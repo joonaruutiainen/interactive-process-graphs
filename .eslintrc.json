@@ -19,7 +19,8 @@
     },
     "plugins": [
         "react",
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "prettier"
     ],
     "rules": {
         "no-unused-vars": "warn",
@@ -35,7 +36,8 @@
                 "ts": "never",
                 "tsx": "never"
             }
-        ]
+        ],
+        "prettier/prettier": ["warn"]
     },
     "settings": {
         "import/resolver": {
