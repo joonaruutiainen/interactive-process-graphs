@@ -18,11 +18,9 @@ interface Props {
   nodes: string[];
 }
 
-const ProcessGraph = ({ nodes }: Props) => (
+const ProcessGraph = ({ nodes }: Props): React.ReactElement => (
   <Container>
-    {nodes.map(node =>
-      <ExampleItem>{node}</ExampleItem>
-    )}
+    {nodes.map(node => <ExampleItem>{node}</ExampleItem>)}
   </Container>
 );
 
