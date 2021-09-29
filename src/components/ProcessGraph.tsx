@@ -18,7 +18,7 @@ interface Props {
   nodes: string[];
 }
 
-const ProcessGraph = ({ nodes }: Props): React.ReactElement => (
+const ProcessGraph: React.FC<Props> = ({ nodes }) => (
   <Container>
     {nodes.map(node => <ExampleItem>{node}</ExampleItem>)}
   </Container>
