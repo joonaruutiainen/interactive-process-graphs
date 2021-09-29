@@ -20,7 +20,9 @@ interface Props {
 
 const ProcessGraph: React.FC<Props> = ({ nodes }) => (
   <Container>
-    {nodes.map(node => <ExampleItem>{node}</ExampleItem>)}
+    {nodes.map(node => (
+      <ExampleItem>{node}</ExampleItem>
+    ))}
   </Container>
 );
 
