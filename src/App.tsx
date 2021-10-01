@@ -8,7 +8,7 @@ const App: React.FC = () => {
   return (
     <div>
       <select
-        defaultValue={exampleProcesses[0].name}
+        value={selectedProcess.name}
         onChange={e => {
           e.preventDefault();
           const process = exampleProcesses.find(p => p.name === e.target.value);
