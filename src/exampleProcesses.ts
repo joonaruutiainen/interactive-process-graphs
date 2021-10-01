@@ -1,3 +1,5 @@
+// NOTE: These example processes are not be used as testing meters, but as a help to get
+// started with the development of the ProcessGraph component and it's child components.
 const exampleProcesses = [
     {
         name: 'simple example',
@@ -175,24 +177,24 @@ const exampleProcesses = [
             },
             {
                 id: 2,
-                type: 'input',
-                nextNodes: [5],
-                previousNodes: [],
-                description: 'Ingredient B input',
-            },
-            {
-                id: 3,
                 type: 'tank',
-                nextNodes: [4],
+                nextNodes: [3],
                 previousNodes: [1],
                 description: 'Ingredient A tank',
             },
             {
-                id: 4,
+                id: 3,
                 type: 'pipe',
                 nextNodes: [20],
-                previousNodes: [3],
+                previousNodes: [2],
                 description: 'Pipe from ingredient A tank to reactor',
+            },
+            {
+                id: 4,
+                type: 'input',
+                nextNodes: [5],
+                previousNodes: [],
+                description: 'Ingredient B input',
             },
             {
                 id: 5,
