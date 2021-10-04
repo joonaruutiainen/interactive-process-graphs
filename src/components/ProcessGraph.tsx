@@ -28,7 +28,7 @@ const esimerkki = {
 const ProcessGraph: React.FC<Props> = ({ nodes }) => (
   <Container>
     {nodes.map(node => (
-      <ExampleItem>{node}</ExampleItem>
+      <ExampleItem key={node}>{node}</ExampleItem>
     ))}
     <NodeDetails nodes={esimerkki} />
   </Container>
