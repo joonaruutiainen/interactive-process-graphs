@@ -1,9 +1,7 @@
 import React from 'react';
-import { fireEvent, render, screen, cleanup } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import App from './App';
 import exampleProcesses from './exampleProcesses';
-
-afterEach(cleanup);
 
 describe('App component', () => {
   it('renders without crashing', () => {
