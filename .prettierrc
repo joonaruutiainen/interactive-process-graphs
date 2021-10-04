@@ -1,17 +1,10 @@
 {
-    "tabWidth": 4,
+    "tabWidth": 2,
     "semi": true,
     "singleQuote": true,
     "printWidth": 120,
     "arrowParens": "avoid",
     "bracketSpacing": true,
     "jsxSingleQuote": true,
-    "overrides": [
-        {
-            "files": "*.tsx",
-            "options": {
-                "tabWidth": 2
-            }
-        }
-    ]
+    "endOfLine": "crlf"
 }
