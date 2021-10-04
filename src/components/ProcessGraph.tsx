@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import NodeDetails from './NodeDetails';
 
 const Container = styled.div`
   display: flex;
@@ -18,11 +19,18 @@ interface Props {
   nodes: string[];
 }
 
+const esimerkki = {
+  name: 'esimerkki moi',
+  id: 0,
+  desc: 'moi',
+};
+
 const ProcessGraph: React.FC<Props> = ({ nodes }) => (
   <Container>
     {nodes.map(node => (
       <ExampleItem>{node}</ExampleItem>
     ))}
+    <NodeDetails nodes={esimerkki} />
   </Container>
 );
 
