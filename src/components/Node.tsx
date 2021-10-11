@@ -17,11 +17,13 @@ interface NodeProps {
   id: number;
   type: string;
   description: string;
-  nextNodes: number[];
-  previousNodes: number[];
 }
 
-const Node: React.FC<NodeProps> = ({ id, type, description, nextNodes, previousNodes }) => (
-  <ProcessBlock>{id}</ProcessBlock>
+const Node: React.FC<NodeProps> = ({ id, type, description }) => (
+  <ProcessBlock>
+    <div>{id}</div>
+    <div>{type}</div>
+    <div>{description}</div>
+  </ProcessBlock>
 );
 export default Node;
