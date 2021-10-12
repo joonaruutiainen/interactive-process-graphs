@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Node } from '../types/Node';
 
 const Container = styled.div`
   display: flex;
@@ -14,14 +15,14 @@ const ExampleItem = styled.div`
   margin: 4px;
 `;
 
-interface Props {
-  nodes: string[];
+interface ProcessGraphProps {
+  nodes: Node[];
 }
 
-const ProcessGraph: React.FC<Props> = ({ nodes }) => (
+const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes }) => (
   <Container>
     {nodes.map(node => (
-      <ExampleItem key={node}>{node}</ExampleItem>
+      <ExampleItem key={node.id}>{node.description}</ExampleItem>
     ))}
   </Container>
 );

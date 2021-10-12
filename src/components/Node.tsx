@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Node as NodeProps } from '../types/Node';
 
 const ProcessBlock = styled.div`
   background-color: lightblue;
@@ -13,12 +14,11 @@ const ProcessBlock = styled.div`
   width: 25px;
 `;
 
-interface NodeProps {
-  id: number;
-  // description: string;
-  // type: string;
-  // data;
-}
-
-const Node: React.FC<NodeProps> = ({ id }) => <ProcessBlock>{id}</ProcessBlock>;
+const Node: React.FC<NodeProps> = ({ id, type, description }) => (
+  <ProcessBlock>
+    <div>{id}</div>
+    <div>{type}</div>
+    <div>{description}</div>
+  </ProcessBlock>
+);
 export default Node;
