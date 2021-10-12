@@ -171,7 +171,7 @@ const exampleProcesses = [
       {
         id: 1,
         type: 'input',
-        nextNodes: [3],
+        nextNodes: [2],
         previousNodes: [],
         description: 'Ingredient A input',
       },
