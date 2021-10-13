@@ -1,30 +1,23 @@
 import React from 'react';
-import styled from 'styled-components';
+import { Canvas, EdgeData, NodeData } from 'reaflow';
+import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-`;
-
-const ExampleItem = styled.div`
-  color: white;
-  background-color: black;
-  font-weight: bold;
-  margin: 4px;
-`;
 
 interface ProcessGraphProps {
   nodes: Node[];
+  edges: Edge[];
 }
 
-const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes }) => (
-  <Container>
-    {nodes.map(node => (
-      <ExampleItem key={node.id}>{node.description}</ExampleItem>
-    ))}
-  </Container>
-);
-
+const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges }) => {
+  const nodeData: NodeData[] = nodes.map(node => ({ ...node, id: node.id.toString(), text: node.type }));
+  const edgeData: EdgeData[] = edges.map(edge => ({
+    ...edge,
+    id: `${edge.from}-${edge.to}`,
+    from: edge.from.toString(),
+    to: edge.to.toString(),
+  }));
+  return (
+    <Canvas width={1800} height={800} nodes={nodeData} edges={edgeData} layoutOptions={{ 'elk.direction': 'RIGHT' }} />
+  );
+};
 export default ProcessGraph;
