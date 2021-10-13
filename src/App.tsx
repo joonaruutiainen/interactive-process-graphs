@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import ProcessGraph from './components/ProcessGraph';
 import exampleProcesses from './exampleProcesses';
+import { DefaultParser } from './parser';
 
 const App: React.FC = () => {
   const [selectedProcess, setSelectedProcess] = useState(exampleProcesses[0]);
+
+  const parser = new DefaultParser;
+  const nodes = parser.parse(selectedProcess.nodes);
 
   return (
     <div>
@@ -21,8 +25,9 @@ const App: React.FC = () => {
           </option>
         ))}
       </select>
-      <ProcessGraph nodes={selectedProcess.nodes} />
+      <ProcessGraph nodes={nodes} />
     </div>
   );
 };
+
 export default App;
