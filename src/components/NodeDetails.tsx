@@ -3,9 +3,16 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   border: solid;
+  border-color: black;
+  padding: 15px;
+  margin: 5px;
+  width: 250px;
+  flex-wrap: wrap;
 `;
 
-const Text = styled.p``;
+const Text = styled.p`
+  color: black;
+`;
 
 interface Props {
   nodes: {
@@ -14,8 +21,6 @@ interface Props {
     desc: string;
   };
 }
-
-// Määrittele laatikolle vakio koko.
 
 const NodeDetails: React.FC<Props> = ({ nodes }) => (
   <Container>
