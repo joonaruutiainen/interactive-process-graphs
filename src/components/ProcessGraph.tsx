@@ -19,8 +19,6 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges }) => {
   return (
     <Canvas
       readonly
-      width={1800}
-      height={800}
       nodes={nodeData}
       edges={edgeData}
       layoutOptions={{
