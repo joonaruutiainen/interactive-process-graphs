@@ -17,7 +17,23 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges }) => {
     to: edge.to.toString(),
   }));
   return (
-    <Canvas width={1800} height={800} nodes={nodeData} edges={edgeData} layoutOptions={{ 'elk.direction': 'RIGHT' }} />
+    <Canvas
+      readonly
+      width={1800}
+      height={800}
+      nodes={nodeData}
+      edges={edgeData}
+      layoutOptions={{
+        'elk.direction': 'RIGHT',
+        'org.eclipse.elk.layered.nodePlacement.strategy': 'NETWORK_SIMPLEX',
+        'org.eclipse.elk.layered.nodePlacement.bk.fixedAlignment': 'BALANCED',
+        'org.eclipse.elk.layered.nodePlacement.bk.edgeStraightening': 'IMPROVE_STRAIGHTNESS',
+        'org.eclipse.elk.edgeRouting': 'ORTHOGONAL',
+        'org.eclipse.elk.layered.layering.strategy': 'NETWORK_SIMPLEX',
+        'org.eclipse.elk.layered.nodePlacement.favorStraightEdges': 'true',
+        'org.eclipse.elk.layered.crossingMinimization.strategy': 'LAYER_SWEEP',
+      }}
+    />
   );
 };
 export default ProcessGraph;
