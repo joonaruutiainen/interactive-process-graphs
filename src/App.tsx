@@ -21,7 +21,7 @@ const App: React.FC = () => {
           </option>
         ))}
       </select>
-      <ProcessGraph nodes={selectedProcess.nodes} />
+      <ProcessGraph nodes={selectedProcess.nodes.map(nodes => nodes.description)} />
     </div>
   );
 };

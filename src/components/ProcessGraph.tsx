@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Node } from '../types/Node';
+import NodeDetails from './NodeDetails';
 
 const Container = styled.div`
   display: flex;
@@ -15,15 +15,22 @@ const ExampleItem = styled.div`
   margin: 4px;
 `;
 
-interface ProcessGraphProps {
-  nodes: Node[];
+interface Props {
+  nodes: string[];
 }
 
-const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes }) => (
+const esimerkki = {
+  name: 'Tähän tulee nimi : nimi',
+  id: 0,
+  desc: 'Tähän tulee kuvaus : kuvaus. Tää on vielä kesken.',
+};
+
+const ProcessGraph: React.FC<Props> = ({ nodes }) => (
   <Container>
     {nodes.map(node => (
-      <ExampleItem key={node.id}>{node.description}</ExampleItem>
+      <ExampleItem key={node}>{node}</ExampleItem>
     ))}
+    <NodeDetails nodes={esimerkki} />
   </Container>
 );
 
