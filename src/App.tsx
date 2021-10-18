@@ -2,8 +2,6 @@ import React, { useState, useMemo } from 'react';
 import styled from 'styled-components';
 import ProcessGraph from './components/ProcessGraph';
 import exampleProcesses from './exampleProcesses';
-import { Edge } from './types/Edge';
-import { Node } from './types/Node';
 import defaultParser from './parser';
 
 const AppContainer = styled.div`
