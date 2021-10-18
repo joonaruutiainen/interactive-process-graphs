@@ -16,10 +16,7 @@ const AppContainer = styled.div`
 const App: React.FC = () => {
   const [selectedProcess, setSelectedProcess] = useState(exampleProcesses[0]);
 
-  const { nodes, edges } = useMemo(
-    () => defaultParser(selectedProcess),
-    [defaultParser, selectedProcess]
-  );
+  const { nodes, edges } = useMemo(() => defaultParser(selectedProcess), [defaultParser, selectedProcess]);
 
   return (
     <AppContainer>

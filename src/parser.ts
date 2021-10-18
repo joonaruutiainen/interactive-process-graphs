@@ -2,23 +2,23 @@ import { Node } from './types/Node';
 import { Edge } from './types/Edge';
 
 export interface IParser<T> {
-  (data: T): { nodes: Node[], edges: Edge[] };
+  (data: T): { nodes: Node[]; edges: Edge[] };
 }
 
 type DefaultNode = {
-  id: number,
-  type: string,
-  description: string,
-  nextNodes: number[],
-  previousNodes: number[],
+  id: number;
+  type: string;
+  description: string;
+  nextNodes: number[];
+  previousNodes: number[];
 };
 
 type DefaultData = {
-  name: string,
-  nodes: DefaultNode[],
+  name: string;
+  nodes: DefaultNode[];
 };
 
-const defaultParser: IParser<DefaultData> = (data) => {
+const defaultParser: IParser<DefaultData> = data => {
   const nodes: Node[] = [];
   const edges: Edge[] = [];
   data.nodes.forEach((node: DefaultNode) => {
@@ -32,8 +32,8 @@ const defaultParser: IParser<DefaultData> = (data) => {
         to: next,
       });
     });
-  })
+  });
   return { nodes, edges };
-}
+};
 
 export default defaultParser;
