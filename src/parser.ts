@@ -1,13 +1,39 @@
 import { Node } from './types/Node';
+import { Edge } from './types/Edge';
 
-abstract class Parser {
-  abstract parse(data: any): Node[];
+export interface IParser<T> {
+  (data: T): { nodes: Node[], edges: Edge[] };
 }
 
-export class DefaultParser extends Parser {
-  parse(data: any): Node[] {
-    return data;
-  }
+type DefaultNode = {
+  id: number,
+  type: string,
+  description: string,
+  nextNodes: number[],
+  previousNodes: number[],
+};
+
+type DefaultData = {
+  name: string,
+  nodes: DefaultNode[],
+};
+
+const defaultParser: IParser<DefaultData> = (data) => {
+  const nodes: Node[] = [];
+  const edges: Edge[] = [];
+  data.nodes.forEach((node: DefaultNode) => {
+    nodes.push({
+      id: node.id,
+      type: node.type,
+    });
+    node.nextNodes.forEach((next: number) => {
+      edges.push({
+        from: node.id,
+        to: next,
+      });
+    });
+  })
+  return { nodes, edges };
 }
 
-export default Parser;
+export default defaultParser;
