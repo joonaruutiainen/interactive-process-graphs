@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Node } from '../types/Node';
 
 const Container = styled.div`
   border: solid;
@@ -14,19 +15,15 @@ const Text = styled.p`
   color: black;
 `;
 
-interface Props {
-  nodes: {
-    name: string;
-    id: number;
-    desc: string;
-  };
+interface NodeDetailsProps {
+  node: Node;
 }
 
-const NodeDetails: React.FC<Props> = ({ nodes }) => (
+const NodeDetails: React.FC<NodeDetailsProps> = ({ node }) => (
   <Container>
-    <Text>{nodes.name}</Text>
-    <Text>{nodes.id}</Text>
-    <Text>{nodes.desc}</Text>
+    <Text>{node.type}</Text>
+    <Text>{node.id}</Text>
+    <Text>{node.description}</Text>
   </Container>
 );
 
