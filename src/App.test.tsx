@@ -3,6 +3,11 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import App from './App';
 import exampleProcesses from './exampleProcesses';
 
+jest.mock('./components/ProcessGraph', () => ({
+  __esModule: true,
+  default: () => <div />,
+}));
+
 describe('App component', () => {
   it('renders without crashing', () => {
     render(<App />);
