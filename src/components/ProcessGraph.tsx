@@ -1,7 +1,8 @@
-import React from 'react';
-import { Canvas, EdgeData, NodeData } from 'reaflow';
+import React, { useState } from 'react';
+import { Canvas, EdgeData, NodeData, Node as ReaflowNode, NodeChildProps } from 'reaflow';
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
+import NodeDetails from './NodeDetails';
 
 interface ProcessGraphProps {
   nodes: Node[];
@@ -9,13 +10,43 @@ interface ProcessGraphProps {
 }
 
 const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges }) => {
-  const nodeData: NodeData[] = nodes.map(node => ({ ...node, id: node.id.toString(), text: node.type }));
+  const [showDetailsId, setShowDetailsId] = useState<string>('');
+
+  const nodeData: NodeData[] = nodes.map(node => ({
+    ...node,
+    id: node.id.toString(),
+    text: node.type,
+  }));
   const edgeData: EdgeData[] = edges.map(edge => ({
     ...edge,
     id: `${edge.from}-${edge.to}`,
     from: edge.from.toString(),
     to: edge.to.toString(),
   }));
+
+  const nodeDataToNode = (node: NodeData): Node => ({
+    ...node,
+    id: parseInt(node.id, 10),
+    type: node.text,
+  });
+
+  const nodeOnClick = (node: NodeData): void => {
+    if (node.id !== showDetailsId) setShowDetailsId(node.id);
+    else setShowDetailsId('');
+  };
+
+  const renderDetails = (event: NodeChildProps): React.SVGProps<SVGForeignObjectElement> => (
+    <foreignObject
+      x='-110px'
+      y='-130px'
+      height='150px'
+      width='300px'
+      display={event.node.id === showDetailsId ? '' : 'none'}
+    >
+      <NodeDetails node={nodeDataToNode(event.node)} />
+    </foreignObject>
+  );
+
   return (
     <Canvas
       readonly
@@ -31,7 +62,10 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges }) => {
         'org.eclipse.elk.layered.nodePlacement.favorStraightEdges': 'true',
         'org.eclipse.elk.layered.crossingMinimization.strategy': 'LAYER_SWEEP',
       }}
+      node={<ReaflowNode onClick={(_, node) => nodeOnClick(node)}>{event => renderDetails(event)}</ReaflowNode>}
+      onCanvasClick={() => setShowDetailsId('')}
     />
   );
 };
+
 export default ProcessGraph;
