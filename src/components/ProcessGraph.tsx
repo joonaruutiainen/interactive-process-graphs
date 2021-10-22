@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { Canvas, EdgeData, NodeData } from 'reaflow';
+import { Icon } from 'ts-react-feather-icons';
+
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
 import useWindowDimensions from '../hooks/useWindowDimensions';
@@ -12,16 +14,28 @@ const Container = styled.div`
   &:active {
     cursor: grabbing;
   }
+  position: relative;
 `;
 
-const ZoomButtons = styled.div`
+const ButtonGroup = styled.div`
   display: flex;
-  width: 100%;
-  max-width: calc(100vw - 60px);
+  flex-direction: column;
+  position: absolute;
+  bottom: 0px;
+  width: fit-content;
   margin-bottom: 10px;
-  button {
-    margin-left: 10px;
-    width: 2em;
+`;
+
+const ZoomButton = styled.button`
+  display: flex;
+  align-items: center;
+  margin: 7px auto 7px 15px;
+  width: fit-content;
+  text-align: center;
+  padding: 5px 6px;
+  border: none;
+  &:hover {
+    cursor: pointer;
   }
 `;
 
@@ -46,24 +60,11 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideButtons =
       <TransformWrapper wheel={{ step: 0.1 }} minScale={0.8} maxScale={10}>
         {({ zoomIn, zoomOut, resetTransform }) => (
           <>
-            {!hideButtons && (
-              <ZoomButtons>
-                <button type='button' onClick={() => zoomIn()}>
-                  +
-                </button>
-                <button type='button' onClick={() => zoomOut()}>
-                  -
-                </button>
-                <button type='button' onClick={() => resetTransform()}>
-                  x
-                </button>
-              </ZoomButtons>
-            )}
             <TransformComponent>
               <Canvas
                 readonly
                 maxWidth={width * 0.9}
-                maxHeight={height * 0.9}
+                maxHeight={height * 0.8}
                 nodes={nodeData}
                 edges={edgeData}
                 layoutOptions={{
@@ -78,6 +79,19 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideButtons =
                 }}
               />
             </TransformComponent>
+            {!hideButtons && (
+              <ButtonGroup>
+                <ZoomButton onClick={() => zoomIn()}>
+                  <Icon name='plus' size={24} />
+                </ZoomButton>
+                <ZoomButton onClick={() => zoomOut()}>
+                  <Icon name='minus' size={24} />
+                </ZoomButton>
+                <ZoomButton onClick={() => resetTransform()}>
+                  <Icon name='maximize' size={24} />
+                </ZoomButton>
+              </ButtonGroup>
+            )}
           </>
         )}
       </TransformWrapper>
