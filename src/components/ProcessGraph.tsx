@@ -28,9 +28,10 @@ const ZoomButtons = styled.div`
 interface ProcessGraphProps {
   nodes: Node[];
   edges: Edge[];
+  hideButtons?: boolean;
 }
 
-const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges }) => {
+const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideButtons = false }) => {
   const nodeData: NodeData[] = nodes.map(node => ({ ...node, id: node.id.toString(), text: node.type }));
   const edgeData: EdgeData[] = edges.map(edge => ({
     ...edge,
@@ -45,17 +46,19 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges }) => {
       <TransformWrapper wheel={{ step: 0.1 }} minScale={0.8} maxScale={10}>
         {({ zoomIn, zoomOut, resetTransform }) => (
           <>
-            <ZoomButtons>
-              <button type='button' onClick={() => zoomIn()}>
-                +
-              </button>
-              <button type='button' onClick={() => zoomOut()}>
-                -
-              </button>
-              <button type='button' onClick={() => resetTransform()}>
-                x
-              </button>
-            </ZoomButtons>
+            {!hideButtons && (
+              <ZoomButtons>
+                <button type='button' onClick={() => zoomIn()}>
+                  +
+                </button>
+                <button type='button' onClick={() => zoomOut()}>
+                  -
+                </button>
+                <button type='button' onClick={() => resetTransform()}>
+                  x
+                </button>
+              </ZoomButtons>
+            )}
             <TransformComponent>
               <Canvas
                 readonly
@@ -81,4 +84,5 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges }) => {
     </Container>
   );
 };
+
 export default ProcessGraph;
