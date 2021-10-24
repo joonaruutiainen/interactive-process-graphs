@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Canvas, EdgeData, NodeData, Node as ReaflowNode } from 'reaflow';
 import Tippy from '@tippyjs/react';
 import { Edge } from '../types/Edge';
@@ -12,7 +12,12 @@ interface ProcessGraphProps {
 
 const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges }) => {
   const [showDetails, setShowDetails] = useState<{ el: Element; node: NodeData } | undefined>(undefined);
-  const [visible, setVisible] = useState(false);
+  const [detailsVisible, setDetailsVisible] = useState(false);
+
+  useEffect(() => {
+    setShowDetails(undefined);
+    setDetailsVisible(false);
+  }, [nodes, edges]);
 
   const nodeData: NodeData[] = nodes.map(node => ({
     ...node,
@@ -35,15 +40,15 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges }) => {
   const nodeOnClick = (event: React.MouseEvent<SVGGElement, MouseEvent>, node: NodeData): void => {
     if (node.id === showDetails?.node.id) {
       setShowDetails(undefined);
-      setVisible(false);
+      setDetailsVisible(false);
     } else {
       setShowDetails({ el: event.target as Element, node });
-      setVisible(true);
+      setDetailsVisible(true);
     }
   };
 
   const canvasOnClick = (): void => {
-    setVisible(false);
+    setDetailsVisible(false);
     setShowDetails(undefined);
   };
 
@@ -69,7 +74,7 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges }) => {
       <Tippy
         render={() => showDetails && <NodeDetails node={nodeDataToNode(showDetails.node)} />}
         reference={showDetails?.el}
-        visible={visible}
+        visible={detailsVisible}
       />
     </>
   );
