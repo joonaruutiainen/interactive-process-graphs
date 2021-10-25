@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Canvas, EdgeData, NodeData, Node as ReaflowNode } from 'reaflow';
 import Tippy from '@tippyjs/react';
 import { Edge } from '../types/Edge';
@@ -9,6 +9,12 @@ interface ProcessGraphProps {
   nodes: Node[];
   edges: Edge[];
 }
+
+const nodeDataToNode = (node: NodeData): Node => ({
+  ...node,
+  id: parseInt(node.id, 10),
+  type: node.text,
+});
 
 const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges }) => {
   const [showDetails, setShowDetails] = useState<{ el: Element; node: NodeData } | undefined>(undefined);
@@ -31,26 +37,18 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges }) => {
     to: edge.to.toString(),
   }));
 
-  const nodeDataToNode = (node: NodeData): Node => ({
-    ...node,
-    id: parseInt(node.id, 10),
-    type: node.text,
-  });
-
-  const nodeOnClick = (event: React.MouseEvent<SVGGElement, MouseEvent>, node: NodeData): void => {
-    if (node.id === showDetails?.node.id) {
-      setShowDetails(undefined);
-      setDetailsVisible(false);
-    } else {
-      setShowDetails({ el: event.target as Element, node });
-      setDetailsVisible(true);
-    }
-  };
-
-  const canvasOnClick = (): void => {
-    setDetailsVisible(false);
-    setShowDetails(undefined);
-  };
+  const nodeOnClick = useCallback(
+    (event: React.MouseEvent<SVGGElement, MouseEvent>, node: NodeData): void => {
+      if (node.id === showDetails?.node.id) {
+        setShowDetails(undefined);
+        setDetailsVisible(false);
+      } else {
+        setShowDetails({ el: event.target as Element, node });
+        setDetailsVisible(true);
+      }
+    },
+    [showDetails, detailsVisible]
+  );
 
   return (
     <>
@@ -69,7 +67,6 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges }) => {
           'org.eclipse.elk.layered.crossingMinimization.strategy': 'LAYER_SWEEP',
         }}
         node={<ReaflowNode onClick={nodeOnClick} />}
-        onCanvasClick={canvasOnClick}
       />
       <Tippy
         render={() => showDetails && <NodeDetails node={nodeDataToNode(showDetails.node)} />}
@@ -81,3 +78,4 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges }) => {
 };
 
 export default ProcessGraph;
+export { nodeDataToNode };
