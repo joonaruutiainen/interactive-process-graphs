@@ -9,6 +9,7 @@ const Container = styled.div`
   margin: 5px;
   width: 250px;
   flex-wrap: wrap;
+  background-color: white;
 `;
 
 const Text = styled.p`
