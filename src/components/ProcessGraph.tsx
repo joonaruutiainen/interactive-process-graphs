@@ -44,10 +44,10 @@ const ZoomButton = styled.button`
 interface ProcessGraphProps {
   nodes: Node[];
   edges: Edge[];
-  hideButtons?: boolean;
+  hideZoomButtons?: boolean;
 }
 
-const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideButtons = false }) => {
+const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButtons = false }) => {
   const [selectedNode, setSelectedNode] = useState<Node | undefined>();
   const [popupTarget, setPopupTarget] = useState<Element | undefined>();
 
@@ -95,12 +95,13 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideButtons =
 
   return (
     <Container>
-      <TransformWrapper wheel={{ step: 0.1 }} minScale={0.8} maxScale={10}>
+      <TransformWrapper wheel={{ step: 0.1 }} minScale={0.8} maxScale={10} doubleClick={{ disabled: true }}>
         {({ zoomIn, zoomOut, resetTransform }) => (
           <>
             <TransformComponent>
               <Canvas
                 readonly
+                zoomable={false}
                 maxWidth={width * 0.9}
                 maxHeight={height * 0.8}
                 nodes={nodeData}
@@ -123,7 +124,7 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideButtons =
                 visible={selectedNode !== undefined}
               />
             </TransformComponent>
-            {!hideButtons && (
+            {!hideZoomButtons && (
               <ButtonGroup>
                 <ZoomButton onClick={() => zoomIn()}>
                   <Icon name='plus' size={24} />
