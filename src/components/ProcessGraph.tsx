@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { Canvas, EdgeData, NodeData, Node as ReaflowNode } from 'reaflow';
 import styled from 'styled-components';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
@@ -47,46 +47,50 @@ interface ProcessGraphProps {
   hideZoomButtons?: boolean;
 }
 
-const nodeDataToNode = (node: NodeData): Node => ({
-  ...node,
-  id: parseInt(node.id, 10),
-  type: node.text,
-});
-
 const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButtons = false }) => {
-  const [showDetails, setShowDetails] = useState<{ el: Element; node: NodeData } | undefined>(undefined);
-  const [detailsVisible, setDetailsVisible] = useState(false);
-
-  useEffect(() => {
-    setShowDetails(undefined);
-    setDetailsVisible(false);
-  }, [nodes, edges]);
-
-  const nodeData: NodeData[] = nodes.map(node => ({
-    ...node,
-    id: node.id.toString(),
-    text: node.type,
-  }));
-  const edgeData: EdgeData[] = edges.map(edge => ({
-    ...edge,
-    id: `${edge.from}-${edge.to}`,
-    from: edge.from.toString(),
-    to: edge.to.toString(),
-  }));
+  const [selectedNode, setSelectedNode] = useState<Node | undefined>();
+  const [popupTarget, setPopupTarget] = useState<Element | undefined>();
 
   const { width, height } = useWindowDimensions();
 
-  const nodeOnClick = useCallback(
+  useEffect(() => {
+    setPopupTarget(undefined);
+    setSelectedNode(undefined);
+  }, [nodes, edges]);
+
+  const nodeData: NodeData[] = useMemo(
+    () =>
+      nodes.map(node => ({
+        ...node,
+        id: node.id.toString(),
+        text: node.type,
+      })),
+    [nodes]
+  );
+
+  const edgeData: EdgeData[] = useMemo(
+    () =>
+      edges.map(edge => ({
+        ...edge,
+        id: `${edge.from}-${edge.to}`,
+        from: edge.from.toString(),
+        to: edge.to.toString(),
+      })),
+    [edges]
+  );
+
+  const onNodeClick = useCallback(
     (event: React.MouseEvent<SVGGElement, MouseEvent>, node: NodeData): void => {
-      if (node.id === showDetails?.node.id) {
-        setShowDetails(undefined);
-        setDetailsVisible(false);
+      const id = parseInt(node.id, 10);
+      if (id === selectedNode?.id) {
+        setSelectedNode(undefined);
+        setPopupTarget(undefined);
       } else {
-        setShowDetails({ el: event.target as Element, node });
-        setDetailsVisible(true);
+        setSelectedNode(nodes.find(n => n.id === id));
+        setPopupTarget(event.target as Element);
       }
     },
-    [showDetails, detailsVisible]
+    [selectedNode, popupTarget]
   );
 
   return (
@@ -112,12 +116,12 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
                   'org.eclipse.elk.layered.nodePlacement.favorStraightEdges': 'true',
                   'org.eclipse.elk.layered.crossingMinimization.strategy': 'LAYER_SWEEP',
                 }}
-                node={<ReaflowNode onClick={nodeOnClick} />}
+                node={<ReaflowNode onClick={onNodeClick} />}
               />
               <Tippy
-                render={() => showDetails && <NodeDetails node={nodeDataToNode(showDetails.node)} />}
-                reference={showDetails?.el}
-                visible={detailsVisible}
+                render={() => selectedNode && <NodeDetails node={selectedNode} />}
+                reference={popupTarget}
+                visible={selectedNode !== undefined}
               />
             </TransformComponent>
             {!hideZoomButtons && (
@@ -141,4 +145,3 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
 };
 
 export default ProcessGraph;
-export { nodeDataToNode };
