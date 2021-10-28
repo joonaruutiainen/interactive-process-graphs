@@ -41,6 +41,17 @@ const ZoomButton = styled.button`
   }
 `;
 
+const nodeToNodeData = (node: Node): NodeData => ({
+  id: node.id.toString(),
+  text: node.type,
+});
+
+const edgeToEdgeData = (edge: Edge): EdgeData => ({
+  id: `${edge.from}-${edge.to}`,
+  from: edge.from.toString(),
+  to: edge.to.toString(),
+});
+
 interface ProcessGraphProps {
   nodes: Node[];
   edges: Edge[];
@@ -58,26 +69,8 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
     setSelectedNode(undefined);
   }, [nodes, edges]);
 
-  const nodeData: NodeData[] = useMemo(
-    () =>
-      nodes.map(node => ({
-        ...node,
-        id: node.id.toString(),
-        text: node.type,
-      })),
-    [nodes]
-  );
-
-  const edgeData: EdgeData[] = useMemo(
-    () =>
-      edges.map(edge => ({
-        ...edge,
-        id: `${edge.from}-${edge.to}`,
-        from: edge.from.toString(),
-        to: edge.to.toString(),
-      })),
-    [edges]
-  );
+  const nodeData: NodeData[] = useMemo(() => nodes.map(nodeToNodeData), [nodes]);
+  const edgeData: EdgeData[] = useMemo(() => edges.map(edgeToEdgeData), [edges]);
 
   const onNodeClick = useCallback(
     (event: React.MouseEvent<SVGGElement, MouseEvent>, node: NodeData): void => {
