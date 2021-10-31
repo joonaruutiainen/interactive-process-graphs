@@ -117,6 +117,8 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
                 }
                 reference={popupTarget}
                 visible={selectedNode !== undefined}
+                interactive
+                appendTo={document.body}
               />
             </TransformComponent>
             {!hideZoomButtons && (
