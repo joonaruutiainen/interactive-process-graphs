@@ -29,7 +29,7 @@ const NodeDetails: React.FC<NodeDetailsProps> = ({ node, dataPlacement }) => (
     <Text>{node.type}</Text>
     <Text>{node.id}</Text>
     <Text>{node.description}</Text>
-    <Arrow data-popper-arrow placement={dataPlacement} />
+    <Arrow placement={dataPlacement} />
   </Container>
 );
 
