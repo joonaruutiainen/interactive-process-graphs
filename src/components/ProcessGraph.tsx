@@ -112,7 +112,9 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
                 node={<ReaflowNode onClick={onNodeClick} />}
               />
               <Tippy
-                render={() => selectedNode && <NodeDetails node={selectedNode} />}
+                render={attrs =>
+                  selectedNode && <NodeDetails node={selectedNode} dataPlacement={attrs['data-placement']} />
+                }
                 reference={popupTarget}
                 visible={selectedNode !== undefined}
               />
