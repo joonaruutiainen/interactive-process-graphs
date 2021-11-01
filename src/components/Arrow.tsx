@@ -22,15 +22,40 @@ const ArrowUp = styled(BaseArrow)`
   border-bottom: 12px solid black;
 `;
 
+const ArrowLeft = styled(BaseArrow)`
+  left: -8px;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-right: 12px solid black;
+`;
+
+const ArrowRight = styled(BaseArrow)`
+  right: -8px;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-left: 12px solid black;
+`;
+
+interface ArrowMap {
+  [key: string]: typeof BaseArrow;
+}
+
+const components: ArrowMap = {
+  t: ArrowDown,
+  b: ArrowUp,
+  l: ArrowRight,
+  r: ArrowLeft,
+};
+
 interface ArrowProps {
   placement: string;
 }
 
 const Arrow: React.FC<ArrowProps> = ({ placement }) => {
-  if (placement === 'bottom') {
-    return <ArrowUp data-popper-arrow />;
-  }
-  return <ArrowDown data-popper-arrow />;
+  if (placement === undefined) return <ArrowDown data-popper-arrow />;
+  const dir = placement.substring(0, 1);
+  const Component = components[dir] || components.b;
+  return <Component data-popper-arrow />;
 };
 
 export default Arrow;

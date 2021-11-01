@@ -119,6 +119,17 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
                 visible={selectedNode !== undefined}
                 interactive
                 appendTo={document.body}
+                popperOptions={{
+                  strategy: 'fixed',
+                  modifiers: [
+                    {
+                      name: 'flip',
+                      options: {
+                        fallbackPlacements: ['bottom', 'right', 'left'],
+                      },
+                    },
+                  ],
+                }}
               />
             </TransformComponent>
             {!hideZoomButtons && (

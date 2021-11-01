@@ -25,7 +25,7 @@ interface NodeDetailsProps {
 }
 
 const NodeDetails: React.FC<NodeDetailsProps> = ({ node, dataPlacement }) => (
-  <Container id='tooltip'>
+  <Container>
     <Text>{node.type}</Text>
     <Text>{node.id}</Text>
     <Text>{node.description}</Text>
