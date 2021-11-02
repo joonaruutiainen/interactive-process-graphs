@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unused-prop-types */
 import React from 'react';
 import styled from 'styled-components';
 import { Placement } from 'tippy.js';

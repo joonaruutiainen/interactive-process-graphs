@@ -53,8 +53,8 @@ interface ArrowProps {
 
 const Arrow: React.FC<ArrowProps> = ({ placement }) => {
   if (placement === undefined) return <ArrowDown data-popper-arrow />;
-  const dir = placement.substring(0, 1);
-  const Component = components[dir] || components.b;
+  const direction = placement.substring(0, 1);
+  const Component = components[direction] || components.b;
   return <Component data-popper-arrow />;
 };
 
