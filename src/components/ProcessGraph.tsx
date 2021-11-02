@@ -64,9 +64,13 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
 
   const { width, height } = useWindowDimensions();
 
-  useEffect(() => {
-    setPopupTarget(undefined);
+  const closePopup = () => {
     setSelectedNode(undefined);
+    setPopupTarget(undefined);
+  };
+
+  useEffect(() => {
+    closePopup();
   }, [nodes, edges]);
 
   const nodeData: NodeData[] = useMemo(() => nodes.map(nodeToNodeData), [nodes]);
@@ -76,8 +80,7 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
     (event: React.MouseEvent<SVGGElement, MouseEvent>, node: NodeData): void => {
       const id = parseInt(node.id, 10);
       if (id === selectedNode?.id) {
-        setSelectedNode(undefined);
-        setPopupTarget(undefined);
+        closePopup();
       } else {
         setSelectedNode(nodes.find(n => n.id === id));
         setPopupTarget(event.target as Element);
