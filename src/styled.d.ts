@@ -2,7 +2,7 @@ import 'styled-components';
 
 interface IPalette {
   main: string;
-  contrastText: string;
+  text: string;
 };
 
 declare module 'styled-components' {
@@ -12,10 +12,10 @@ declare module 'styled-components' {
       common: {
         black: string;
         white: string;
-        grey: string;
       };
       primary: IPalette;
       secondary: IPalette;
+      background: IPalette;
    };
   };
 };

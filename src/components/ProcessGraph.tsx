@@ -12,7 +12,7 @@ import { Node } from '../types/Node';
 import useWindowDimensions from '../hooks/useWindowDimensions';
 
 const Container = styled.div`
-  background-color: ${props => props.theme.palette.common.grey};
+  background-color: ${props => props.theme.palette.background.main};
   border-radius: ${props => props.theme.borderRadius};
   cursor: grab;
   &:active {

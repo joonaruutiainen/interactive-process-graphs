@@ -6,15 +6,18 @@ const defaultTheme: DefaultTheme = {
     common: {
       black: '#000000',
       white: '#ffffff',
-      grey: '#C0C1D0',
     },
     primary: {
       main: '#2B2C3D',
-      contrastText: '#ffffff'
+      text: '#ffffff',
     },
     secondary: {
       main: '#3D445A',
-      contrastText: '#ffffff'
+      text: '#ffffff',
+    },
+    background: {
+      main: '#C0C1D0',
+      text: '#000000',
     },
   },
 };
