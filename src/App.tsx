@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import styled, { ThemeProvider } from 'styled-components';
-import defaultTheme from './theme'
+import styled from 'styled-components';
 import ProcessGraph from './components/ProcessGraph';
 import exampleProcesses from './exampleProcesses';
 import defaultParser from './parser';
@@ -11,7 +10,7 @@ const AppContainer = styled.div`
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background-color: ${props => props.theme.palette.common.white};
+  background-color: white;
 `;
 
 const App: React.FC = () => {
@@ -20,26 +19,24 @@ const App: React.FC = () => {
   const { nodes, edges } = useMemo(() => defaultParser(selectedProcess), [defaultParser, selectedProcess]);
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <AppContainer>
-        <select
-          value={selectedProcess.name}
-          onChange={e => {
-            e.preventDefault();
-            const process = exampleProcesses.find(p => p.name === e.target.value);
-            if (process) setSelectedProcess(process);
-          }}
-          style={{ marginTop: '20px' }}
-        >
-          {exampleProcesses.map(process => (
-            <option value={process.name} key={process.name}>
-              {process.name}
-            </option>
-          ))}
-        </select>
-        <ProcessGraph nodes={nodes} edges={edges} />
-      </AppContainer>
-    </ThemeProvider>
+    <AppContainer>
+      <select
+        value={selectedProcess.name}
+        onChange={e => {
+          e.preventDefault();
+          const process = exampleProcesses.find(p => p.name === e.target.value);
+          if (process) setSelectedProcess(process);
+        }}
+        style={{ marginTop: '20px' }}
+      >
+        {exampleProcesses.map(process => (
+          <option value={process.name} key={process.name}>
+            {process.name}
+          </option>
+        ))}
+      </select>
+      <ProcessGraph nodes={nodes} edges={edges} />
+    </AppContainer>
   );
 };
 
