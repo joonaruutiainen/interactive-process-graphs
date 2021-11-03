@@ -11,7 +11,7 @@ const AppContainer = styled.div`
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background-image: linear-gradient(to bottom right, Silver, DimGray);
+  background-color: ${props => props.theme.palette.common.white};
 `;
 
 const App: React.FC = () => {

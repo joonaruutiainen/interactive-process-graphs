@@ -12,7 +12,8 @@ import { Node } from '../types/Node';
 import useWindowDimensions from '../hooks/useWindowDimensions';
 
 const Container = styled.div`
-  background-color: lightgrey;
+  background-color: ${props => props.theme.palette.common.grey};
+  border-radius: ${props => props.theme.borderRadius};
   cursor: grab;
   &:active {
     cursor: grabbing;
@@ -30,6 +31,7 @@ const ButtonGroup = styled.div`
 `;
 
 const ZoomButton = styled.button`
+  background-color: ${props => props.theme.palette.common.white};
   display: flex;
   align-items: center;
   margin: 7px auto 7px 15px;
