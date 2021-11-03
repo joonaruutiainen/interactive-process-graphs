@@ -3,17 +3,16 @@ import styled from 'styled-components';
 import { Node } from '../types/Node';
 
 const Container = styled.div`
-  border: solid;
-  border-color: black;
+  border-radius: ${props => props.theme.borderRadius};
   padding: 15px;
   margin: 5px;
   width: 250px;
   flex-wrap: wrap;
-  background-color: white;
+  background-color: ${props => props.theme.palette.common.white};
 `;
 
 const Text = styled.p`
-  color: black;
+  color: ${props => props.theme.palette.common.black};
 `;
 
 interface NodeDetailsProps {

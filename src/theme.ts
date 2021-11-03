@@ -4,15 +4,16 @@ const defaultTheme: DefaultTheme = {
   borderRadius: '4px',
   palette: {
     common: {
-      black: '#222831',
-      white: '#ffffff'
+      black: '#000000',
+      white: '#ffffff',
+      grey: '#C0C1D0',
     },
     primary: {
-      main: '#726a95',
+      main: '#2B2C3D',
       contrastText: '#ffffff'
     },
     secondary: {
-      main: '#709fb0',
+      main: '#3D445A',
       contrastText: '#ffffff'
     },
   },
