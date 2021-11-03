@@ -113,6 +113,7 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
                   'org.eclipse.elk.layered.crossingMinimization.strategy': 'LAYER_SWEEP',
                 }}
                 node={<ReaflowNode onClick={onNodeClick} />}
+                onCanvasClick={closePopup}
               />
               <Tippy
                 render={attrs =>
