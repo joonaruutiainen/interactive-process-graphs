@@ -3,7 +3,7 @@ import 'styled-components';
 interface IPalette {
   main: string;
   text: string;
-};
+}
 
 declare module 'styled-components' {
   export interface DefaultTheme {
@@ -17,5 +17,6 @@ declare module 'styled-components' {
       secondary: IPalette;
       background: IPalette;
    };
-  };
-};
+
+  }
+}

@@ -9,7 +9,7 @@ import NodeDetails from './NodeDetails';
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
 import useWindowDimensions from '../hooks/useWindowDimensions';
-import defaultTheme from '../theme'
+import defaultTheme from '../theme';
 
 const Container = styled.div`
   background-color: ${props => props.theme.palette.background.main};
