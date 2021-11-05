@@ -37,7 +37,7 @@ const ArrowRight = styled(BaseArrow)`
 `;
 
 interface ArrowMap {
-  [key: string]: typeof BaseArrow;
+  [direction: string]: typeof BaseArrow;
 }
 
 const components: ArrowMap = {
