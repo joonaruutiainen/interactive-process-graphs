@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
-import { Canvas, EdgeData, NodeData, Node as ReaflowNode } from 'reaflow';
+import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react';
+import { Canvas, EdgeData, NodeData, Node as ReaflowNode, CanvasRef } from 'reaflow';
 import styled from 'styled-components';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { Icon } from 'ts-react-feather-icons';
@@ -48,6 +48,7 @@ interface ProcessGraphProps {
 }
 
 const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButtons = false }) => {
+  const canvasRef = useRef<CanvasRef | null>(null);
   const [selectedNode, setSelectedNode] = useState<Node | undefined>();
   const [popupTarget, setPopupTarget] = useState<Element | undefined>();
 
@@ -100,6 +101,7 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
           <>
             <TransformComponent>
               <Canvas
+                ref={canvasRef}
                 readonly
                 zoomable={false}
                 maxWidth={width * 0.9}
@@ -117,6 +119,7 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
                   'org.eclipse.elk.layered.crossingMinimization.strategy': 'LAYER_SWEEP',
                 }}
                 node={<ReaflowNode onClick={onNodeClick} />}
+                onLayoutChange={() => canvasRef.current?.fitCanvas?.()}
               />
               <Tippy
                 render={() => selectedNode && <NodeDetails node={selectedNode} />}
