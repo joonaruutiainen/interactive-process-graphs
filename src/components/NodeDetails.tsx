@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Placement } from 'tippy.js';
 import { Node } from '../types/Node';
+import Arrow from './Arrow';
 
 const Container = styled.div`
   border: solid;
@@ -18,13 +20,15 @@ const Text = styled.p`
 
 interface NodeDetailsProps {
   node: Node;
+  dataPlacement: Placement;
 }
 
-const NodeDetails: React.FC<NodeDetailsProps> = ({ node }) => (
+const NodeDetails: React.FC<NodeDetailsProps> = ({ node, dataPlacement }) => (
   <Container>
     <Text>{node.type}</Text>
     <Text>{node.id}</Text>
     <Text>{node.description}</Text>
+    <Arrow placement={dataPlacement} />
   </Container>
 );
 
