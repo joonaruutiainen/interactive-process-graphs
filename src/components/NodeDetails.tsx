@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ts-react-feather-icons';
+import { Placement } from 'tippy.js';
 import { Node } from '../types/Node';
+import Arrow from './Arrow';
 
 const Container = styled.div`
   border: solid;
@@ -41,9 +43,10 @@ const Button = styled.div`
 
 interface NodeDetailsProps {
   node: Node;
+  dataPlacement: Placement;
 }
 
-const NodeDetails: React.FC<NodeDetailsProps> = ({ node }) => (
+const NodeDetails: React.FC<NodeDetailsProps> = ({ node, dataPlacement }) => (
   <Container>
     <ButtonContainer>
       <Button>
@@ -53,6 +56,7 @@ const NodeDetails: React.FC<NodeDetailsProps> = ({ node }) => (
     <TypeText>{node.type}</TypeText>
     <Text> id {node.id}</Text>
     <Text> description {node.description}</Text>
+    <Arrow placement={dataPlacement} />
   </Container>
 );
 

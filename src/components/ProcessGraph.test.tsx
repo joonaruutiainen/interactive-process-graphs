@@ -1,11 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { ResizeObserver } from '@juggle/resize-observer';
+import { render, cleanup } from '@testing-library/react';
 import ProcessGraph from './ProcessGraph';
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
 
-window.ResizeObserver = ResizeObserver;
 Element.prototype.scrollTo = jest.fn();
 
 const testNodes: Node[] = [
@@ -26,12 +24,12 @@ const testEdges: Edge[] = [
   },
 ];
 
+afterEach(cleanup);
+
 describe('ProcessGraph component', () => {
   describe('with two nodes', () => {
     it('renders without crashing', () => {
-      const div = document.createElement('div');
-      ReactDOM.render(<ProcessGraph nodes={testNodes} edges={testEdges} />, div);
-      ReactDOM.unmountComponentAtNode(div);
+      render(<ProcessGraph nodes={testNodes} edges={testEdges} />);
     });
   });
 });
