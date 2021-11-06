@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
+import ToggleButton from 'react-toggle-button';
 import { Canvas, EdgeData, NodeData, Node as ReaflowNode } from 'reaflow';
 import styled from 'styled-components';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
@@ -41,6 +42,13 @@ const ZoomButton = styled.button`
   }
 `;
 
+const SwitchButton = styled.div`
+  position: absolute;
+  top: 0px;
+  margin-top: 10px;
+  margin: 7px;
+`;
+
 interface ProcessGraphProps {
   nodes: Node[];
   edges: Edge[];
@@ -50,6 +58,7 @@ interface ProcessGraphProps {
 const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButtons = false }) => {
   const [selectedNode, setSelectedNode] = useState<Node | undefined>();
   const [popupTarget, setPopupTarget] = useState<Element | undefined>();
+  const [selectionMode, setSelectionMode] = useState(false);
 
   const { width, height } = useWindowDimensions();
 
@@ -81,17 +90,25 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
 
   const onNodeClick = useCallback(
     (event: React.MouseEvent<SVGGElement, MouseEvent>, node: NodeData): void => {
-      const id = parseInt(node.id, 10);
-      if (id === selectedNode?.id) {
-        setSelectedNode(undefined);
-        setPopupTarget(undefined);
-      } else {
-        setSelectedNode(nodes.find(n => n.id === id));
-        setPopupTarget(event.target as Element);
+      if (!selectionMode) {
+        const id = parseInt(node.id, 10);
+        if (id === selectedNode?.id) {
+          setSelectedNode(undefined);
+          setPopupTarget(undefined);
+        } else {
+          setSelectedNode(nodes.find(n => n.id === id));
+          setPopupTarget(event.target as Element);
+        }
       }
     },
-    [selectedNode, popupTarget]
+    [selectedNode, popupTarget, selectionMode]
   );
+
+  const modeSwitch = () => {
+    setSelectionMode(!selectionMode);
+    setSelectedNode(undefined);
+    setPopupTarget(undefined);
+  };
 
   return (
     <Container>
@@ -124,6 +141,10 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
                 visible={selectedNode !== undefined}
               />
             </TransformComponent>
+            <SwitchButton>
+              Selection mode
+              <ToggleButton value={selectionMode} onToggle={modeSwitch} />
+            </SwitchButton>
             {!hideZoomButtons && (
               <ButtonGroup>
                 <ZoomButton onClick={() => zoomIn()}>
