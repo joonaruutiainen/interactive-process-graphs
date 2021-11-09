@@ -65,32 +65,25 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
   const canvasRef = useRef<CanvasRef | null>(null);
   const [selectedNode, setSelectedNode] = useState<Node | undefined>();
   const [popupTargetNode, setPopupTargetNode] = useState<Element | undefined>();
-
   const [selectedEdge, setSelectedEdge] = useState<EdgeData | undefined>();
-  const [popupTargetEdge, setPopupTargetEdge] = useState<Element | undefined>();
+  let edgeHoverTimeout: ReturnType<typeof setTimeout>;
 
   const { width, height } = useWindowDimensions();
 
   const nodeData: NodeData[] = useMemo(() => nodes.map(nodeToNodeData), [nodes]);
   const edgeData: EdgeData[] = useMemo(() => edges.map(edgeToEdgeData), [edges]);
 
-  const closeEdgePopup = () => {
-    setSelectedEdge(undefined);
-    setPopupTargetEdge(undefined);
-  };
-
   const closeNodePopup = () => {
     setSelectedNode(undefined);
     setPopupTargetNode(undefined);
   };
 
-  const closePopups = () => {
-    closeNodePopup();
-    closeEdgePopup();
+  const getEdgeTooltipText = (from: string | undefined, to: string | undefined): string => {
+    if (from === undefined || to === undefined) return '';
+    const fromNode = nodes.find(n => n.id.toString() === from);
+    const toNode = nodes.find(n => n.id.toString() === to);
+    return `From ${fromNode?.type} ${fromNode?.id} to ${toNode?.type} ${toNode?.id}`;
   };
-
-  const getEdgeTooltipText = (from: string | undefined, to: string | undefined): string =>
-    `From ${nodes.find(n => n.id.toString() === from)?.type} to ${nodes.find(n => n.id.toString() === to)?.type}`;
 
   const onNodeClick = useCallback(
     (event: React.MouseEvent<SVGGElement, MouseEvent>, node: NodeData): void => {
@@ -103,19 +96,6 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
       }
     },
     [selectedNode, popupTargetNode]
-  );
-
-  const onEdgeClick = useCallback(
-    (event: React.MouseEvent<SVGGElement, MouseEvent>, edge: EdgeData): void => {
-      const selectedId = `${selectedEdge?.from}-${selectedEdge?.to}`;
-      if (edge.id === selectedId) {
-        closeEdgePopup();
-      } else {
-        setSelectedEdge(edge);
-        setPopupTargetEdge(event.target as Element);
-      }
-    },
-    [selectedEdge, popupTargetEdge]
   );
 
   return (
@@ -143,12 +123,22 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
                   'org.eclipse.elk.layered.crossingMinimization.strategy': 'LAYER_SWEEP',
                 }}
                 node={<ReaflowNode onClick={onNodeClick} />}
-                edge={<ReaflowEdge onClick={onEdgeClick} onLeave={closeEdgePopup} />}
+                edge={
+                  <ReaflowEdge
+                    onEnter={(_, edge) => {
+                      edgeHoverTimeout = setTimeout(() => setSelectedEdge(edge), 1000);
+                    }}
+                    onLeave={() => {
+                      clearTimeout(edgeHoverTimeout);
+                      setSelectedEdge(undefined);
+                    }}
+                  />
+                }
                 onLayoutChange={() => {
-                  closePopups();
+                  closeNodePopup();
                   canvasRef.current?.fitCanvas?.();
                 }}
-                onCanvasClick={closePopups}
+                onCanvasClick={closeNodePopup}
               />
               <Tippy
                 render={attrs =>
@@ -172,7 +162,6 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
               />
               <Tippy
                 content={getEdgeTooltipText(selectedEdge?.from, selectedEdge?.to)}
-                reference={popupTargetEdge}
                 visible={selectedEdge !== undefined}
                 arrow={false}
                 followCursor
