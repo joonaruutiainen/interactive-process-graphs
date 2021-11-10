@@ -25,6 +25,7 @@ const defaultParser: IParser<DefaultData> = data => {
     nodes.push({
       id: node.id,
       type: node.type,
+      description: node.description,
     });
     node.nextNodes.forEach((next: number) => {
       edges.push({
