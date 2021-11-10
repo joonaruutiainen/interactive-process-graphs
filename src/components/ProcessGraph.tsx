@@ -124,7 +124,9 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
                 node={
                   <ReaflowNode
                     style={{ stroke: 'black', fill: 'lightblue', strokeWidth: 1, rx: 15, ry: 15 }}
-                    label={<Label style={{ 'font-family': 'Verdana', 'text-transform': 'uppercase', fill: 'black' }} />}
+                    label={
+                      <Label style={{ 'font-family': 'Helvetica', 'text-transform': 'uppercase', fill: 'black' }} />
+                    }
                     onClick={onNodeClick}
                     icon={<ReaflowIcon />}
                   />
