@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
+const SPACING = '-6px';
+const SIZE = '12px';
+
 const BaseArrow = styled.div`
   position: absolute;
   width: 0;
@@ -9,31 +12,31 @@ const BaseArrow = styled.div`
 `;
 
 const ArrowDown = styled(BaseArrow)`
-  bottom: -8px;
-  border-left: 12px solid transparent;
-  border-right: 12px solid transparent;
-  border-top: 12px solid black;
+  bottom: ${SPACING};
+  border-left: ${SIZE} solid transparent;
+  border-right: ${SIZE} solid transparent;
+  border-top: ${SIZE} solid black;
 `;
 
 const ArrowUp = styled(BaseArrow)`
-  top: -8px;
-  border-left: 12px solid transparent;
-  border-right: 12px solid transparent;
-  border-bottom: 12px solid black;
+  top: ${SPACING};
+  border-left: ${SIZE} solid transparent;
+  border-right: ${SIZE} solid transparent;
+  border-bottom: ${SIZE} solid black;
 `;
 
 const ArrowLeft = styled(BaseArrow)`
-  left: -8px;
-  border-top: 12px solid transparent;
-  border-bottom: 12px solid transparent;
-  border-right: 12px solid black;
+  left: ${SPACING};
+  border-top: ${SIZE} solid transparent;
+  border-bottom: ${SIZE} solid transparent;
+  border-right: ${SIZE} solid black;
 `;
 
 const ArrowRight = styled(BaseArrow)`
-  right: -8px;
-  border-top: 12px solid transparent;
-  border-bottom: 12px solid transparent;
-  border-left: 12px solid black;
+  right: ${SPACING};
+  border-top: ${SIZE} solid transparent;
+  border-bottom: ${SIZE} solid transparent;
+  border-left: ${SIZE} solid black;
 `;
 
 interface ArrowMap {

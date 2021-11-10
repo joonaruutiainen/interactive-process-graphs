@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react';
-import { Canvas, EdgeData, NodeData, Node as ReaflowNode, CanvasRef } from 'reaflow';
+import { Canvas, EdgeData, NodeData, Node as ReaflowNode, CanvasRef, Icon as ReaflowIcon, Label } from 'reaflow';
 import styled from 'styled-components';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { Icon } from 'ts-react-feather-icons';
@@ -44,6 +44,12 @@ const ZoomButton = styled.button`
 const nodeToNodeData = (node: Node): NodeData => ({
   id: node.id.toString(),
   text: node.type,
+  width: node.type.length * 10 + 65 >= 350 ? 350 : node.type.length * 10 + 65,
+  icon: {
+    url: 'https://icons.iconarchive.com/icons/google/noto-emoji-animals-nature/64/22215-dog-icon.png',
+    height: 30,
+    width: 30,
+  },
 });
 
 const edgeToEdgeData = (edge: Edge): EdgeData => ({
@@ -114,10 +120,16 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
                   'org.eclipse.elk.layered.nodePlacement.favorStraightEdges': 'true',
                   'org.eclipse.elk.layered.crossingMinimization.strategy': 'LAYER_SWEEP',
                 }}
-                node={<ReaflowNode onClick={onNodeClick} />}
+                node={
+                  <ReaflowNode
+                    style={{ stroke: 'black', fill: 'lightblue', strokeWidth: 1, rx: 15, ry: 15 }}
+                    label={<Label style={{ 'font-family': 'Verdana', 'text-transform': 'uppercase', fill: 'black' }} />}
+                    onClick={onNodeClick}
+                    icon={<ReaflowIcon />}
+                  />
+                }
                 onLayoutChange={() => canvasRef.current?.fitCanvas?.()}
                 onCanvasClick={closePopup}
-
               />
               <Tippy
                 render={attrs =>
