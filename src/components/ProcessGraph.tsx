@@ -136,6 +136,7 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
                 }
                 onLayoutChange={() => {
                   closeNodePopup();
+                  resetTransform();
                   canvasRef.current?.fitCanvas?.();
                 }}
                 onCanvasClick={closeNodePopup}
