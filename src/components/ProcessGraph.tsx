@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import ToggleButton from 'react-toggle-button';
-import { Canvas, EdgeData, NodeData, Node as ReaflowNode } from 'reaflow';
+import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react';
+import { Canvas, EdgeData, NodeData, Node as ReaflowNode, CanvasRef } from 'reaflow';
 import styled from 'styled-components';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { Icon } from 'ts-react-feather-icons';
@@ -48,6 +48,16 @@ const SwitchButton = styled.div`
   margin-top: 10px;
   margin: 7px;
 `;
+const nodeToNodeData = (node: Node): NodeData => ({
+  id: node.id.toString(),
+  text: node.type,
+});
+
+const edgeToEdgeData = (edge: Edge): EdgeData => ({
+  id: `${edge.from}-${edge.to}`,
+  from: edge.from.toString(),
+  to: edge.to.toString(),
+});
 
 interface ProcessGraphProps {
   nodes: Node[];
@@ -56,49 +66,36 @@ interface ProcessGraphProps {
 }
 
 const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButtons = false }) => {
+  const canvasRef = useRef<CanvasRef | null>(null);
   const [selectedNode, setSelectedNode] = useState<Node | undefined>();
   const [popupTarget, setPopupTarget] = useState<Element | undefined>();
   const [selectionMode, setSelectionMode] = useState(false);
 
   const { width, height } = useWindowDimensions();
 
-  useEffect(() => {
-    setPopupTarget(undefined);
+  const closePopup = () => {
     setSelectedNode(undefined);
+    setPopupTarget(undefined);
+  };
+
+  useEffect(() => {
+    closePopup();
   }, [nodes, edges]);
 
-  const nodeData: NodeData[] = useMemo(
-    () =>
-      nodes.map(node => ({
-        ...node,
-        id: node.id.toString(),
-        text: node.type,
-      })),
-    [nodes]
-  );
-
-  const edgeData: EdgeData[] = useMemo(
-    () =>
-      edges.map(edge => ({
-        ...edge,
-        id: `${edge.from}-${edge.to}`,
-        from: edge.from.toString(),
-        to: edge.to.toString(),
-      })),
-    [edges]
-  );
+  const nodeData: NodeData[] = useMemo(() => nodes.map(nodeToNodeData), [nodes]);
+  const edgeData: EdgeData[] = useMemo(() => edges.map(edgeToEdgeData), [edges]);
 
   const onNodeClick = useCallback(
     (event: React.MouseEvent<SVGGElement, MouseEvent>, node: NodeData): void => {
-      if (!selectionMode) {
-        const id = parseInt(node.id, 10);
-        if (id === selectedNode?.id) {
-          setSelectedNode(undefined);
-          setPopupTarget(undefined);
-        } else {
-          setSelectedNode(nodes.find(n => n.id === id));
-          setPopupTarget(event.target as Element);
-        }
+      if (selectionMode) {
+        return;
+      }
+      const id = parseInt(node.id, 10);
+      if (id === selectedNode?.id) {
+        closePopup();
+      } else {
+        setSelectedNode(nodes.find(n => n.id === id));
+        setPopupTarget(event.target as Element);
       }
     },
     [selectedNode, popupTarget, selectionMode]
@@ -106,8 +103,7 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
 
   const modeSwitch = () => {
     setSelectionMode(!selectionMode);
-    setSelectedNode(undefined);
-    setPopupTarget(undefined);
+    closePopup();
   };
 
   return (
@@ -117,6 +113,7 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
           <>
             <TransformComponent>
               <Canvas
+                ref={canvasRef}
                 readonly
                 zoomable={false}
                 maxWidth={width * 0.9}
@@ -134,11 +131,28 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
                   'org.eclipse.elk.layered.crossingMinimization.strategy': 'LAYER_SWEEP',
                 }}
                 node={<ReaflowNode onClick={onNodeClick} />}
+                onLayoutChange={() => canvasRef.current?.fitCanvas?.()}
+                onCanvasClick={closePopup}
               />
               <Tippy
-                render={() => selectedNode && <NodeDetails node={selectedNode} />}
+                render={attrs =>
+                  selectedNode && <NodeDetails node={selectedNode} dataPlacement={attrs['data-placement']} />
+                }
                 reference={popupTarget}
                 visible={selectedNode !== undefined}
+                interactive
+                appendTo={document.body}
+                popperOptions={{
+                  strategy: 'fixed',
+                  modifiers: [
+                    {
+                      name: 'flip',
+                      options: {
+                        fallbackPlacements: ['bottom', 'right', 'left'],
+                      },
+                    },
+                  ],
+                }}
               />
             </TransformComponent>
             <SwitchButton>
