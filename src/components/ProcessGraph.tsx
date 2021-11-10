@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { Icon } from 'ts-react-feather-icons';
 import Tippy from '@tippyjs/react';
+import shiba from '../icons/shiba.svg';
 
 import NodeDetails from './NodeDetails';
 import { Edge } from '../types/Edge';
@@ -46,7 +47,7 @@ const nodeToNodeData = (node: Node): NodeData => ({
   text: node.type,
   width: node.type.length * 10 + 65 >= 350 ? 350 : node.type.length * 10 + 65,
   icon: {
-    url: 'https://icons.iconarchive.com/icons/google/noto-emoji-animals-nature/64/22215-dog-icon.png',
+    url: shiba,
     height: 30,
     width: 30,
   },
