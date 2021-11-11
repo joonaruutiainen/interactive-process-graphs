@@ -1,7 +1,9 @@
-import React, { useCallback, useState, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react';
 import { Canvas, EdgeData, NodeData, Node as ReaflowNode, Edge as ReaflowEdge, CanvasRef } from 'reaflow';
+
 import styled from 'styled-components';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
+import ToggleButton from 'react-toggle-button';
 import { Icon } from 'ts-react-feather-icons';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
@@ -44,6 +46,12 @@ const ZoomButton = styled.button`
   }
 `;
 
+const SwitchButton = styled.div`
+  position: absolute;
+  top: 0px;
+  margin-top: 10px;
+  margin: 7px;
+`;
 const nodeToNodeData = (node: Node): NodeData => ({
   id: node.id.toString(),
   text: node.type,
@@ -63,6 +71,8 @@ interface ProcessGraphProps {
 
 const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButtons = false }) => {
   const canvasRef = useRef<CanvasRef | null>(null);
+  const [selectionMode, setSelectionMode] = useState(false);
+  
   const [selectedNode, setSelectedNode] = useState<Node | undefined>();
   const [popupTargetNode, setPopupTargetNode] = useState<Element | undefined>();
   const [selectedEdge, setSelectedEdge] = useState<EdgeData | undefined>();
@@ -87,6 +97,9 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
 
   const onNodeClick = useCallback(
     (event: React.MouseEvent<SVGGElement, MouseEvent>, node: NodeData): void => {
+      if (selectionMode) {
+        return;
+      }
       const id = parseInt(node.id, 10);
       if (id === selectedNode?.id) {
         closeNodePopup();
@@ -95,8 +108,13 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
         setPopupTargetNode(event.target as Element);
       }
     },
-    [selectedNode, popupTargetNode]
+    [selectedNode, popupTargetNode, selectionMode]
   );
+
+  const modeSwitch = () => {
+    setSelectionMode(!selectionMode);
+    closePopup();
+  };
 
   return (
     <Container>
@@ -169,6 +187,10 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
                 plugins={[followCursor]}
               />
             </TransformComponent>
+            <SwitchButton>
+              Selection mode
+              <ToggleButton value={selectionMode} onToggle={modeSwitch} />
+            </SwitchButton>
             {!hideZoomButtons && (
               <ButtonGroup>
                 <ZoomButton onClick={() => zoomIn()}>
