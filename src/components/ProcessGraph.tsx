@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react';
+import React, { useCallback, useState, useMemo, useRef } from 'react';
 import { Canvas, EdgeData, NodeData, Node as ReaflowNode, Edge as ReaflowEdge, CanvasRef } from 'reaflow';
 
 import styled from 'styled-components';
@@ -72,7 +72,7 @@ interface ProcessGraphProps {
 const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButtons = false }) => {
   const canvasRef = useRef<CanvasRef | null>(null);
   const [selectionMode, setSelectionMode] = useState(false);
-  
+
   const [selectedNode, setSelectedNode] = useState<Node | undefined>();
   const [popupTargetNode, setPopupTargetNode] = useState<Element | undefined>();
   const [selectedEdge, setSelectedEdge] = useState<EdgeData | undefined>();
@@ -113,7 +113,7 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
 
   const modeSwitch = () => {
     setSelectionMode(!selectionMode);
-    closePopup();
+    closeNodePopup();
   };
 
   return (
