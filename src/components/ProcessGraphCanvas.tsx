@@ -137,9 +137,8 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoo
                 node={
                   <ReaflowNode
                     style={{
-                      stroke: theme.palette.common.black,
                       fill: theme.palette.primary.main,
-                      strokeWidth: 1,
+                      strokeWidth: 2,
                       rx: theme.borderRadius,
                       ry: theme.borderRadius,
                     }}
