@@ -5,7 +5,7 @@ import ProcessGraphCanvas, { ProcessGraphProps } from './ProcessGraphCanvas';
 
 const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButtons = false }) => (
   <ThemeProvider theme={defaultTheme}>
-    <ProcessGraphCanvas nodes={nodes} edges={edges} hideZoomButtons />
+    <ProcessGraphCanvas nodes={nodes} edges={edges} hideZoomButtons={hideZoomButtons} />
   </ThemeProvider>
 );
 
