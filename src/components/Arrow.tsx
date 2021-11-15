@@ -15,28 +15,28 @@ const ArrowDown = styled(BaseArrow)`
   bottom: ${SPACING};
   border-left: ${SIZE} solid transparent;
   border-right: ${SIZE} solid transparent;
-  border-top: ${SIZE} solid black;
+  border-top: ${SIZE} solid ${props => props.theme.palette.secondary.main};
 `;
 
 const ArrowUp = styled(BaseArrow)`
   top: ${SPACING};
   border-left: ${SIZE} solid transparent;
   border-right: ${SIZE} solid transparent;
-  border-bottom: ${SIZE} solid black;
+  border-bottom: ${SIZE} solid ${props => props.theme.palette.secondary.main};
 `;
 
 const ArrowLeft = styled(BaseArrow)`
   left: ${SPACING};
   border-top: ${SIZE} solid transparent;
   border-bottom: ${SIZE} solid transparent;
-  border-right: ${SIZE} solid black;
+  border-right: ${SIZE} solid ${props => props.theme.palette.primary.main};
 `;
 
 const ArrowRight = styled(BaseArrow)`
   right: ${SPACING};
   border-top: ${SIZE} solid transparent;
   border-bottom: ${SIZE} solid transparent;
-  border-left: ${SIZE} solid black;
+  border-left: ${SIZE} solid ${props => props.theme.palette.secondary.main};
 `;
 
 interface ArrowMap {

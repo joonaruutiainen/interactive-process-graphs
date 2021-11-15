@@ -7,7 +7,8 @@ interface IPalette {
 
 declare module 'styled-components' {
   export interface DefaultTheme {
-    borderRadius: string;
+    borderRadius: number; // border radius in pixels
+    fontFamily: string;
     palette: {
       common: {
         black: string;
@@ -16,7 +17,6 @@ declare module 'styled-components' {
       primary: IPalette;
       secondary: IPalette;
       background: IPalette;
-   };
-
+    };
   }
 }

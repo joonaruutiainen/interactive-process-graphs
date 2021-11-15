@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, cleanup } from '@testing-library/react';
-import ProcessGraph from './ProcessGraph';
+import ProcessGraphCanvas from './ProcessGraphCanvas';
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
 
@@ -29,7 +29,7 @@ afterEach(cleanup);
 describe('ProcessGraph component', () => {
   describe('with two nodes', () => {
     it('renders without crashing', () => {
-      render(<ProcessGraph nodes={testNodes} edges={testEdges} />);
+      render(<ProcessGraphCanvas nodes={testNodes} edges={testEdges} />);
     });
   });
 });
