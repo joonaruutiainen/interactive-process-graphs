@@ -9,6 +9,7 @@ import Tippy from '@tippyjs/react';
 import NodeDetails from './NodeDetails';
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
+import InfoBox from './InfoBox';
 import useWindowDimensions from '../hooks/useWindowDimensions';
 
 const Container = styled.div`
@@ -42,12 +43,28 @@ const ZoomButton = styled.button`
   }
 `;
 
+const InfoButton = styled.button`
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 98%;
+  width: fit-content;
+  bottom: 0px;
+  margin-bottom: 10px;
+  padding: 5px 6px;
+  border: none;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
 const SwitchButton = styled.div`
   position: absolute;
   top: 0px;
   margin-top: 10px;
   margin: 7px;
 `;
+
 const nodeToNodeData = (node: Node): NodeData => ({
   id: node.id.toString(),
   text: node.type,
@@ -70,12 +87,14 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
   const [selectedNode, setSelectedNode] = useState<Node | undefined>();
   const [popupTarget, setPopupTarget] = useState<Element | undefined>();
   const [selectionMode, setSelectionMode] = useState(false);
+  const [infoVisible, setInfoVisible] = useState(false);
 
   const { width, height } = useWindowDimensions();
 
   const closePopup = () => {
     setSelectedNode(undefined);
     setPopupTarget(undefined);
+    setInfoVisible(false);
   };
 
   useEffect(() => {
@@ -87,6 +106,7 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
 
   const onNodeClick = useCallback(
     (event: React.MouseEvent<SVGGElement, MouseEvent>, node: NodeData): void => {
+      setInfoVisible(false);
       if (selectionMode) {
         return;
       }
@@ -104,6 +124,10 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
   const modeSwitch = () => {
     setSelectionMode(!selectionMode);
     closePopup();
+  };
+
+  const toggleInfoBox = () => {
+    setInfoVisible(!infoVisible);
   };
 
   return (
@@ -155,6 +179,17 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
                 }}
               />
             </TransformComponent>
+            <div>
+              <InfoButton onClick={toggleInfoBox}>
+                <Icon name='help-circle' size={26} />
+              </InfoButton>
+              {infoVisible && (
+                <InfoBox
+                  info='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+                  handleClose={toggleInfoBox}
+                />
+              )}
+            </div>
             <SwitchButton>
               Selection mode
               <ToggleButton value={selectionMode} onToggle={modeSwitch} />
