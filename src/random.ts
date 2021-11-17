@@ -36,7 +36,7 @@ export class RandomGraphGenerator {
     const nodes: Node[] = [];
     const edges: Edge[] = [];
 
-    // Generate vertical "rows" of nodes equal to nInputNodes
+    // Generate horizontal "rows" of nodes equal to nInputNodes
     let rows: NodeRow[] = [];
     for (let i = 0; i < this.nInputNodes; i++) {
       const node = { id: i, type: 'INPUT' };
