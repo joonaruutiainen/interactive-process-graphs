@@ -1,10 +1,12 @@
-import ToggleButton from 'react-toggle-button';
-import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react';
-import { Canvas, EdgeData, NodeData, Node as ReaflowNode, CanvasRef } from 'reaflow';
+import React, { useCallback, useState, useMemo, useRef } from 'react';
+import { Canvas, EdgeData, NodeData, Node as ReaflowNode, Edge as ReaflowEdge, CanvasRef } from 'reaflow';
 import styled, { ThemeProvider } from 'styled-components';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
+import ToggleButton from 'react-toggle-button';
 import { Icon } from 'ts-react-feather-icons';
 import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
+import { followCursor } from 'tippy.js';
 
 import NodeDetails from './NodeDetails';
 import { Edge } from '../types/Edge';
@@ -36,6 +38,7 @@ const ZoomButton = styled.button`
   display: flex;
   align-items: center;
   margin: 7px auto 7px 15px;
+
   width: fit-content;
   text-align: center;
   padding: 5px 6px;
@@ -51,6 +54,7 @@ const SwitchButton = styled.div`
   margin-top: 10px;
   margin: 7px;
 `;
+
 const nodeToNodeData = (node: Node): NodeData => ({
   id: node.id.toString(),
   text: node.type,
@@ -70,23 +74,29 @@ interface ProcessGraphProps {
 
 const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButtons = false }) => {
   const canvasRef = useRef<CanvasRef | null>(null);
-  const [selectedNode, setSelectedNode] = useState<Node | undefined>();
-  const [popupTarget, setPopupTarget] = useState<Element | undefined>();
   const [selectionMode, setSelectionMode] = useState(false);
+
+  const [selectedNode, setSelectedNode] = useState<Node | undefined>();
+  const [popupTargetNode, setPopupTargetNode] = useState<Element | undefined>();
+  const [selectedEdge, setSelectedEdge] = useState<EdgeData | undefined>();
+  let edgeHoverTimeout: ReturnType<typeof setTimeout>;
 
   const { width, height } = useWindowDimensions();
 
-  const closePopup = () => {
-    setSelectedNode(undefined);
-    setPopupTarget(undefined);
-  };
-
-  useEffect(() => {
-    closePopup();
-  }, [nodes, edges]);
-
   const nodeData: NodeData[] = useMemo(() => nodes.map(nodeToNodeData), [nodes]);
   const edgeData: EdgeData[] = useMemo(() => edges.map(edgeToEdgeData), [edges]);
+
+  const closeNodePopup = () => {
+    setSelectedNode(undefined);
+    setPopupTargetNode(undefined);
+  };
+
+  const getEdgeTooltipText = (from: string | undefined, to: string | undefined): string => {
+    if (from === undefined || to === undefined) return '';
+    const fromNode = nodes.find(n => n.id.toString() === from);
+    const toNode = nodes.find(n => n.id.toString() === to);
+    return `From ${fromNode?.type} ${fromNode?.id} to ${toNode?.type} ${toNode?.id}`;
+  };
 
   const onNodeClick = useCallback(
     (event: React.MouseEvent<SVGGElement, MouseEvent>, node: NodeData): void => {
@@ -95,22 +105,22 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
       }
       const id = parseInt(node.id, 10);
       if (id === selectedNode?.id) {
-        closePopup();
+        closeNodePopup();
       } else {
         setSelectedNode(nodes.find(n => n.id === id));
-        setPopupTarget(event.target as Element);
+        setPopupTargetNode(event.target as Element);
       }
     },
-    [selectedNode, popupTarget, selectionMode]
+    [selectedNode, popupTargetNode, selectionMode]
   );
 
   const modeSwitch = () => {
     setSelectionMode(!selectionMode);
-    closePopup();
+    closeNodePopup();
   };
 
   return (
-  <ThemeProvider theme={defaultTheme}>
+    <ThemeProvider theme={defaultTheme}>
       <Container>
         <TransformWrapper wheel={{ step: 0.1 }} minScale={0.8} maxScale={10} doubleClick={{ disabled: true }}>
           {({ zoomIn, zoomOut, resetTransform }) => (
@@ -135,14 +145,29 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
                     'org.eclipse.elk.layered.crossingMinimization.strategy': 'LAYER_SWEEP',
                   }}
                   node={<ReaflowNode onClick={onNodeClick} />}
-                  onLayoutChange={() => canvasRef.current?.fitCanvas?.()}
-                  onCanvasClick={closePopup}
+                  edge={
+                    <ReaflowEdge
+                      onEnter={(_, edge) => {
+                        edgeHoverTimeout = setTimeout(() => setSelectedEdge(edge), 1000);
+                      }}
+                      onLeave={() => {
+                        clearTimeout(edgeHoverTimeout);
+                        setSelectedEdge(undefined);
+                      }}
+                    />
+                  }
+                  onLayoutChange={() => {
+                    closeNodePopup();
+                    resetTransform();
+                    canvasRef.current?.fitCanvas?.();
+                  }}
+                  onCanvasClick={closeNodePopup}
                 />
                 <Tippy
                   render={attrs =>
                     selectedNode && <NodeDetails node={selectedNode} dataPlacement={attrs['data-placement']} />
                   }
-                  reference={popupTarget}
+                  reference={popupTargetNode}
                   visible={selectedNode !== undefined}
                   interactive
                   appendTo={document.body}
@@ -157,6 +182,13 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
                       },
                     ],
                   }}
+                />
+                <Tippy
+                  content={getEdgeTooltipText(selectedEdge?.from, selectedEdge?.to)}
+                  visible={selectedEdge !== undefined}
+                  arrow={false}
+                  followCursor
+                  plugins={[followCursor]}
                 />
               </TransformComponent>
               <SwitchButton>
