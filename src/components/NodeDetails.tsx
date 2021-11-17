@@ -8,12 +8,12 @@ import Arrow from './Arrow';
 const Container = styled.div`
   border: solid;
   border-color: grey;
-  border-radius: 15px;
-  padding: 10px;
-  margin: 10px;
-  width: 150px;
+  border-radius: ${props => props.theme.borderRadius};
+  padding: 15px;
+  margin: 5px;
+  width: 250px;
   flex-wrap: wrap;
-  background-color: white;
+  background-color: ${props => props.theme.palette.common.white};
 `;
 
 const TypeText = styled.h3`
@@ -22,7 +22,7 @@ const TypeText = styled.h3`
 `;
 
 const Text = styled.div`
-  color: black;
+  color: ${props => props.theme.palette.common.black};
 `;
 
 const ButtonContainer = styled.div`
