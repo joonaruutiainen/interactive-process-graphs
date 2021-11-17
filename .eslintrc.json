@@ -26,6 +26,7 @@
     ],
     "rules": {
         "no-unused-vars": "warn",
+        "no-plusplus": 0,
         "no-use-before-define": "off",
         "@typescript-eslint/no-use-before-define": ["error"],
         "react/require-default-props": 0,
