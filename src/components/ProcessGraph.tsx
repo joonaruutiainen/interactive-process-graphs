@@ -94,6 +94,9 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
   const closePopup = () => {
     setSelectedNode(undefined);
     setPopupTarget(undefined);
+  };
+
+  const closeInfoPopup = () => {
     setInfoVisible(false);
   };
 
@@ -106,7 +109,6 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
 
   const onNodeClick = useCallback(
     (event: React.MouseEvent<SVGGElement, MouseEvent>, node: NodeData): void => {
-      setInfoVisible(false);
       if (selectionMode) {
         return;
       }
@@ -155,8 +157,14 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
                   'org.eclipse.elk.layered.crossingMinimization.strategy': 'LAYER_SWEEP',
                 }}
                 node={<ReaflowNode onClick={onNodeClick} />}
-                onLayoutChange={() => canvasRef.current?.fitCanvas?.()}
-                onCanvasClick={closePopup}
+                onLayoutChange={() => {
+                  canvasRef.current?.fitCanvas?.();
+                  closeInfoPopup();
+                }}
+                onCanvasClick={() => {
+                  closePopup();
+                  closeInfoPopup();
+                }}
               />
               <Tippy
                 render={attrs =>
@@ -183,12 +191,7 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
               <InfoButton onClick={toggleInfoBox}>
                 <Icon name='help-circle' size={26} />
               </InfoButton>
-              {infoVisible && (
-                <InfoBox
-                  info='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-                  handleClose={toggleInfoBox}
-                />
-              )}
+              {infoVisible && <InfoBox handleClose={toggleInfoBox} />}
             </div>
             <SwitchButton>
               Selection mode
