@@ -2,6 +2,7 @@ import { Node } from './types/Node';
 import { Edge } from './types/Edge';
 
 export interface IParser<T> {
+  // eslint-disable-next-line no-unused-vars
   (data: T): { nodes: Node[]; edges: Edge[] };
 }
 
@@ -25,6 +26,7 @@ const defaultParser: IParser<DefaultData> = data => {
     nodes.push({
       id: node.id,
       type: node.type,
+      description: node.description,
     });
     node.nextNodes.forEach((next: number) => {
       edges.push({

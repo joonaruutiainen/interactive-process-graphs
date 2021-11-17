@@ -12,6 +12,7 @@ const Container = styled.div`
   padding: 10px;
   margin: 10px;
   width: 150px;
+
   flex-wrap: wrap;
   background-color: ${props => props.theme.palette.common.white};
 `;
