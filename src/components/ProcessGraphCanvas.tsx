@@ -64,6 +64,10 @@ const SwitchButton = styled.div`
   margin: 7px;
 `;
 
+const StyledTippy = styled(Tippy)`
+  font-family: ${props => props.theme.fontFamily};
+`;
+
 const nodeToNodeData = (node: Node): NodeData => ({
   id: node.id.toString(),
   text: node.type,
@@ -227,7 +231,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoo
                   ],
                 }}
               />
-              <Tippy
+              <StyledTippy
                 content={getEdgeTooltipText(selectedEdge?.from, selectedEdge?.to)}
                 visible={selectedEdge !== undefined}
                 arrow={false}
