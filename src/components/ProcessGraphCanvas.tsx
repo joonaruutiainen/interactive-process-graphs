@@ -64,16 +64,22 @@ const SwitchButton = styled.div`
   margin: 7px;
 `;
 
-const nodeToNodeData = (node: Node): NodeData => ({
-  id: node.id.toString(),
-  text: node.type,
-  width: node.type.length * 10 + 65 >= 350 ? 350 : node.type.length * 10 + 65,
-  icon: {
-    url: icons[node.type] || node.id % 2 === 0 ? icons.shiba : icons.dog,
-    height: 30,
-    width: 30,
-  },
-});
+const nodeToNodeData = (node: Node, iconSize: number): NodeData => {
+  const nodeWidth = node.type.length * 10 + iconSize * 2.1 >= 350 ? 350 : node.type.length * 10 + iconSize * 2.1;
+  const nodeHeight = iconSize > 30 ? iconSize + 20 : 50;
+  return {
+    id: node.id.toString(),
+    text: node.type,
+    width: nodeWidth,
+    height: nodeHeight,
+    icon: {
+      url: icons[node.type] || node.id % 2 === 0 ? icons.shiba : icons.dog,
+      height: iconSize,
+      width: iconSize,
+    },
+    className: 'processGraphNode',
+  };
+};
 
 const edgeToEdgeData = (edge: Edge): EdgeData => ({
   id: `${edge.from}-${edge.to}`,
@@ -85,9 +91,10 @@ export interface ProcessGraphProps {
   nodes: Node[];
   edges: Edge[];
   hideZoomButtons?: boolean;
+  iconSize?: number; // default is 30, icon and label positions in a node are messed up if this is changed (fix pls)
 }
 
-const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButtons = false }) => {
+const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButtons = false, iconSize = 30 }) => {
   const canvasRef = useRef<CanvasRef | null>(null);
   const theme = useContext(ThemeContext);
 
@@ -105,7 +112,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoo
     setPopupTargetNode(undefined);
   };
 
-  const nodeData: NodeData[] = useMemo(() => nodes.map(nodeToNodeData), [nodes]);
+  const nodeData: NodeData[] = useMemo(() => nodes.map(node => nodeToNodeData(node, iconSize)), [nodes]);
   const edgeData: EdgeData[] = useMemo(() => edges.map(edgeToEdgeData), [edges]);
 
   const getEdgeTooltipText = (from: string | undefined, to: string | undefined): string => {
@@ -147,6 +154,8 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoo
                 zoomable={false}
                 maxWidth={width * 0.9}
                 maxHeight={height * 0.8}
+                minZoom={-1000}
+                maxZoom={1000}
                 nodes={nodeData}
                 edges={edgeData}
                 layoutOptions={{
@@ -177,7 +186,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoo
                       />
                     }
                     onClick={onNodeClick}
-                    icon={<ReaflowIcon />}
+                    icon={<ReaflowIcon x={50} y={50} height={iconSize} width={iconSize} />}
                   />
                 }
                 arrow={
@@ -200,10 +209,20 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoo
                     }}
                   />
                 }
-                onLayoutChange={() => {
+                onLayoutChange={layout => {
                   closeNodePopup();
                   resetTransform();
-                  canvasRef.current?.fitCanvas?.();
+                  if (layout.height && layout.width) {
+                    // TODO: calculate the width of icons to be added to layout width
+                    // total width of icons = number of node columns * iconSize
+                    const layoutWidth: number = layout.width + 300; // replace 300 with total width of icons
+                    const layoutHeight: number = layout.height; // if iconSize > minimun node size (50), this has to be increased as well
+                    const widthZoom = width / layoutWidth;
+                    const heightZoom = height / layoutHeight;
+                    const scale = Math.min(heightZoom, widthZoom, 1);
+                    canvasRef?.current?.setZoom?.(scale - 1);
+                    canvasRef?.current?.centerCanvas?.();
+                  }
                 }}
                 onCanvasClick={closeNodePopup}
               />
