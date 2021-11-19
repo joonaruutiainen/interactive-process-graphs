@@ -9,6 +9,7 @@ import {
   Edge as ReaflowEdge,
   MarkerArrow,
   Label,
+  ElkRoot,
 } from 'reaflow';
 import styled, { ThemeContext } from 'styled-components';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
@@ -81,7 +82,6 @@ const nodeToNodeData = (node: Node, iconSize: number): NodeData => {
       height: iconSize,
       width: iconSize,
     },
-    className: 'processGraphNode',
   };
 };
 
@@ -144,6 +144,20 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoo
   const modeSwitch = () => {
     setSelectionMode(!selectionMode);
     closeNodePopup();
+  };
+
+  const fitGraph = (layout: ElkRoot) => {
+    if (layout.height && layout.width) {
+      // TODO: calculate the width of icons to be added to layout width
+      // total width of icons = number of node columns * iconSize
+      const layoutWidth: number = layout.width + 300; // replace 300 with total width of icons
+      const layoutHeight: number = layout.height; // if iconSize > minimun node size (50), this has to be increased as well
+      const widthZoom = width / layoutWidth;
+      const heightZoom = height / layoutHeight;
+      const scale = Math.min(heightZoom, widthZoom, 1);
+      canvasRef?.current?.setZoom?.(scale - 1);
+      canvasRef?.current?.centerCanvas?.();
+    }
   };
 
   return (
@@ -216,17 +230,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoo
                 onLayoutChange={layout => {
                   closeNodePopup();
                   resetTransform();
-                  if (layout.height && layout.width) {
-                    // TODO: calculate the width of icons to be added to layout width
-                    // total width of icons = number of node columns * iconSize
-                    const layoutWidth: number = layout.width + 300; // replace 300 with total width of icons
-                    const layoutHeight: number = layout.height; // if iconSize > minimun node size (50), this has to be increased as well
-                    const widthZoom = width / layoutWidth;
-                    const heightZoom = height / layoutHeight;
-                    const scale = Math.min(heightZoom, widthZoom, 1);
-                    canvasRef?.current?.setZoom?.(scale - 1);
-                    canvasRef?.current?.centerCanvas?.();
-                  }
+                  fitGraph(layout);
                 }}
                 onCanvasClick={closeNodePopup}
               />
