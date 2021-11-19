@@ -108,10 +108,6 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
     setPopupTargetNode(undefined);
   };
 
-  const closeInfoPopup = () => {
-    setInfoVisible(false);
-  };
-
   const getEdgeTooltipText = (from: string | undefined, to: string | undefined): string => {
     if (from === undefined || to === undefined) return '';
     const fromNode = nodes.find(n => n.id.toString() === from);
@@ -183,13 +179,12 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButto
                   }
                   onLayoutChange={() => {
                     closeNodePopup();
-                    closeInfoPopup();
                     resetTransform();
+                    setInfoVisible(false);
                     canvasRef.current?.fitCanvas?.();
                   }}
                   onCanvasClick={() => {
-                    closeNodePopup();
-                    closeInfoPopup();
+                    setInfoVisible(false);
                   }}
                 />
                 <Tippy
