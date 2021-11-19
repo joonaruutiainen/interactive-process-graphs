@@ -64,6 +64,10 @@ const SwitchButton = styled.div`
   margin: 7px;
 `;
 
+const StyledTippy = styled(Tippy)`
+  font-family: ${props => props.theme.fontFamily};
+`;
+
 const nodeToNodeData = (node: Node, iconSize: number): NodeData => {
   const nodeWidth = node.type.length * 10 + iconSize * 2.1 >= 350 ? 350 : node.type.length * 10 + iconSize * 2.1;
   const nodeHeight = iconSize > 30 ? iconSize + 20 : 50;
@@ -246,7 +250,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoo
                   ],
                 }}
               />
-              <Tippy
+              <StyledTippy
                 content={getEdgeTooltipText(selectedEdge?.from, selectedEdge?.to)}
                 visible={selectedEdge !== undefined}
                 arrow={false}
