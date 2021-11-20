@@ -1,5 +1,7 @@
 import React from 'react';
 import { render, cleanup } from '@testing-library/react';
+import { ThemeProvider } from 'styled-components';
+import defaultTheme from '../theme';
 import ProcessGraphCanvas from './ProcessGraphCanvas';
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
@@ -29,7 +31,11 @@ afterEach(cleanup);
 describe('ProcessGraph component', () => {
   describe('with two nodes', () => {
     it('renders without crashing', () => {
-      render(<ProcessGraphCanvas nodes={testNodes} edges={testEdges} />);
+      render(
+        <ThemeProvider theme={defaultTheme}>
+          <ProcessGraphCanvas nodes={testNodes} edges={testEdges} />
+        </ThemeProvider>
+      );
     });
   });
 });
