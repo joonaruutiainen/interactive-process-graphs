@@ -7,11 +7,11 @@ import Arrow from './Arrow';
 
 const Container = styled.div`
   border: solid;
-  border-color: grey;
-  border-radius: ${props => props.theme.borderRadius};
-  padding: 15px;
-  margin: 5px;
-  width: 250px;
+  border-color: ${props => props.theme.palette.secondary.main};
+  border-radius: ${props => props.theme.borderRadius}px;
+  padding: 10px;
+  margin: 10px;
+  width: 150px;
   flex-wrap: wrap;
   background-color: ${props => props.theme.palette.common.white};
 `;
@@ -19,10 +19,12 @@ const Container = styled.div`
 const TypeText = styled.h3`
   padding: 0;
   margin: 0 0 10px 0;
+  font-family: ${props => props.theme.fontFamily};
 `;
 
-const Text = styled.div`
+const Text = styled.p`
   color: ${props => props.theme.palette.common.black};
+  font-family: ${props => props.theme.fontFamily};
 `;
 
 const ButtonContainer = styled.div`

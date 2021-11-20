@@ -6,7 +6,7 @@ const exampleProcesses = [
     nodes: [
       {
         id: 1,
-        type: 'tank',
+        type: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
         nextNodes: [4],
         previousNodes: [],
         description: 'Ingredient A tank',
@@ -88,7 +88,7 @@ const exampleProcesses = [
       },
       {
         id: 5,
-        type: 'pipe',
+        type: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
         nextNodes: [6],
         previousNodes: [9],
         description: 'Feedback pipe',
@@ -205,7 +205,7 @@ const exampleProcesses = [
       },
       {
         id: 6,
-        type: 'pipe',
+        type: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
         nextNodes: [20],
         previousNodes: [5],
         description: 'Pipe from ingredient B tank to reactor',
