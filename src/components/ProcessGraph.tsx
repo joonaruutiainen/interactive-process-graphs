@@ -3,9 +3,23 @@ import { ThemeProvider } from 'styled-components';
 import defaultTheme from '../theme';
 import ProcessGraphCanvas, { ProcessGraphProps } from './ProcessGraphCanvas';
 
-const ProcessGraph: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButtons = false }) => (
+const ProcessGraph: React.FC<ProcessGraphProps> = ({
+  nodes,
+  edges,
+  selectableNodes = true,
+  onSelectNodes = undefined,
+  hideZoomButtons = false,
+  iconSize = 30,
+}) => (
   <ThemeProvider theme={defaultTheme}>
-    <ProcessGraphCanvas nodes={nodes} edges={edges} hideZoomButtons={hideZoomButtons} />
+    <ProcessGraphCanvas
+      nodes={nodes}
+      edges={edges}
+      selectableNodes={selectableNodes}
+      onSelectNodes={onSelectNodes}
+      hideZoomButtons={hideZoomButtons}
+      iconSize={iconSize}
+    />
   </ThemeProvider>
 );
 

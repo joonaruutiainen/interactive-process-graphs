@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 
 import { Graph } from './types/Graph';
@@ -85,7 +85,7 @@ const App: React.FC = () => {
   const otherMode = useMemo(() => (processMode === 'examples' ? 'random' : 'examples'), [processMode]);
 
   const [selectedProcess, setSelectedProcess] = useState(exampleProcesses[0]);
-  const [rgg, setRgg] = useState(new RandomGraphGenerator(10, 10));
+  const [rgg, setRgg] = useState(new RandomGraphGenerator(5, 5));
 
   const [selectedNodes, setSelectedNodes] = useState<string>('');
 
@@ -97,10 +97,13 @@ const App: React.FC = () => {
     }
   }, [processMode, selectedProcess, rgg]);
 
-  const onSelectNodes = (selection: string[]) => {
-    if (selection.length > 0) setSelectedNodes(JSON.stringify(selection, null, 2));
-    else setSelectedNodes('');
-  };
+  const onSelectNodes = useCallback(
+    (selection: number[]) => {
+      if (selection.length > 0) setSelectedNodes(JSON.stringify(selection, null, 2));
+      else setSelectedNodes('');
+    },
+    [selectedNodes]
+  );
 
   return (
     <AppContainer>
@@ -156,7 +159,7 @@ const App: React.FC = () => {
           selectedNodes !== '' ? selectedNodes : 'none'
         }`}</NodeSelectionContainer>
       </RowContainer>
-      <ProcessGraph nodes={graph.nodes} edges={graph.edges} />
+      <ProcessGraph nodes={graph.nodes} edges={graph.edges} onSelectNodes={onSelectNodes} />
     </AppContainer>
   );
 };

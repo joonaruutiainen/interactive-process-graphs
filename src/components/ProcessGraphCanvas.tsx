@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo, useRef, useContext } from 'react';
+import React, { useCallback, useState, useMemo, useRef, useContext, useEffect } from 'react';
 import {
   Canvas,
   EdgeData,
@@ -94,11 +94,22 @@ const edgeToEdgeData = (edge: Edge): EdgeData => ({
 export interface ProcessGraphProps {
   nodes: Node[];
   edges: Edge[];
+  selectableNodes?: boolean;
+  // eslint-disable-next-line no-unused-vars
+  onSelectNodes?: (selection: number[]) => void;
+
   hideZoomButtons?: boolean;
   iconSize?: number; // default is 30, icon and label positions in a node are messed up if this is changed (fix pls)
 }
 
-const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButtons = false, iconSize = 30 }) => {
+const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
+  nodes,
+  edges,
+  selectableNodes = true,
+  onSelectNodes = undefined,
+  hideZoomButtons = false,
+  iconSize = 30,
+}) => {
   const canvasRef = useRef<CanvasRef | null>(null);
   const theme = useContext(ThemeContext);
 
@@ -106,10 +117,15 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoo
   const [selectedNode, setSelectedNode] = useState<Node | undefined>();
   const [popupTargetNode, setPopupTargetNode] = useState<Element | undefined>();
   const [selectedEdge, setSelectedEdge] = useState<EdgeData | undefined>();
+  const [selection, setSelection] = useState<number[]>([]);
 
   let edgeHoverTimeout: ReturnType<typeof setTimeout>;
 
   const { width, height } = useWindowDimensions();
+
+  useEffect(() => {
+    if (onSelectNodes) onSelectNodes(selection);
+  }, [selection, onSelectNodes]);
 
   const closeNodePopup = () => {
     setSelectedNode(undefined);
@@ -128,9 +144,18 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoo
 
   const onNodeClick = useCallback(
     (event: React.MouseEvent<SVGGElement, MouseEvent>, node: NodeData): void => {
-      if (selectionMode) return;
-
       const id = parseInt(node.id, 10);
+
+      if (selectableNodes && selectionMode) {
+        let newSelection = [...selection];
+        if (!selection.find(n => n === id)) {
+          newSelection = [...selection, id];
+          newSelection.sort((a, b) => a - b);
+        } else newSelection = newSelection.filter(n => n !== id);
+        setSelection(newSelection);
+        return;
+      }
+
       if (id === selectedNode?.id) {
         closeNodePopup();
       } else {
@@ -138,10 +163,11 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoo
         setPopupTargetNode(event.target as Element);
       }
     },
-    [selectedNode, popupTargetNode, selectionMode]
+    [selectedNode, popupTargetNode, selection, selectionMode]
   );
 
   const modeSwitch = () => {
+    if (selectionMode) setSelection([]);
     setSelectionMode(!selectionMode);
     closeNodePopup();
   };
@@ -228,11 +254,15 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoo
                   />
                 }
                 onLayoutChange={layout => {
-                  closeNodePopup();
+                  if (selectionMode) setSelection([]);
+                  else closeNodePopup();
                   resetTransform();
                   fitGraph(layout);
                 }}
-                onCanvasClick={closeNodePopup}
+                onCanvasClick={() => {
+                  if (selectionMode) setSelection([]);
+                  else closeNodePopup();
+                }}
               />
               <Tippy
                 render={attrs =>
@@ -262,10 +292,12 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoo
                 plugins={[followCursor]}
               />
             </TransformComponent>
-            <SwitchButton>
-              Selection mode
-              <ToggleButton value={selectionMode} onToggle={modeSwitch} />
-            </SwitchButton>
+            {selectableNodes && (
+              <SwitchButton>
+                Selection mode
+                <ToggleButton value={selectionMode} onToggle={modeSwitch} />
+              </SwitchButton>
+            )}
             {!hideZoomButtons && (
               <ButtonGroup>
                 <ZoomButton onClick={() => zoomIn()}>
