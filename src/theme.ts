@@ -1,7 +1,8 @@
 import { DefaultTheme } from 'styled-components';
 
 const defaultTheme: DefaultTheme = {
-  borderRadius: '4px',
+  borderRadius: 7,
+  fontFamily: 'Helvetica',
   palette: {
     common: {
       black: '#000000',
