@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 
 import { Graph } from './types/Graph';
@@ -16,6 +16,66 @@ const AppContainer = styled.div`
   background-color: white;
 `;
 
+const RowContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-height: 150px;
+  margin: 5px;
+`;
+
+const ProcessSelectionContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 25%;
+  margin-left: 5%;
+`;
+
+const RggContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 180px;
+  height: 110px;
+  font-family: Helvetica;
+`;
+
+const NodeSelectionContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: left;
+  width: 75%;
+  margin: 5%;
+  font-family: Helvetica;
+`;
+
+const StyledButton = styled.button`
+  padding: 6px;
+  background-color: #2b2c3d;
+  color: white;
+  font-family: Helvetica;
+`;
+
+const StyledInput = styled.input`
+  padding: 3px;
+  text-align: center;
+  border-radius: 5px;
+  font-family: Helvetica;
+`;
+
+const StyledSelect = styled.select`
+  padding: 3px;
+  text-align: center;
+  border-radius: 5px;
+  font-family: Helvetica;
+`;
+
 type ProcessMode = 'examples' | 'random';
 
 const App: React.FC = () => {
@@ -25,7 +85,9 @@ const App: React.FC = () => {
   const otherMode = useMemo(() => (processMode === 'examples' ? 'random' : 'examples'), [processMode]);
 
   const [selectedProcess, setSelectedProcess] = useState(exampleProcesses[0]);
-  const [rgg, setRgg] = useState(new RandomGraphGenerator(10, 10));
+  const [rgg, setRgg] = useState(new RandomGraphGenerator(5, 5));
+
+  const [selectedNodes, setSelectedNodes] = useState<string>('');
 
   useEffect(() => {
     if (processMode === 'examples') {
@@ -35,49 +97,69 @@ const App: React.FC = () => {
     }
   }, [processMode, selectedProcess, rgg]);
 
+  const onSelectNodes = useCallback(
+    (selection: number[]) => {
+      if (selection.length > 0) setSelectedNodes(JSON.stringify(selection, null, 2));
+      else setSelectedNodes('');
+    },
+    [selectedNodes]
+  );
+
   return (
     <AppContainer>
-      <button onClick={() => setProcessMode(otherMode)} type='button'>
-        Switch to {otherMode}
-      </button>
-      {processMode === 'examples' ? (
-        <select
-          value={selectedProcess.name}
-          onChange={e => {
-            e.preventDefault();
-            const process = exampleProcesses.find(p => p.name === e.target.value);
-            if (process) setSelectedProcess(process);
-          }}
-          style={{ marginTop: '20px' }}
-        >
-          {exampleProcesses.map(process => (
-            <option value={process.name} key={process.name}>
-              {process.name}
-            </option>
-          ))}
-        </select>
-      ) : (
-        <>
-          <button onClick={() => setGraph(rgg.generate())} type='button' style={{ marginTop: '20px' }}>
-            Regenerate
-          </button>
-          <div>
-            Max depth:
-            <input
-              type='number'
-              value={rgg.maxDepth}
-              onChange={e => setRgg(new RandomGraphGenerator(parseInt(e.target.value, 10), rgg.nInputNodes))}
-            />
-            Input Nodes:
-            <input
-              type='number'
-              value={rgg.nInputNodes}
-              onChange={e => setRgg(new RandomGraphGenerator(rgg.maxDepth, parseInt(e.target.value, 10)))}
-            />
-          </div>
-        </>
-      )}
-      <ProcessGraph nodes={graph.nodes} edges={graph.edges} />
+      <RowContainer>
+        <ProcessSelectionContainer>
+          <StyledButton onClick={() => setProcessMode(otherMode)} type='button'>
+            Switch to {otherMode}
+          </StyledButton>
+          {processMode === 'examples' ? (
+            <StyledSelect
+              value={selectedProcess.name}
+              onChange={e => {
+                e.preventDefault();
+                const process = exampleProcesses.find(p => p.name === e.target.value);
+                if (process) setSelectedProcess(process);
+              }}
+              style={{ marginTop: '20px' }}
+            >
+              {exampleProcesses.map(process => (
+                <option value={process.name} key={process.name}>
+                  {process.name}
+                </option>
+              ))}
+            </StyledSelect>
+          ) : (
+            <RggContainer>
+              <StyledButton onClick={() => setGraph(rgg.generate())} type='button' style={{ marginTop: '20px' }}>
+                Regenerate graph
+              </StyledButton>
+
+              <RowContainer>
+                Max depth:
+                <StyledInput
+                  type='number'
+                  value={rgg.maxDepth}
+                  onChange={e => setRgg(new RandomGraphGenerator(parseInt(e.target.value, 10), rgg.nInputNodes))}
+                  style={{ width: '70px' }}
+                />
+              </RowContainer>
+              <RowContainer>
+                Input Nodes:
+                <StyledInput
+                  type='number'
+                  value={rgg.nInputNodes}
+                  onChange={e => setRgg(new RandomGraphGenerator(rgg.maxDepth, parseInt(e.target.value, 10)))}
+                  style={{ width: '70px' }}
+                />
+              </RowContainer>
+            </RggContainer>
+          )}
+        </ProcessSelectionContainer>
+        <NodeSelectionContainer>{`Selected nodes: ${
+          selectedNodes !== '' ? selectedNodes : 'none'
+        }`}</NodeSelectionContainer>
+      </RowContainer>
+      <ProcessGraph nodes={graph.nodes} edges={graph.edges} onSelectNodes={onSelectNodes} />
     </AppContainer>
   );
 };
