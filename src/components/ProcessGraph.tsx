@@ -6,8 +6,11 @@ import ProcessGraphCanvas, { ProcessGraphProps } from './ProcessGraphCanvas';
 const ProcessGraph: React.FC<ProcessGraphProps> = ({
   nodes,
   edges,
-  selectableNodes = true,
+  disableSelections = false,
   onSelectNodes = undefined,
+  onSelectEdges = undefined,
+  onNodeClick = undefined,
+  onEdgeClick = undefined,
   hideZoomButtons = false,
   iconSize = 30,
 }) => (
@@ -15,8 +18,11 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({
     <ProcessGraphCanvas
       nodes={nodes}
       edges={edges}
-      selectableNodes={selectableNodes}
+      disableSelections={disableSelections}
       onSelectNodes={onSelectNodes}
+      onSelectEdges={onSelectEdges}
+      onNodeClick={onNodeClick}
+      onEdgeClick={onEdgeClick}
       hideZoomButtons={hideZoomButtons}
       iconSize={iconSize}
     />

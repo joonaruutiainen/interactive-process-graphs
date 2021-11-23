@@ -94,10 +94,15 @@ const edgeToEdgeData = (edge: Edge): EdgeData => ({
 export interface ProcessGraphProps {
   nodes: Node[];
   edges: Edge[];
-  selectableNodes?: boolean;
+  disableSelections?: boolean;
   // eslint-disable-next-line no-unused-vars
   onSelectNodes?: (selection: number[]) => void;
-
+  // eslint-disable-next-line no-unused-vars
+  onSelectEdges?: (selection: string[]) => void;
+  // eslint-disable-next-line no-unused-vars
+  onNodeClick?: (event: React.MouseEvent<SVGGElement, MouseEvent>, node: NodeData) => void;
+  // eslint-disable-next-line no-unused-vars
+  onEdgeClick?: (event: React.MouseEvent<SVGGElement, MouseEvent>, edge: EdgeData) => void;
   hideZoomButtons?: boolean;
   iconSize?: number; // default is 30, icon and label positions in a node are messed up if this is changed (fix pls)
 }
@@ -105,8 +110,11 @@ export interface ProcessGraphProps {
 const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
   nodes,
   edges,
-  selectableNodes = true,
+  disableSelections = false,
   onSelectNodes = undefined,
+  onSelectEdges = undefined,
+  onNodeClick = undefined,
+  onEdgeClick = undefined,
   hideZoomButtons = false,
   iconSize = 30,
 }) => {
@@ -117,15 +125,20 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
   const [selectedNode, setSelectedNode] = useState<Node | undefined>();
   const [popupTargetNode, setPopupTargetNode] = useState<Element | undefined>();
   const [selectedEdge, setSelectedEdge] = useState<EdgeData | undefined>();
-  const [selection, setSelection] = useState<number[]>([]);
+  const [nodeSelection, setNodeSelection] = useState<number[]>([]);
+  const [edgeSelection, setEdgeSelection] = useState<string[]>([]);
 
   let edgeHoverTimeout: ReturnType<typeof setTimeout>;
 
   const { width, height } = useWindowDimensions();
 
   useEffect(() => {
-    if (onSelectNodes) onSelectNodes(selection);
-  }, [selection, onSelectNodes]);
+    if (onSelectNodes) onSelectNodes(nodeSelection);
+  }, [nodeSelection, onSelectNodes]);
+
+  useEffect(() => {
+    if (onSelectEdges) onSelectEdges(edgeSelection);
+  }, [edgeSelection, onSelectEdges]);
 
   const closeNodePopup = () => {
     setSelectedNode(undefined);
@@ -142,20 +155,14 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
     return `From ${fromNode?.type} ${fromNode?.id} to ${toNode?.type} ${toNode?.id}`;
   };
 
-  const onNodeClick = useCallback(
+  const handleNodeClick = useCallback(
     (event: React.MouseEvent<SVGGElement, MouseEvent>, node: NodeData): void => {
-      const id = parseInt(node.id, 10);
-
-      if (selectableNodes && selectionMode) {
-        let newSelection = [...selection];
-        if (!selection.find(n => n === id)) {
-          newSelection = [...selection, id];
-          newSelection.sort((a, b) => a - b);
-        } else newSelection = newSelection.filter(n => n !== id);
-        setSelection(newSelection);
+      if (onNodeClick) {
+        onNodeClick(event, node);
         return;
       }
 
+      const id = parseInt(node.id, 10);
       if (id === selectedNode?.id) {
         closeNodePopup();
       } else {
@@ -163,11 +170,49 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
         setPopupTargetNode(event.target as Element);
       }
     },
-    [selectedNode, popupTargetNode, selection, selectionMode]
+    [selectedNode, popupTargetNode, onNodeClick]
+  );
+
+  const handleNodeSelect = useCallback(
+    (node: NodeData): void => {
+      const id = parseInt(node.id, 10);
+      let newSelection = [...nodeSelection];
+      if (!nodeSelection.find(n => n === id)) {
+        newSelection = [...nodeSelection, id];
+        newSelection.sort((a, b) => a - b);
+      } else newSelection = newSelection.filter(n => n !== id);
+      setNodeSelection(newSelection);
+    },
+    [nodeSelection]
+  );
+
+  const handleEdgeClick = useCallback(
+    (event: React.MouseEvent<SVGGElement, MouseEvent>, edge: EdgeData): void => {
+      if (onEdgeClick) {
+        onEdgeClick(event, edge);
+      }
+    },
+    [onEdgeClick]
+  );
+
+  const handleEdgeSelect = useCallback(
+    (edge: EdgeData): void => {
+      const { id } = edge;
+      let newSelection = [...edgeSelection];
+      if (!edgeSelection.find(e => e === id)) {
+        newSelection = [...edgeSelection, id];
+        newSelection.sort();
+      } else newSelection = newSelection.filter(e => e !== id);
+      setEdgeSelection(newSelection);
+    },
+    [edgeSelection]
   );
 
   const modeSwitch = () => {
-    if (selectionMode) setSelection([]);
+    if (selectionMode) {
+      setNodeSelection([]);
+      setEdgeSelection([]);
+    }
     setSelectionMode(!selectionMode);
     closeNodePopup();
   };
@@ -229,7 +274,10 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                         }}
                       />
                     }
-                    onClick={onNodeClick}
+                    onClick={(event, node) => {
+                      if (!disableSelections && selectionMode) handleNodeSelect(node);
+                      else handleNodeClick(event, node);
+                    }}
                     icon={<ReaflowIcon x={50} y={50} height={iconSize} width={iconSize} />}
                   />
                 }
@@ -244,6 +292,10 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                 edge={
                   <ReaflowEdge
                     style={{ stroke: theme.palette.secondary.main }}
+                    onClick={(event, edge) => {
+                      if (!disableSelections && selectionMode) handleEdgeSelect(edge);
+                      else handleEdgeClick(event, edge);
+                    }}
                     onEnter={(_, edge) => {
                       edgeHoverTimeout = setTimeout(() => setSelectedEdge(edge), 1000);
                     }}
@@ -254,14 +306,18 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                   />
                 }
                 onLayoutChange={layout => {
-                  if (selectionMode) setSelection([]);
-                  else closeNodePopup();
+                  if (selectionMode) {
+                    setNodeSelection([]);
+                    setEdgeSelection([]);
+                  } else closeNodePopup();
                   resetTransform();
                   fitGraph(layout);
                 }}
                 onCanvasClick={() => {
-                  if (selectionMode) setSelection([]);
-                  else closeNodePopup();
+                  if (selectionMode) {
+                    setNodeSelection([]);
+                    setEdgeSelection([]);
+                  } else closeNodePopup();
                 }}
               />
               <Tippy
@@ -292,7 +348,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                 plugins={[followCursor]}
               />
             </TransformComponent>
-            {selectableNodes && (
+            {!disableSelections && (
               <SwitchButton>
                 Selection mode
                 <ToggleButton value={selectionMode} onToggle={modeSwitch} />

@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
+import { NodeData, EdgeData } from 'reaflow';
 
 import { Graph } from './types/Graph';
 import ProcessGraph from './components/ProcessGraph';
@@ -45,12 +46,21 @@ const RggContainer = styled.div`
   font-family: Helvetica;
 `;
 
-const NodeSelectionContainer = styled.div`
+const OnClickContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 20%;
+  font-family: Helvetica;
+`;
+
+const SelectionContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: left;
-  width: 75%;
+  width: 55%;
   margin: 5%;
   font-family: Helvetica;
 `;
@@ -87,7 +97,12 @@ const App: React.FC = () => {
   const [selectedProcess, setSelectedProcess] = useState(exampleProcesses[0]);
   const [rgg, setRgg] = useState(new RandomGraphGenerator(5, 5));
 
-  const [selectedNodes, setSelectedNodes] = useState<string>('');
+  const [selectedNodes, setSelectedNodes] = useState<string>('none');
+  const [selectedEdges, setSelectedEdges] = useState<string>('none');
+
+  const [clickedNode, setClickedNode] = useState<string>('none');
+  const [clickedEdge, setClickedEdge] = useState<string>('none');
+  const [useDefaultOnClicks, setUseDefaultOnClicks] = useState<boolean>(true);
 
   useEffect(() => {
     if (processMode === 'examples') {
@@ -100,9 +115,31 @@ const App: React.FC = () => {
   const onSelectNodes = useCallback(
     (selection: number[]) => {
       if (selection.length > 0) setSelectedNodes(JSON.stringify(selection, null, 2));
-      else setSelectedNodes('');
+      else setSelectedNodes('none');
     },
     [selectedNodes]
+  );
+
+  const onSelectEdges = useCallback(
+    (selection: string[]) => {
+      if (selection.length > 0) setSelectedEdges(JSON.stringify(selection, null, 2));
+      else setSelectedEdges('none');
+    },
+    [selectedEdges]
+  );
+
+  const onNodeClick = useCallback(
+    (_, node: NodeData) => {
+      setClickedNode(node.id);
+    },
+    [setClickedNode]
+  );
+
+  const onEdgeClick = useCallback(
+    (_, edge: EdgeData) => {
+      setClickedEdge(edge.id);
+    },
+    [setClickedEdge]
   );
 
   return (
@@ -155,11 +192,43 @@ const App: React.FC = () => {
             </RggContainer>
           )}
         </ProcessSelectionContainer>
-        <NodeSelectionContainer>{`Selected nodes: ${
-          selectedNodes !== '' ? selectedNodes : 'none'
-        }`}</NodeSelectionContainer>
+        <OnClickContainer>
+          <StyledButton
+            onClick={() => {
+              setUseDefaultOnClicks(!useDefaultOnClicks);
+              setClickedNode('none');
+              setClickedEdge('none');
+            }}
+          >
+            {useDefaultOnClicks ? 'Switch to override functions' : 'Switch to default functions'}
+          </StyledButton>
+          <div style={{ marginTop: '10px' }}>{`node clicked: ${clickedNode}`}</div>
+          <div>{`edge clicked: ${clickedEdge}`}</div>
+        </OnClickContainer>
+        <SelectionContainer>
+          <div>{`Selected nodes: ${selectedNodes}`}</div>
+          <div>{`Selected edges: ${selectedEdges}`}</div>
+        </SelectionContainer>
       </RowContainer>
-      <ProcessGraph nodes={graph.nodes} edges={graph.edges} onSelectNodes={onSelectNodes} />
+      {useDefaultOnClicks && (
+        <ProcessGraph
+          nodes={graph.nodes}
+          edges={graph.edges}
+          onSelectNodes={onSelectNodes}
+          onSelectEdges={onSelectEdges}
+        />
+      )}
+      {!useDefaultOnClicks && (
+        <ProcessGraph
+          nodes={graph.nodes}
+          edges={graph.edges}
+          disableSelections
+          onSelectNodes={onSelectNodes}
+          onSelectEdges={onSelectEdges}
+          onNodeClick={onNodeClick}
+          onEdgeClick={onEdgeClick}
+        />
+      )}
     </AppContainer>
   );
 };
