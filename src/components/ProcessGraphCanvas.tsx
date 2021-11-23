@@ -12,7 +12,7 @@ import {
   ElkRoot,
 } from 'reaflow';
 import styled, { ThemeContext } from 'styled-components';
-import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
+import { TransformWrapper, TransformComponent, ReactZoomPanPinchRef } from 'react-zoom-pan-pinch';
 import { Icon } from 'ts-react-feather-icons';
 import ToggleButton from 'react-toggle-button';
 import Tippy from '@tippyjs/react';
@@ -111,6 +111,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
   iconSize = 30,
 }) => {
   const canvasRef = useRef<CanvasRef | null>(null);
+  const zoomRef = useRef<ReactZoomPanPinchRef>(null);
   const theme = useContext(ThemeContext);
 
   const [selectionMode, setSelectionMode] = useState(false);
@@ -151,7 +152,9 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
         if (!selection.find(n => n === id)) {
           newSelection = [...selection, id];
           newSelection.sort((a, b) => a - b);
-        } else newSelection = newSelection.filter(n => n !== id);
+        } else {
+          newSelection = newSelection.filter(n => n !== id);
+        }
         setSelection(newSelection);
         return;
       }
@@ -186,9 +189,26 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
     }
   };
 
+  useEffect(() => {
+    if (!canvasRef.current || !zoomRef.current) return;
+
+    fitGraph(canvasRef.current.layout);
+    zoomRef.current.setTransform(
+      zoomRef.current.state.positionX,
+      zoomRef.current.state.positionY,
+      zoomRef.current.state.previousScale
+    );
+  }, [width, height]);
+
   return (
     <Container>
-      <TransformWrapper wheel={{ step: 0.1 }} minScale={0.8} maxScale={10} doubleClick={{ disabled: true }}>
+      <TransformWrapper
+        ref={zoomRef}
+        wheel={{ step: 0.1 }}
+        minScale={0.8}
+        maxScale={10}
+        doubleClick={{ disabled: true }}
+      >
         {({ zoomIn, zoomOut, resetTransform }) => (
           <>
             <TransformComponent>
@@ -256,6 +276,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                 onLayoutChange={layout => {
                   if (selectionMode) setSelection([]);
                   else closeNodePopup();
+
                   resetTransform();
                   fitGraph(layout);
                 }}
