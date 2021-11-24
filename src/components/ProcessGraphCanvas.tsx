@@ -96,9 +96,9 @@ export interface ProcessGraphProps {
   edges: Edge[];
   disableSelections?: boolean;
   // eslint-disable-next-line no-unused-vars
-  onSelectNodes?: (selection: number[]) => void;
+  onSelectNodes?: (selection: Node[]) => void;
   // eslint-disable-next-line no-unused-vars
-  onSelectEdges?: (selection: string[]) => void;
+  onSelectEdges?: (selection: Edge[]) => void;
   // eslint-disable-next-line no-unused-vars
   onNodeClick?: (event: React.MouseEvent<SVGGElement, MouseEvent>, node: NodeData) => void;
   // eslint-disable-next-line no-unused-vars
@@ -121,27 +121,30 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
   const canvasRef = useRef<CanvasRef | null>(null);
   const theme = useContext(ThemeContext);
 
-  const [selectionMode, setSelectionMode] = useState(false);
-  const [selectedNode, setSelectedNode] = useState<Node | undefined>();
+  // viewing mode state for selecting a node
+  const [openNode, setOpenNode] = useState<Node | undefined>();
   const [popupTargetNode, setPopupTargetNode] = useState<Element | undefined>();
-  const [selectedEdge, setSelectedEdge] = useState<EdgeData | undefined>();
-  const [nodeSelection, setNodeSelection] = useState<number[]>([]);
-  const [edgeSelection, setEdgeSelection] = useState<string[]>([]);
 
+  // selection mode state for selecting a set of nodes and/or edges
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [nodeSelection, setNodeSelection] = useState<Node[]>([]);
+  const [edgeSelection, setEdgeSelection] = useState<Edge[]>([]);
+
+  const [hoveredEdge, setHoveredEdge] = useState<EdgeData | undefined>();
   let edgeHoverTimeout: ReturnType<typeof setTimeout>;
 
   const { width, height } = useWindowDimensions();
 
   useEffect(() => {
-    if (onSelectNodes) onSelectNodes(nodeSelection);
+    onSelectNodes?.(nodeSelection);
   }, [nodeSelection, onSelectNodes]);
 
   useEffect(() => {
-    if (onSelectEdges) onSelectEdges(edgeSelection);
+    onSelectEdges?.(edgeSelection);
   }, [edgeSelection, onSelectEdges]);
 
   const closeNodePopup = () => {
-    setSelectedNode(undefined);
+    setOpenNode(undefined);
     setPopupTargetNode(undefined);
   };
 
@@ -163,25 +166,37 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
       }
 
       const id = parseInt(node.id, 10);
-      if (id === selectedNode?.id) {
+      if (id === openNode?.id) {
         closeNodePopup();
       } else {
-        setSelectedNode(nodes.find(n => n.id === id));
+        // tääki bugaa, eka noden klikkaus ei tee mitää ku starttaa äpin
+        setOpenNode(nodes.find(n => n.id === id));
         setPopupTargetNode(event.target as Element);
       }
     },
-    [selectedNode, popupTargetNode, onNodeClick]
+    [openNode, popupTargetNode, onNodeClick]
   );
 
   const handleNodeSelect = useCallback(
     (node: NodeData): void => {
       const id = parseInt(node.id, 10);
       let newSelection = [...nodeSelection];
-      if (!nodeSelection.find(n => n === id)) {
-        newSelection = [...nodeSelection, id];
-        newSelection.sort((a, b) => a - b);
-      } else newSelection = newSelection.filter(n => n !== id);
-      setNodeSelection(newSelection);
+      const selectedNode: Node | undefined = nodes.find(n => n.id === id);
+      if (selectedNode) {
+        // tää bugaa
+        // 1. starttaa äppi
+        // 2. vaihda selection mode
+        // 3. klikkaa nodeja, ei tapahdu mitää
+        // 4. klikkaa vaik canvasta
+        // 5. klikkaa nodeja, selection toimii
+        if (!nodeSelection.find(n => n.id === selectedNode.id)) {
+          newSelection.push(selectedNode);
+          newSelection.sort((a, b) => a.id - b.id);
+        } else {
+          newSelection = newSelection.filter(n => n.id !== id);
+        }
+        setNodeSelection(newSelection);
+      }
     },
     [nodeSelection]
   );
@@ -199,11 +214,16 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
     (edge: EdgeData): void => {
       const { id } = edge;
       let newSelection = [...edgeSelection];
-      if (!edgeSelection.find(e => e === id)) {
-        newSelection = [...edgeSelection, id];
-        newSelection.sort();
-      } else newSelection = newSelection.filter(e => e !== id);
-      setEdgeSelection(newSelection);
+      const selectedEdge: Edge | undefined = edges.find(e => `${e.from}-${e.to}` === id);
+      if (selectedEdge) {
+        if (!edgeSelection.find(e => `${e.from}-${e.to}` === `${selectedEdge.from}-${selectedEdge.to}`)) {
+          newSelection.push(selectedEdge);
+          newSelection.sort((a, b) => a.from - b.from);
+        } else {
+          newSelection = newSelection.filter(e => `${e.from}-${e.to}` !== id);
+        }
+        setEdgeSelection(newSelection);
+      }
     },
     [edgeSelection]
   );
@@ -297,11 +317,12 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                       else handleEdgeClick(event, edge);
                     }}
                     onEnter={(_, edge) => {
-                      edgeHoverTimeout = setTimeout(() => setSelectedEdge(edge), 1000);
+                      if (openNode) return;
+                      edgeHoverTimeout = setTimeout(() => setHoveredEdge(edge), 1000);
                     }}
                     onLeave={() => {
                       clearTimeout(edgeHoverTimeout);
-                      setSelectedEdge(undefined);
+                      setHoveredEdge(undefined);
                     }}
                   />
                 }
@@ -321,11 +342,9 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                 }}
               />
               <Tippy
-                render={attrs =>
-                  selectedNode && <NodeDetails node={selectedNode} dataPlacement={attrs['data-placement']} />
-                }
+                render={attrs => openNode && <NodeDetails node={openNode} dataPlacement={attrs['data-placement']} />}
                 reference={popupTargetNode}
-                visible={selectedNode !== undefined}
+                visible={openNode !== undefined}
                 interactive
                 appendTo={document.body}
                 popperOptions={{
@@ -341,8 +360,8 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                 }}
               />
               <StyledTippy
-                content={getEdgeTooltipText(selectedEdge?.from, selectedEdge?.to)}
-                visible={selectedEdge !== undefined}
+                content={getEdgeTooltipText(hoveredEdge?.from, hoveredEdge?.to)}
+                visible={hoveredEdge !== undefined}
                 arrow={false}
                 followCursor
                 plugins={[followCursor]}

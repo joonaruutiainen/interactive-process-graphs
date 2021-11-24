@@ -2,6 +2,8 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { NodeData, EdgeData } from 'reaflow';
 
+import { Node } from './types/Node';
+import { Edge } from './types/Edge';
 import { Graph } from './types/Graph';
 import ProcessGraph from './components/ProcessGraph';
 import exampleProcesses from './exampleProcesses';
@@ -113,17 +115,23 @@ const App: React.FC = () => {
   }, [processMode, selectedProcess, rgg]);
 
   const onSelectNodes = useCallback(
-    (selection: number[]) => {
-      if (selection.length > 0) setSelectedNodes(JSON.stringify(selection, null, 2));
-      else setSelectedNodes('none');
+    (selection: Node[]) => {
+      if (selection.length > 0) {
+        const nodeSelection: number[] = [];
+        selection.forEach(n => nodeSelection.push(n.id));
+        setSelectedNodes(JSON.stringify(nodeSelection, null, 2));
+      } else setSelectedNodes('none');
     },
     [selectedNodes]
   );
 
   const onSelectEdges = useCallback(
-    (selection: string[]) => {
-      if (selection.length > 0) setSelectedEdges(JSON.stringify(selection, null, 2));
-      else setSelectedEdges('none');
+    (selection: Edge[]) => {
+      if (selection.length > 0) {
+        const edgeSelection: string[] = [];
+        selection.forEach(e => edgeSelection.push(`${e.from}-${e.to}`));
+        setSelectedEdges(JSON.stringify(edgeSelection, null, 2));
+      } else setSelectedEdges('none');
     },
     [selectedEdges]
   );
