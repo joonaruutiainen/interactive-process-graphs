@@ -10,6 +10,12 @@ const exampleProcesses = [
         nextNodes: [4],
         previousNodes: [],
         description: 'Ingredient A tank',
+        data: {
+          mass_flow: '1.5kg/s',
+          pressure: '0.3',
+          liiba: 'laaba',
+          liirum: 'laarum',
+        },
       },
       {
         id: 2,
@@ -17,6 +23,12 @@ const exampleProcesses = [
         nextNodes: [5],
         previousNodes: [],
         description: 'Ingredient B tank',
+        data: {
+          mass_flow: '1.5kg/s',
+          pressure: '0.3',
+          liiba:
+            '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."',
+        },
       },
       {
         id: 3,
@@ -24,6 +36,16 @@ const exampleProcesses = [
         nextNodes: [6],
         previousNodes: [],
         description: 'Water tank',
+        data: {
+          mass_flow: '1.5kg/s',
+          pressure: '0.3',
+          liiba: 'laaba',
+          liirum: 'laarum',
+          mass_flow2: '1.5kg/s',
+          pressure2: '0.3',
+          liiba2: 'laaba',
+          liirum2: 'laarum',
+        },
       },
       {
         id: 4,
@@ -31,6 +53,16 @@ const exampleProcesses = [
         nextNodes: [7],
         previousNodes: [1],
         description: 'Pipe from ingredient A tank to mixing tank',
+        data: {
+          mass_flow: '1.5kg/s',
+          pressure: '0.3',
+          liiba: 'laaba',
+          liirum: 'laarum',
+          mass_flow2: '1.5kg/s',
+          pressure2: '0.3',
+          liiba2: 'laaba',
+          liirum2: 'laarum',
+        },
       },
       {
         id: 5,
@@ -38,6 +70,7 @@ const exampleProcesses = [
         nextNodes: [7],
         previousNodes: [2],
         description: 'Pipe from ingredient B tank to mixing tank',
+        data: {},
       },
       {
         id: 6,
@@ -45,6 +78,7 @@ const exampleProcesses = [
         nextNodes: [7],
         previousNodes: [3],
         description: 'Pipe from water tank to mixing tank',
+        data: {},
       },
       {
         id: 7,
@@ -52,6 +86,7 @@ const exampleProcesses = [
         nextNodes: [],
         previousNodes: [4, 5, 6],
         description: 'Mixing tank',
+        data: {},
       },
     ],
   },
@@ -64,6 +99,7 @@ const exampleProcesses = [
         nextNodes: [2],
         previousNodes: [],
         description: 'Powder screw feeder',
+        data: {},
       },
       {
         id: 2,
@@ -71,6 +107,7 @@ const exampleProcesses = [
         nextNodes: [6],
         previousNodes: [1],
         description: 'Pipe from powder screw feeder to mixing tank 1',
+        data: {},
       },
       {
         id: 3,
@@ -78,6 +115,7 @@ const exampleProcesses = [
         nextNodes: [4, 11],
         previousNodes: [],
         description: 'Water tank',
+        data: {},
       },
       {
         id: 4,
@@ -85,6 +123,7 @@ const exampleProcesses = [
         nextNodes: [6],
         previousNodes: [3],
         description: 'Pipe from water tank to mixing tank 1',
+        data: {},
       },
       {
         id: 5,
@@ -92,6 +131,7 @@ const exampleProcesses = [
         nextNodes: [6],
         previousNodes: [9],
         description: 'Feedback pipe',
+        data: {},
       },
       {
         id: 6,
@@ -99,6 +139,7 @@ const exampleProcesses = [
         nextNodes: [7],
         previousNodes: [2, 4, 5],
         description: 'Mixing tank 1',
+        data: {},
       },
       {
         id: 7,
@@ -106,6 +147,7 @@ const exampleProcesses = [
         nextNodes: [8],
         previousNodes: [7],
         description: 'Pipe from mixing tank 1',
+        data: {},
       },
       {
         id: 8,
@@ -113,6 +155,7 @@ const exampleProcesses = [
         nextNodes: [9],
         previousNodes: [7],
         description: 'Mixin tank 1 pump',
+        data: {},
       },
       {
         id: 9,
@@ -120,6 +163,7 @@ const exampleProcesses = [
         nextNodes: [10, 5],
         previousNodes: [8],
         description: 'Branching pipe',
+        data: {},
       },
       {
         id: 10,
@@ -127,6 +171,7 @@ const exampleProcesses = [
         nextNodes: [12],
         previousNodes: [9],
         description: 'Pipe to mixing tank 2',
+        data: {},
       },
       {
         id: 11,
@@ -134,6 +179,7 @@ const exampleProcesses = [
         nextNodes: [12],
         previousNodes: [3],
         description: 'Pipe from water tank to mixing tank 2',
+        data: {},
       },
       {
         id: 12,
@@ -141,6 +187,7 @@ const exampleProcesses = [
         nextNodes: [13],
         previousNodes: [10, 11],
         description: 'Mixing tank 2',
+        data: {},
       },
       {
         id: 13,
@@ -148,6 +195,7 @@ const exampleProcesses = [
         nextNodes: [14],
         previousNodes: [12],
         description: 'Pipe from mixing tank 2',
+        data: {},
       },
       {
         id: 14,
@@ -155,6 +203,7 @@ const exampleProcesses = [
         nextNodes: [15],
         previousNodes: [13],
         description: 'Mixing tank 2 pump',
+        data: {},
       },
       {
         id: 15,
@@ -162,6 +211,7 @@ const exampleProcesses = [
         nextNodes: [],
         previousNodes: [14],
         description: 'Output pipe',
+        data: {},
       },
     ],
   },
@@ -174,6 +224,7 @@ const exampleProcesses = [
         nextNodes: [2],
         previousNodes: [],
         description: 'Ingredient A input',
+        data: {},
       },
       {
         id: 2,
@@ -181,6 +232,7 @@ const exampleProcesses = [
         nextNodes: [3],
         previousNodes: [1],
         description: 'Ingredient A tank',
+        data: {},
       },
       {
         id: 3,
@@ -188,6 +240,7 @@ const exampleProcesses = [
         nextNodes: [20],
         previousNodes: [2],
         description: 'Pipe from ingredient A tank to reactor',
+        data: {},
       },
       {
         id: 4,
@@ -195,6 +248,7 @@ const exampleProcesses = [
         nextNodes: [5],
         previousNodes: [],
         description: 'Ingredient B input',
+        data: {},
       },
       {
         id: 5,
@@ -202,6 +256,7 @@ const exampleProcesses = [
         nextNodes: [6],
         previousNodes: [2],
         description: 'Ingredient B tank',
+        data: {},
       },
       {
         id: 6,
@@ -209,6 +264,7 @@ const exampleProcesses = [
         nextNodes: [20],
         previousNodes: [5],
         description: 'Pipe from ingredient B tank to reactor',
+        data: {},
       },
       {
         id: 7,
@@ -216,6 +272,7 @@ const exampleProcesses = [
         nextNodes: [8],
         previousNodes: [],
         description: 'Ingredient C input',
+        data: {},
       },
       {
         id: 8,
@@ -223,6 +280,7 @@ const exampleProcesses = [
         nextNodes: [9],
         previousNodes: [7],
         description: 'Ingredient C tank',
+        data: {},
       },
       {
         id: 9,
@@ -230,6 +288,7 @@ const exampleProcesses = [
         nextNodes: [20],
         previousNodes: [8],
         description: 'Pipe from ingredient C tank to reactor',
+        data: {},
       },
       {
         id: 10,
@@ -237,6 +296,7 @@ const exampleProcesses = [
         nextNodes: [11],
         previousNodes: [],
         description: 'Ingredient D input',
+        data: {},
       },
       {
         id: 11,
@@ -244,6 +304,7 @@ const exampleProcesses = [
         nextNodes: [12],
         previousNodes: [10],
         description: 'Ingredient D tank',
+        data: {},
       },
       {
         id: 12,
@@ -251,6 +312,7 @@ const exampleProcesses = [
         nextNodes: [20],
         previousNodes: [11],
         description: 'Pipe from ingredient D tank to reactor',
+        data: {},
       },
       {
         id: 13,
@@ -258,6 +320,7 @@ const exampleProcesses = [
         nextNodes: [14],
         previousNodes: [],
         description: 'Ingredient E input',
+        data: {},
       },
       {
         id: 14,
@@ -265,6 +328,7 @@ const exampleProcesses = [
         nextNodes: [15],
         previousNodes: [13],
         description: 'Ingredient E tank',
+        data: {},
       },
       {
         id: 15,
@@ -272,6 +336,7 @@ const exampleProcesses = [
         nextNodes: [20],
         previousNodes: [14],
         description: 'Pipe from ingredient E tank to reactor',
+        data: {},
       },
       {
         id: 16,
@@ -279,6 +344,7 @@ const exampleProcesses = [
         nextNodes: [17],
         previousNodes: [],
         description: 'Ingredient F input',
+        data: {},
       },
       {
         id: 17,
@@ -286,6 +352,7 @@ const exampleProcesses = [
         nextNodes: [18],
         previousNodes: [16],
         description: 'Ingredient F tank',
+        data: {},
       },
       {
         id: 18,
@@ -293,6 +360,7 @@ const exampleProcesses = [
         nextNodes: [20],
         previousNodes: [17],
         description: 'Pipe from ingredient F tank to reactor',
+        data: {},
       },
       {
         id: 19,
@@ -300,6 +368,7 @@ const exampleProcesses = [
         nextNodes: [20],
         previousNodes: [],
         description: 'Reactor input',
+        data: {},
       },
       {
         id: 20,
@@ -307,6 +376,7 @@ const exampleProcesses = [
         nextNodes: [21],
         previousNodes: [4, 6, 9, 12, 15, 18, 19],
         description: 'Reactor tank',
+        data: {},
       },
       {
         id: 21,
@@ -314,6 +384,7 @@ const exampleProcesses = [
         nextNodes: [22],
         previousNodes: [20],
         description: 'Pipe to reactor pump',
+        data: {},
       },
       {
         id: 22,
@@ -321,6 +392,7 @@ const exampleProcesses = [
         nextNodes: [23],
         previousNodes: [21],
         description: 'Reactor pump',
+        data: {},
       },
       {
         id: 23,
@@ -328,6 +400,7 @@ const exampleProcesses = [
         nextNodes: [25],
         previousNodes: [22],
         description: 'Pipe from reactor pump to cooling tank',
+        data: {},
       },
       {
         id: 24,
@@ -335,6 +408,7 @@ const exampleProcesses = [
         nextNodes: [25],
         previousNodes: [],
         description: 'Cooling tank input',
+        data: {},
       },
       {
         id: 25,
@@ -342,6 +416,7 @@ const exampleProcesses = [
         nextNodes: [26],
         previousNodes: [23, 24],
         description: 'Cooling tank',
+        data: {},
       },
       {
         id: 26,
@@ -349,6 +424,7 @@ const exampleProcesses = [
         nextNodes: [27],
         previousNodes: [25],
         description: 'Pipe to cooling tank pump',
+        data: {},
       },
       {
         id: 27,
@@ -356,6 +432,7 @@ const exampleProcesses = [
         nextNodes: [28],
         previousNodes: [26],
         description: 'Cooling tank pump',
+        data: {},
       },
       {
         id: 28,
@@ -363,6 +440,7 @@ const exampleProcesses = [
         nextNodes: [29],
         previousNodes: [27],
         description: 'Pipe from cooling tank pump to storage tank',
+        data: {},
       },
       {
         id: 29,
@@ -370,6 +448,7 @@ const exampleProcesses = [
         nextNodes: [],
         previousNodes: [28],
         description: 'Storage tank',
+        data: {},
       },
     ],
   },
