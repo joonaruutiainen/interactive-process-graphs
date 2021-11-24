@@ -12,7 +12,7 @@ import {
   ElkRoot,
 } from 'reaflow';
 import styled, { ThemeContext } from 'styled-components';
-import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
+import { TransformWrapper, TransformComponent, ReactZoomPanPinchRef } from 'react-zoom-pan-pinch';
 import { Icon } from 'ts-react-feather-icons';
 import ToggleButton from 'react-toggle-button';
 import Tippy from '@tippyjs/react';
@@ -24,7 +24,6 @@ import NodeDetails from './NodeDetails';
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
 import InfoBox from './InfoBox';
-import useWindowDimensions from '../hooks/useWindowDimensions';
 
 const Container = styled.div`
   background-color: ${props => props.theme.palette.background.main};
@@ -116,6 +115,9 @@ export interface ProcessGraphProps {
 
   hideZoomButtons?: boolean;
   iconSize?: number; // default is 30, icon and label positions in a node are messed up if this is changed (fix pls)
+
+  width: number;
+  height: number;
 }
 
 const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
@@ -125,8 +127,11 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
   onSelectNodes = undefined,
   hideZoomButtons = false,
   iconSize = 30,
+  width,
+  height,
 }) => {
   const canvasRef = useRef<CanvasRef | null>(null);
+  const zoomRef = useRef<ReactZoomPanPinchRef>(null);
   const theme = useContext(ThemeContext);
 
   const [selectionMode, setSelectionMode] = useState(false);
@@ -137,8 +142,6 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
   const [selection, setSelection] = useState<number[]>([]);
 
   let edgeHoverTimeout: ReturnType<typeof setTimeout>;
-
-  const { width, height } = useWindowDimensions();
 
   useEffect(() => {
     if (onSelectNodes) onSelectNodes(selection);
@@ -168,7 +171,9 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
         if (!selection.find(n => n === id)) {
           newSelection = [...selection, id];
           newSelection.sort((a, b) => a - b);
-        } else newSelection = newSelection.filter(n => n !== id);
+        } else {
+          newSelection = newSelection.filter(n => n !== id);
+        }
         setSelection(newSelection);
         return;
       }
@@ -207,9 +212,26 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
     }
   };
 
+  useEffect(() => {
+    if (!canvasRef.current || !zoomRef.current) return;
+
+    fitGraph(canvasRef.current.layout);
+    zoomRef.current.setTransform(
+      zoomRef.current.state.positionX,
+      zoomRef.current.state.positionY,
+      zoomRef.current.state.previousScale
+    );
+  }, [width, height]);
+
   return (
     <Container>
-      <TransformWrapper wheel={{ step: 0.1 }} minScale={0.8} maxScale={10} doubleClick={{ disabled: true }}>
+      <TransformWrapper
+        ref={zoomRef}
+        wheel={{ step: 0.1 }}
+        minScale={0.8}
+        maxScale={10}
+        doubleClick={{ disabled: true }}
+      >
         {({ zoomIn, zoomOut, resetTransform }) => (
           <>
             <TransformComponent>
@@ -217,8 +239,8 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                 ref={canvasRef}
                 readonly
                 zoomable={false}
-                maxWidth={width * 0.9}
-                maxHeight={height * 0.8}
+                maxWidth={width}
+                maxHeight={height}
                 minZoom={-1000}
                 maxZoom={1000}
                 nodes={nodeData}
@@ -266,6 +288,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                   <ReaflowEdge
                     style={{ stroke: theme.palette.secondary.main }}
                     onEnter={(_, edge) => {
+                      if (selectedNode) return;
                       edgeHoverTimeout = setTimeout(() => setSelectedEdge(edge), 1000);
                     }}
                     onLeave={() => {
@@ -277,6 +300,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                 onLayoutChange={layout => {
                   if (selectionMode) setSelection([]);
                   else closeNodePopup();
+
                   resetTransform();
                   fitGraph(layout);
                   setInfoVisible(false);
