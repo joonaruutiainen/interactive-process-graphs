@@ -39,7 +39,6 @@ const Container = styled.div`
 const Controls = styled.div`
   display: flex;
   flex-direction: row;
-  position: absolute;
   bottom: 0px;
   width: 100%;
 `;
@@ -50,11 +49,11 @@ const ButtonGroup = styled.div`
 `;
 
 const ZoomButton = styled(Button)`
-  margin: 0 0 3px 13px;
+  margin: 13px 0 3px 13px;
 `;
 
 const SelectionMode = styled.div`
-  margin: 0 13px 13px auto;
+  margin: 13px 13px 13px auto;
   display: flex;
   flex-direction: row;
 `;
@@ -66,7 +65,7 @@ const SelectionLabel = styled.div`
 `;
 
 const InfoButton = styled(Button)`
-  margin: 0 13px 13px 0;
+  margin: 13px 13px 13px 0;
 `;
 
 const StyledTippy = styled(Tippy)`
