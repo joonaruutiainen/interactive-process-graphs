@@ -4,15 +4,15 @@ import { Icon } from 'ts-react-feather-icons';
 
 const Box = styled.div`
   border: solid;
-  border-color: grey;
-  border-radius: 15px;
+  border-color: ${props => props.theme.palette.secondary.main};
+  border-radius: ${props => props.theme.borderRadius}px;
   position: absolute;
   padding: 10px;
   bottom: 50px;
   width: 500px;
   left: 75%;
   flex-wrap: wrap;
-  background-color: white;
+  background-color: ${props => props.theme.palette.common.white};
 `;
 
 const ButtonContainer = styled.div`
@@ -38,6 +38,7 @@ const TitleText = styled.h3`
 
 const TextContainer = styled.div`
   overflow-wrap: break-word;
+  font-family: ${props => props.theme.fontFamily};
 `;
 
 interface InfoBoxProps {
