@@ -23,6 +23,7 @@ import icons from '../utils/icons';
 import NodeDetails from './NodeDetails';
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
+import InfoBox from './InfoBox';
 import useWindowDimensions from '../hooks/useWindowDimensions';
 
 const Container = styled.div`
@@ -63,6 +64,21 @@ const SwitchButton = styled.div`
   top: 0px;
   margin-top: 10px;
   margin: 7px;
+`;
+
+const InfoButton = styled.button`
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 97%;
+  width: fit-content;
+  bottom: 0px;
+  margin-bottom: 10px;
+  padding: 5px 6px;
+  border: none;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const StyledTippy = styled(Tippy)`
@@ -114,6 +130,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
   const theme = useContext(ThemeContext);
 
   const [selectionMode, setSelectionMode] = useState(false);
+  const [infoVisible, setInfoVisible] = useState(false);
   const [selectedNode, setSelectedNode] = useState<Node | undefined>();
   const [popupTargetNode, setPopupTargetNode] = useState<Element | undefined>();
   const [selectedEdge, setSelectedEdge] = useState<EdgeData | undefined>();
@@ -170,6 +187,10 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
     if (selectionMode) setSelection([]);
     setSelectionMode(!selectionMode);
     closeNodePopup();
+  };
+
+  const toggleInfoBox = () => {
+    setInfoVisible(!infoVisible);
   };
 
   const fitGraph = (layout: ElkRoot) => {
@@ -258,10 +279,12 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                   else closeNodePopup();
                   resetTransform();
                   fitGraph(layout);
+                  setInfoVisible(false);
                 }}
                 onCanvasClick={() => {
                   if (selectionMode) setSelection([]);
                   else closeNodePopup();
+                  setInfoVisible(false);
                 }}
               />
               <Tippy
@@ -292,6 +315,12 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                 plugins={[followCursor]}
               />
             </TransformComponent>
+            <div>
+              <InfoButton onClick={toggleInfoBox}>
+                <Icon name='help-circle' size={26} />
+              </InfoButton>
+              {infoVisible && <InfoBox handleClose={toggleInfoBox} />}
+            </div>
             {selectableNodes && (
               <SwitchButton>
                 Selection mode
