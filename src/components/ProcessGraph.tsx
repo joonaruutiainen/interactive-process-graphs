@@ -10,6 +10,8 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({
   onSelectNodes = undefined,
   hideZoomButtons = false,
   iconSize = 30,
+  width,
+  height,
 }) => (
   <ThemeProvider theme={defaultTheme}>
     <ProcessGraphCanvas
@@ -19,6 +21,8 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({
       onSelectNodes={onSelectNodes}
       hideZoomButtons={hideZoomButtons}
       iconSize={iconSize}
+      width={width}
+      height={height}
     />
   </ThemeProvider>
 );

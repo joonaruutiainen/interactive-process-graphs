@@ -6,6 +6,7 @@ import ProcessGraph from './components/ProcessGraph';
 import exampleProcesses from './exampleProcesses';
 import defaultParser from './parser';
 import { RandomGraphGenerator } from './random';
+import useWindowDimensions from './hooks/useWindowDimensions';
 
 const AppContainer = styled.div`
   display: flex;
@@ -105,6 +106,8 @@ const App: React.FC = () => {
     [selectedNodes]
   );
 
+  const { width, height } = useWindowDimensions();
+
   return (
     <AppContainer>
       <RowContainer>
@@ -159,7 +162,13 @@ const App: React.FC = () => {
           selectedNodes !== '' ? selectedNodes : 'none'
         }`}</NodeSelectionContainer>
       </RowContainer>
-      <ProcessGraph nodes={graph.nodes} edges={graph.edges} onSelectNodes={onSelectNodes} />
+      <ProcessGraph
+        nodes={graph.nodes}
+        edges={graph.edges}
+        onSelectNodes={onSelectNodes}
+        width={width * 0.9}
+        height={height * 0.8}
+      />
     </AppContainer>
   );
 };

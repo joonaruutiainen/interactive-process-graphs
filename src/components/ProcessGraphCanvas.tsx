@@ -23,7 +23,6 @@ import icons from '../utils/icons';
 import NodeDetails from './NodeDetails';
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
-import useWindowDimensions from '../hooks/useWindowDimensions';
 
 const Container = styled.div`
   background-color: ${props => props.theme.palette.background.main};
@@ -100,6 +99,9 @@ export interface ProcessGraphProps {
 
   hideZoomButtons?: boolean;
   iconSize?: number; // default is 30, icon and label positions in a node are messed up if this is changed (fix pls)
+
+  width: number;
+  height: number;
 }
 
 const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
@@ -109,6 +111,8 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
   onSelectNodes = undefined,
   hideZoomButtons = false,
   iconSize = 30,
+  width,
+  height,
 }) => {
   const canvasRef = useRef<CanvasRef | null>(null);
   const zoomRef = useRef<ReactZoomPanPinchRef>(null);
@@ -121,8 +125,6 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
   const [selection, setSelection] = useState<number[]>([]);
 
   let edgeHoverTimeout: ReturnType<typeof setTimeout>;
-
-  const { width, height } = useWindowDimensions();
 
   useEffect(() => {
     if (onSelectNodes) onSelectNodes(selection);
@@ -216,8 +218,8 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                 ref={canvasRef}
                 readonly
                 zoomable={false}
-                maxWidth={width * 0.9}
-                maxHeight={height * 0.8}
+                maxWidth={width}
+                maxHeight={height}
                 minZoom={-1000}
                 maxZoom={1000}
                 nodes={nodeData}
@@ -265,6 +267,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                   <ReaflowEdge
                     style={{ stroke: theme.palette.secondary.main }}
                     onEnter={(_, edge) => {
+                      if (selectedNode) return;
                       edgeHoverTimeout = setTimeout(() => setSelectedEdge(edge), 1000);
                     }}
                     onLeave={() => {
