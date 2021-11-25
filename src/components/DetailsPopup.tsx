@@ -68,10 +68,13 @@ const Button = styled.div`
   }
 `;
 
-interface EdgeDetailsPopupProps {
-  edge: Edge;
+interface DetailsPopupProps {
   dataPlacement: Placement;
   onClose?: () => void;
+}
+
+interface EdgeDetailsPopupProps extends DetailsPopupProps {
+  edge: Edge;
 }
 
 export const EdgeDetailsPopup: React.FC<EdgeDetailsPopupProps> = ({ edge, dataPlacement, onClose = undefined }) => {
@@ -95,11 +98,9 @@ export const EdgeDetailsPopup: React.FC<EdgeDetailsPopupProps> = ({ edge, dataPl
   );
 };
 
-interface NodeDetailsPopupProps {
+interface NodeDetailsPopupProps extends DetailsPopupProps {
   node: Node;
-  dataPlacement: Placement;
   iconSize?: number;
-  onClose?: () => void;
 }
 
 export const NodeDetailsPopup: React.FC<NodeDetailsPopupProps> = ({
