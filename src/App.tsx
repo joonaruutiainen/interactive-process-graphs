@@ -1,11 +1,15 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import styled from 'styled-components';
 
+import { Node } from './types/Node';
+import { Edge } from './types/Edge';
 import { Graph } from './types/Graph';
 import ProcessGraph from './components/ProcessGraph';
 import exampleProcesses from './exampleProcesses';
 import defaultParser from './parser';
 import { RandomGraphGenerator } from './random';
+import { GraphTool } from './hooks/graphTools/useGraphTools';
+import useMultiselectTool from './hooks/graphTools/useMultiselectTool';
 import useWindowDimensions from './hooks/useWindowDimensions';
 
 const AppContainer = styled.div`
@@ -46,12 +50,21 @@ const RggContainer = styled.div`
   font-family: Helvetica;
 `;
 
-const NodeSelectionContainer = styled.div`
+const OnClickContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 20%;
+  font-family: Helvetica;
+`;
+
+const SelectionContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: left;
-  width: 75%;
+  width: 55%;
   margin: 5%;
   font-family: Helvetica;
 `;
@@ -90,6 +103,25 @@ const App: React.FC = () => {
 
   const [selectedNodes, setSelectedNodes] = useState<string>('');
 
+  const multiselectTool = useMultiselectTool((nodes: Node[]) => {
+    if (nodes.length > 0) {
+      setSelectedNodes(nodes.map(n => n.id.toString()).join(', '));
+    } else {
+      setSelectedNodes('none');
+    }
+  });
+
+  const [clickedNode, setClickedNode] = useState<string>('none');
+  const [clickedEdge, setClickedEdge] = useState<string>('none');
+
+  const useCustomClickTool = (): GraphTool => ({
+    name: 'Custom Click Tool',
+    onNodeClick: (node: Node) => setClickedNode(node.id.toString()),
+    onEdgeClick: (edge: Edge) => setClickedEdge(`${edge.from}-${edge.to}`),
+  });
+
+  const customClickTool = useCustomClickTool();
+
   useEffect(() => {
     if (processMode === 'examples') {
       setGraph(defaultParser(selectedProcess));
@@ -97,14 +129,6 @@ const App: React.FC = () => {
       setGraph(rgg.generate());
     }
   }, [processMode, selectedProcess, rgg]);
-
-  const onSelectNodes = useCallback(
-    (selection: number[]) => {
-      if (selection.length > 0) setSelectedNodes(JSON.stringify(selection, null, 2));
-      else setSelectedNodes('');
-    },
-    [selectedNodes]
-  );
 
   const { width, height } = useWindowDimensions();
 
@@ -158,16 +182,22 @@ const App: React.FC = () => {
             </RggContainer>
           )}
         </ProcessSelectionContainer>
-        <NodeSelectionContainer>{`Selected nodes: ${
-          selectedNodes !== '' ? selectedNodes : 'none'
-        }`}</NodeSelectionContainer>
+        <OnClickContainer>
+          <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>Custom onClicks</div>
+          <div>{`node clicked: ${clickedNode}`}</div>
+          <div>{`edge clicked: ${clickedEdge}`}</div>
+        </OnClickContainer>
+        <SelectionContainer>
+          <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>Multiselection</div>
+          <div>{`Selected nodes: ${selectedNodes}`}</div>
+        </SelectionContainer>
       </RowContainer>
       <ProcessGraph
         nodes={graph.nodes}
         edges={graph.edges}
-        onSelectNodes={onSelectNodes}
+        customGraphTools={[multiselectTool, customClickTool]}
         width={width * 0.9}
-        height={height * 0.8}
+        height={height * 0.7}
       />
     </AppContainer>
   );

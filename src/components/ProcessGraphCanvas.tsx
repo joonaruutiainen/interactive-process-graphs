@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo, useRef, useContext, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useMemo, useRef, useContext } from 'react';
 import {
   Canvas,
   EdgeData,
@@ -14,15 +14,14 @@ import {
 import styled, { ThemeContext } from 'styled-components';
 import { TransformWrapper, TransformComponent, ReactZoomPanPinchRef } from 'react-zoom-pan-pinch';
 import { Icon } from 'ts-react-feather-icons';
-import ToggleButton from 'react-toggle-button';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
-import { followCursor } from 'tippy.js';
 
 import icons from '../utils/icons';
-import NodeDetails from './NodeDetails';
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
+import useGraphTools, { GraphTool } from '../hooks/graphTools/useGraphTools';
+import usePopupInfoTool from '../hooks/graphTools/usePopupInfoTool';
 import InfoBox from './InfoBox';
 import Button from '../styles/components';
 
@@ -70,24 +69,8 @@ const ZoomButton = styled(Button)`
   margin: 13px 0 13px 13px;
 `;
 
-const SelectionMode = styled.div`
-  margin: 13px 13px 13px auto;
-  display: flex;
-  flex-direction: row;
-`;
-
-const SelectionLabel = styled.div`
-  font-family: ${props => props.theme.fontFamily};
-  margin-right: 5px;
-  align-self: center;
-`;
-
 const InfoButton = styled(Button)`
   margin: 13px 13px 13px 0;
-`;
-
-const StyledTippy = styled(Tippy)`
-  font-family: ${props => props.theme.fontFamily};
 `;
 
 const nodeToNodeData = (node: Node, iconSize: number): NodeData => {
@@ -115,13 +98,9 @@ const edgeToEdgeData = (edge: Edge): EdgeData => ({
 export interface ProcessGraphProps {
   nodes: Node[];
   edges: Edge[];
-  selectableNodes?: boolean;
-  // eslint-disable-next-line no-unused-vars
-  onSelectNodes?: (selection: number[]) => void;
-
   hideZoomButtons?: boolean;
   iconSize?: number; // default is 30, icon and label positions in a node are messed up if this is changed (fix pls)
-
+  customGraphTools?: GraphTool[];
   width: number;
   height: number;
 }
@@ -129,80 +108,45 @@ export interface ProcessGraphProps {
 const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
   nodes,
   edges,
-  selectableNodes = true,
-  onSelectNodes = undefined,
   hideZoomButtons = false,
   iconSize = 30,
+  customGraphTools = [],
   width,
   height,
 }) => {
   const canvasRef = useRef<CanvasRef | null>(null);
   const zoomRef = useRef<ReactZoomPanPinchRef>(null);
   const theme = useContext(ThemeContext);
+  const [infoVisible, setInfoVisible] = useState<boolean>(false);
 
-  const [selectionMode, setSelectionMode] = useState(false);
-  const [infoVisible, setInfoVisible] = useState(false);
-  const [selectedNode, setSelectedNode] = useState<Node | undefined>();
-  const [popupTargetNode, setPopupTargetNode] = useState<Element | undefined>();
-  const [selectedEdge, setSelectedEdge] = useState<EdgeData | undefined>();
-  const [selection, setSelection] = useState<number[]>([]);
+  const reaflowNodes: NodeData[] = useMemo(() => nodes.map(node => nodeToNodeData(node, iconSize)), [nodes]);
+  const reaflowEdges: EdgeData[] = useMemo(() => edges.map(edgeToEdgeData), [edges]);
 
-  let edgeHoverTimeout: ReturnType<typeof setTimeout>;
+  const popupInfoTool = usePopupInfoTool();
+  const [activeTool, setActiveTool, allTools] = useGraphTools([popupInfoTool, ...customGraphTools]);
+  const activeToolTippyProps = useMemo(() => activeTool.getTippyProps?.(), [activeTool]);
 
-  useEffect(() => {
-    if (onSelectNodes) onSelectNodes(selection);
-  }, [selection, onSelectNodes]);
-
-  const closeNodePopup = () => {
-    setSelectedNode(undefined);
-    setPopupTargetNode(undefined);
-  };
-
-  const nodeData: NodeData[] = useMemo(() => nodes.map(node => nodeToNodeData(node, iconSize)), [nodes]);
-  const edgeData: EdgeData[] = useMemo(() => edges.map(edgeToEdgeData), [edges]);
-
-  const getEdgeTooltipText = (from: string | undefined, to: string | undefined): string => {
-    if (from === undefined || to === undefined) return '';
-    const fromNode = nodes.find(n => n.id.toString() === from);
-    const toNode = nodes.find(n => n.id.toString() === to);
-    return `From ${fromNode?.type} ${fromNode?.id} to ${toNode?.type} ${toNode?.id}`;
-  };
-
-  const onNodeClick = useCallback(
-    (event: React.MouseEvent<SVGGElement, MouseEvent>, node: NodeData): void => {
-      const id = parseInt(node.id, 10);
-
-      if (selectableNodes && selectionMode) {
-        let newSelection = [...selection];
-        if (!selection.find(n => n === id)) {
-          newSelection = [...selection, id];
-          newSelection.sort((a, b) => a - b);
-        } else {
-          newSelection = newSelection.filter(n => n !== id);
-        }
-        setSelection(newSelection);
-        return;
-      }
-
-      if (id === selectedNode?.id) {
-        closeNodePopup();
-      } else {
-        setSelectedNode(nodes.find(n => n.id === id));
-        setPopupTargetNode(event.target as Element);
+  const handleNodeClick = useCallback(
+    (event: React.MouseEvent<SVGGElement, MouseEvent>, nodeData: NodeData): void => {
+      const id = parseInt(nodeData.id, 10);
+      const node = nodes.find(n => n.id === id);
+      if (node) {
+        activeTool.onNodeClick?.(node, event);
       }
     },
-    [selectedNode, popupTargetNode, selection, selectionMode]
+    [activeTool]
   );
 
-  const modeSwitch = () => {
-    if (selectionMode) setSelection([]);
-    setSelectionMode(!selectionMode);
-    closeNodePopup();
-  };
-
-  const toggleInfoBox = () => {
-    setInfoVisible(!infoVisible);
-  };
+  const handleEdgeClick = useCallback(
+    (event: React.MouseEvent<SVGGElement, MouseEvent>, edgeData: EdgeData): void => {
+      const [fromId, toId] = edgeData.id.split('-').map(id => parseInt(id, 10));
+      const edge = edges.find(e => e.from === fromId && e.to === toId);
+      if (edge) {
+        activeTool.onEdgeClick?.(edge, event);
+      }
+    },
+    [activeTool]
+  );
 
   const fitGraph = (layout: ElkRoot) => {
     if (layout.height && layout.width) {
@@ -220,7 +164,6 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
 
   useEffect(() => {
     if (!canvasRef.current || !zoomRef.current) return;
-
     fitGraph(canvasRef.current.layout);
     zoomRef.current.setTransform(
       zoomRef.current.state.positionX,
@@ -249,8 +192,8 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                 maxHeight={height}
                 minZoom={-1000}
                 maxZoom={1000}
-                nodes={nodeData}
-                edges={edgeData}
+                nodes={reaflowNodes}
+                edges={reaflowEdges}
                 layoutOptions={{
                   'elk.direction': 'RIGHT',
                   'org.eclipse.elk.layered.nodePlacement.strategy': 'NETWORK_SIMPLEX',
@@ -278,7 +221,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                         }}
                       />
                     }
-                    onClick={onNodeClick}
+                    onClick={handleNodeClick}
                     icon={<ReaflowIcon x={50} y={50} height={iconSize} width={iconSize} />}
                   />
                 }
@@ -290,41 +233,22 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                     }}
                   />
                 }
-                edge={
-                  <ReaflowEdge
-                    style={{ stroke: theme.palette.secondary.main }}
-                    onEnter={(_, edge) => {
-                      if (selectedNode) return;
-                      edgeHoverTimeout = setTimeout(() => setSelectedEdge(edge), 1000);
-                    }}
-                    onLeave={() => {
-                      clearTimeout(edgeHoverTimeout);
-                      setSelectedEdge(undefined);
-                    }}
-                  />
-                }
+                edge={<ReaflowEdge style={{ stroke: theme.palette.secondary.main }} onClick={handleEdgeClick} />}
                 onLayoutChange={layout => {
-                  if (selectionMode) setSelection([]);
-                  else closeNodePopup();
-
+                  activeTool.reset?.();
                   resetTransform();
                   fitGraph(layout);
                   setInfoVisible(false);
                 }}
                 onCanvasClick={() => {
-                  if (selectionMode) setSelection([]);
-                  else closeNodePopup();
+                  activeTool.reset?.();
                   setInfoVisible(false);
                 }}
               />
               <Tippy
-                render={attrs =>
-                  selectedNode && (
-                    <NodeDetails node={selectedNode} dataPlacement={attrs['data-placement']} onClose={closeNodePopup} />
-                  )
-                }
-                reference={popupTargetNode}
-                visible={selectedNode !== undefined}
+                render={activeToolTippyProps?.render}
+                reference={activeToolTippyProps?.reference}
+                visible={activeToolTippyProps?.visible ?? false}
                 interactive
                 appendTo={document.body}
                 popperOptions={{
@@ -339,13 +263,6 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                   ],
                 }}
               />
-              <StyledTippy
-                content={getEdgeTooltipText(selectedEdge?.from, selectedEdge?.to)}
-                visible={selectedEdge !== undefined}
-                arrow={false}
-                followCursor
-                plugins={[followCursor]}
-              />
             </TransformComponent>
             <Controls>
               {!hideZoomButtons && (
@@ -359,21 +276,21 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                   <ZoomButton onClick={() => resetTransform()}>
                     <Icon name='maximize' size={24} />
                   </ZoomButton>
+                  {/* TODO: Custom buttons for tools */}
+                  {allTools.map(tool => (
+                    <button type='button' onClick={() => setActiveTool(tool)} disabled={activeTool.name === tool.name}>
+                      {tool.name}
+                    </button>
+                  ))}
                 </ButtonGroup>
               )}
             </Controls>
             <Controls>
               <ControlGroup>
-              {selectableNodes && (
-                  <SelectionMode>
-                    <SelectionLabel>Selection mode</SelectionLabel>
-                    <ToggleButton value={selectionMode} onToggle={modeSwitch} />
-                  </SelectionMode>
-                )}
-                <InfoButton onClick={toggleInfoBox}>
+                <InfoButton onClick={() => setInfoVisible(!infoVisible)}>
                   <Icon name='info' size={24} />
                 </InfoButton>
-                {infoVisible && <InfoBox handleClose={toggleInfoBox} />}
+                {infoVisible && <InfoBox handleClose={() => setInfoVisible(false)} />}
               </ControlGroup>
             </Controls>
           </>

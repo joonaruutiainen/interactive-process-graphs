@@ -2,8 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ts-react-feather-icons';
 import { Placement } from 'tippy.js';
-import { Node } from '../types/Node';
+
 import Arrow from './Arrow';
+import { Edge } from '../types/Edge';
+import { Node } from '../types/Node';
 import dogIcon from '../icons/dog.svg';
 
 const CLOSE_BUTTON_SIZE = 20;
@@ -66,14 +68,47 @@ const Button = styled.div`
   }
 `;
 
-interface NodeDetailsProps {
-  node: Node;
+interface DetailsPopupProps {
   dataPlacement: Placement;
   onClose?: () => void;
+}
+
+interface EdgeDetailsPopupProps extends DetailsPopupProps {
+  edge: Edge;
+}
+
+export const EdgeDetailsPopup: React.FC<EdgeDetailsPopupProps> = ({ edge, dataPlacement, onClose = undefined }) => {
+  const { from, to } = edge;
+
+  return (
+    <Container>
+      <FirstRow>
+        <Text>
+          Edge from {from} to {to}
+        </Text>
+        <Spacer />
+        <ButtonContainer>
+          <Button onClick={onClose}>
+            <Icon name='x-circle' size={CLOSE_BUTTON_SIZE} />
+          </Button>
+        </ButtonContainer>
+      </FirstRow>
+      <Arrow placement={dataPlacement} />
+    </Container>
+  );
+};
+
+interface NodeDetailsPopupProps extends DetailsPopupProps {
+  node: Node;
   iconSize?: number;
 }
 
-const NodeDetails: React.FC<NodeDetailsProps> = ({ node, dataPlacement, iconSize = 40, onClose = undefined }) => {
+export const NodeDetailsPopup: React.FC<NodeDetailsPopupProps> = ({
+  node,
+  dataPlacement,
+  iconSize = 40,
+  onClose = undefined,
+}) => {
   const { id, type, description, data } = node;
 
   return (
@@ -109,5 +144,3 @@ const NodeDetails: React.FC<NodeDetailsProps> = ({ node, dataPlacement, iconSize
     </Container>
   );
 };
-
-export default NodeDetails;
