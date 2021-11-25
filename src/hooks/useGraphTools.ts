@@ -5,9 +5,7 @@ import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
 import NodeDetails from '../components/NodeDetails';
 
-// eslint-disable-next-line no-unused-vars
 type EdgeClickCallback = (edge: Edge, event: React.MouseEvent<SVGGElement, MouseEvent>) => void;
-// eslint-disable-next-line no-unused-vars
 type NodeClickCallback = (node: Node, event: React.MouseEvent<SVGGElement, MouseEvent>) => void;
 
 export interface GraphTool {
@@ -18,7 +16,6 @@ export interface GraphTool {
   getTippyProps?: () => Pick<TippyProps, 'render' | 'reference' | 'visible'>;
 }
 
-// eslint-disable-next-line no-unused-vars
 const useGraphTools = (tools: GraphTool[]): [GraphTool, (tool: GraphTool) => void, GraphTool[]] => {
   if (tools.length === 0) {
     throw new Error('No graph tools provided');
@@ -66,10 +63,12 @@ export const useInfoTool = (): GraphTool => {
       };
     }
     return {
-      render: (attrs: any) => React.createElement(NodeDetails, {
-        node: selectedNode,
-        dataPlacement: attrs['data-placement'],
-      }),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      render: (attrs: any) =>
+        React.createElement(NodeDetails, {
+          node: selectedNode,
+          dataPlacement: attrs['data-placement'],
+        }),
       reference: tippyTargetElement,
       visible: true,
     };
@@ -78,23 +77,20 @@ export const useInfoTool = (): GraphTool => {
   return { name: 'Node Info Tool', reset, onNodeClick, getTippyProps };
 };
 
-export const useMultiselectTool = (
-  onUpdate?: (nodes: Node[]) => void
-): GraphTool => {
+export const useMultiselectTool = (onUpdate?: (nodes: Node[]) => void): GraphTool => {
   const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
 
   const reset = (): void => {
     setSelectedNodes([]);
   };
 
-  const onNodeClick: NodeClickCallback = (node) => {
+  const onNodeClick: NodeClickCallback = node => {
     if (selectedNodes.find(n => n.id === node.id)) {
       setSelectedNodes(selectedNodes.filter(n => n.id !== node.id));
-    }
-    else {
+    } else {
       setSelectedNodes([...selectedNodes, node]);
     }
-  }
+  };
 
   useEffect(() => {
     onUpdate?.(selectedNodes);

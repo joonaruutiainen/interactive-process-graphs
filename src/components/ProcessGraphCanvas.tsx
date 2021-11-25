@@ -86,7 +86,13 @@ export interface ProcessGraphProps {
   customGraphTools?: GraphTool[];
 }
 
-const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoomButtons = false, iconSize = 30, customGraphTools = [] }) => {
+const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
+  nodes,
+  edges,
+  hideZoomButtons = false,
+  iconSize = 30,
+  customGraphTools = [],
+}) => {
   const canvasRef = useRef<CanvasRef | null>(null);
   const theme = useContext(ThemeContext);
 
@@ -234,7 +240,11 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({ nodes, edges, hideZoo
               />
             </TransformComponent>
             <div>
-              {allTools.map(tool => <button type='button' onClick={() => setActiveTool(tool)}>{tool.name}</button>)}
+              {allTools.map(tool => (
+                <button type='button' onClick={() => setActiveTool(tool)}>
+                  {tool.name}
+                </button>
+              ))}
             </div>
             {!hideZoomButtons && (
               <ButtonGroup>

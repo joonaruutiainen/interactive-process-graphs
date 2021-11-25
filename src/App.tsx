@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { Node } from './types/Node';
@@ -8,7 +8,7 @@ import ProcessGraph from './components/ProcessGraph';
 import exampleProcesses from './exampleProcesses';
 import defaultParser from './parser';
 import { RandomGraphGenerator } from './random';
-import { useMultiselectTool } from './hooks/useGraphTools';
+import { GraphTool, useMultiselectTool } from './hooks/useGraphTools';
 
 const AppContainer = styled.div`
   display: flex;
@@ -100,14 +100,25 @@ const App: React.FC = () => {
   const [rgg, setRgg] = useState(new RandomGraphGenerator(5, 5));
 
   const [selectedNodes, setSelectedNodes] = useState<string>('');
+
   const multiselectTool = useMultiselectTool((nodes: Node[]) => {
     if (nodes.length > 0) {
       setSelectedNodes(nodes.map(n => n.id.toString()).join(', '));
-    }
-    else {
+    } else {
       setSelectedNodes('none');
     }
   });
+
+  const [clickedNode, setClickedNode] = useState<string>('none');
+  const [clickedEdge, setClickedEdge] = useState<string>('none');
+
+  const useCustomClickTool = (): GraphTool => ({
+    name: 'Custom Click Tool',
+    onNodeClick: (node: Node) => setClickedNode(node.id.toString()),
+    onEdgeClick: (edge: Edge) => setClickedEdge(`${edge.from}-${edge.to}`),
+  });
+
+  const customClickTool = useCustomClickTool();
 
   useEffect(() => {
     if (processMode === 'examples') {
@@ -167,15 +178,17 @@ const App: React.FC = () => {
             </RggContainer>
           )}
         </ProcessSelectionContainer>
+        <OnClickContainer>
+          <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>Custom onClicks</div>
+          <div>{`node clicked: ${clickedNode}`}</div>
+          <div>{`edge clicked: ${clickedEdge}`}</div>
+        </OnClickContainer>
         <SelectionContainer>
+          <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>Multiselection</div>
           <div>{`Selected nodes: ${selectedNodes}`}</div>
         </SelectionContainer>
       </RowContainer>
-      <ProcessGraph
-        nodes={graph.nodes}
-        edges={graph.edges}
-        customGraphTools={[multiselectTool]}
-      />
+      <ProcessGraph nodes={graph.nodes} edges={graph.edges} customGraphTools={[multiselectTool, customClickTool]} />
     </AppContainer>
   );
 };
