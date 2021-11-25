@@ -319,7 +319,9 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
               />
               <Tippy
                 render={attrs =>
-                  selectedNode && <NodeDetails node={selectedNode} dataPlacement={attrs['data-placement']} />
+                  selectedNode && (
+                    <NodeDetails node={selectedNode} dataPlacement={attrs['data-placement']} onClose={closeNodePopup} />
+                  )
                 }
                 reference={popupTargetNode}
                 visible={selectedNode !== undefined}
