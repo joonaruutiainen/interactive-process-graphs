@@ -1,6 +1,6 @@
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
-import defaultTheme from '../theme';
+import defaultTheme from '../styles/theme';
 import ProcessGraphCanvas, { ProcessGraphProps } from './ProcessGraphCanvas';
 
 const ProcessGraph: React.FC<ProcessGraphProps> = props => (

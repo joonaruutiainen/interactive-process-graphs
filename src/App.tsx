@@ -10,6 +10,7 @@ import defaultParser from './parser';
 import { RandomGraphGenerator } from './random';
 import { GraphTool } from './hooks/graphTools/useGraphTools';
 import useMultiselectTool from './hooks/graphTools/useMultiselectTool';
+import useWindowDimensions from './hooks/useWindowDimensions';
 
 const AppContainer = styled.div`
   display: flex;
@@ -129,6 +130,8 @@ const App: React.FC = () => {
     }
   }, [processMode, selectedProcess, rgg]);
 
+  const { width, height } = useWindowDimensions();
+
   return (
     <AppContainer>
       <RowContainer>
@@ -189,7 +192,13 @@ const App: React.FC = () => {
           <div>{`Selected nodes: ${selectedNodes}`}</div>
         </SelectionContainer>
       </RowContainer>
-      <ProcessGraph nodes={graph.nodes} edges={graph.edges} customGraphTools={[multiselectTool, customClickTool]} />
+      <ProcessGraph
+        nodes={graph.nodes}
+        edges={graph.edges}
+        customGraphTools={[multiselectTool, customClickTool]}
+        width={width * 0.9}
+        height={height * 0.9}
+      />
     </AppContainer>
   );
 };

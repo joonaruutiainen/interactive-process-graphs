@@ -12,7 +12,7 @@ import {
   ElkRoot,
 } from 'reaflow';
 import styled, { ThemeContext } from 'styled-components';
-import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
+import { TransformWrapper, TransformComponent, ReactZoomPanPinchRef } from 'react-zoom-pan-pinch';
 import { Icon } from 'ts-react-feather-icons';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
@@ -20,9 +20,10 @@ import 'tippy.js/dist/tippy.css';
 import icons from '../utils/icons';
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
-import useWindowDimensions from '../hooks/useWindowDimensions';
 import useGraphTools, { GraphTool } from '../hooks/graphTools/useGraphTools';
 import usePopupInfoTool from '../hooks/graphTools/usePopupInfoTool';
+import InfoBox from './InfoBox';
+import Button from '../styles/components';
 
 const Container = styled.div`
   background-color: ${props => props.theme.palette.background.main};
@@ -34,27 +35,58 @@ const Container = styled.div`
   position: relative;
 `;
 
-const ButtonGroup = styled.div`
-  display: flex;
-  flex-direction: column;
+const Controls = styled.div`
+  display: inline-flex;
+  flex-direction: row;
   position: absolute;
-  bottom: 0px;
-  width: fit-content;
-  margin-bottom: 10px;
+  bottom: 0;
+  width: 100%;
 `;
 
-const ZoomButton = styled.button`
-  background-color: ${props => props.theme.palette.common.white};
+const ButtonGroup = styled.div`
+  background-color: ${props => props.theme.palette.background.main};
+  border-top-right-radius: ${props => props.theme.borderRadius}px;
+  padding-right: 13px;
   display: flex;
-  align-items: center;
-  margin: 7px auto 7px 15px;
-  width: fit-content;
-  text-align: center;
-  padding: 5px 6px;
-  border: none;
-  &:hover {
-    cursor: pointer;
-  }
+  flex-direction: row;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+`;
+
+const ControlGroup = styled.div`
+  background-color: ${props => props.theme.palette.background.main};
+  border-top-left-radius: ${props => props.theme.borderRadius}px;
+  padding-left: 13px;
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+`;
+
+const ZoomButton = styled(Button)`
+  margin: 13px 0 13px 13px;
+`;
+
+const SelectionMode = styled.div`
+  margin: 13px 13px 13px auto;
+  display: flex;
+  flex-direction: row;
+`;
+
+const SelectionLabel = styled.div`
+  font-family: ${props => props.theme.fontFamily};
+  margin-right: 5px;
+  align-self: center;
+`;
+
+const InfoButton = styled(Button)`
+  margin: 13px 13px 13px 0;
+`;
+
+const StyledTippy = styled(Tippy)`
+  font-family: ${props => props.theme.fontFamily};
 `;
 
 const nodeToNodeData = (node: Node, iconSize: number): NodeData => {
@@ -85,6 +117,8 @@ export interface ProcessGraphProps {
   hideZoomButtons?: boolean;
   iconSize?: number; // default is 30, icon and label positions in a node are messed up if this is changed (fix pls)
   customGraphTools?: GraphTool[];
+  width: number;
+  height: number;
 }
 
 const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
@@ -93,12 +127,13 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
   hideZoomButtons = false,
   iconSize = 30,
   customGraphTools = [],
+  width,
+  height,
 }) => {
   const canvasRef = useRef<CanvasRef | null>(null);
+  const zoomRef = useRef<ReactZoomPanPinchRef>(null);
   const theme = useContext(ThemeContext);
-
-  const { width, height } = useWindowDimensions();
-
+  
   const reaflowNodes: NodeData[] = useMemo(() => nodes.map(node => nodeToNodeData(node, iconSize)), [nodes]);
   const reaflowEdges: EdgeData[] = useMemo(() => edges.map(edgeToEdgeData), [edges]);
 
@@ -142,9 +177,26 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
     }
   };
 
+  useEffect(() => {
+    if (!canvasRef.current || !zoomRef.current) return;
+
+    fitGraph(canvasRef.current.layout);
+    zoomRef.current.setTransform(
+      zoomRef.current.state.positionX,
+      zoomRef.current.state.positionY,
+      zoomRef.current.state.previousScale
+    );
+  }, [width, height]);
+
   return (
     <Container>
-      <TransformWrapper wheel={{ step: 0.1 }} minScale={0.8} maxScale={10} doubleClick={{ disabled: true }}>
+      <TransformWrapper
+        ref={zoomRef}
+        wheel={{ step: 0.1 }}
+        minScale={0.8}
+        maxScale={10}
+        doubleClick={{ disabled: true }}
+      >
         {({ zoomIn, zoomOut, resetTransform }) => (
           <>
             <TransformComponent>
@@ -152,8 +204,8 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                 ref={canvasRef}
                 readonly
                 zoomable={false}
-                maxWidth={width * 0.9}
-                maxHeight={height * 0.8}
+                maxWidth={width}
+                maxHeight={height}
                 minZoom={-1000}
                 maxZoom={1000}
                 nodes={reaflowNodes}
@@ -202,8 +254,12 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                   activeTool.reset?.();
                   resetTransform();
                   fitGraph(layout);
+                  setInfoVisible(false);
                 }}
-                onCanvasClick={activeTool.reset}
+                onCanvasClick={() => {
+                  activeTool.reset();
+                  setInfoVisible(false);
+                }}
               />
               <Tippy
                 render={activeToolTippyProps?.render}
@@ -231,19 +287,29 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                 </button>
               ))}
             </div>
-            {!hideZoomButtons && (
-              <ButtonGroup>
-                <ZoomButton onClick={() => zoomIn()}>
-                  <Icon name='plus' size={24} />
-                </ZoomButton>
-                <ZoomButton onClick={() => zoomOut()}>
-                  <Icon name='minus' size={24} />
-                </ZoomButton>
-                <ZoomButton onClick={() => resetTransform()}>
-                  <Icon name='maximize' size={24} />
-                </ZoomButton>
-              </ButtonGroup>
-            )}
+            <Controls>
+              {!hideZoomButtons && (
+                <ButtonGroup>
+                  <ZoomButton onClick={() => zoomIn()}>
+                    <Icon name='plus' size={24} />
+                  </ZoomButton>
+                  <ZoomButton onClick={() => zoomOut()}>
+                    <Icon name='minus' size={24} />
+                  </ZoomButton>
+                  <ZoomButton onClick={() => resetTransform()}>
+                    <Icon name='maximize' size={24} />
+                  </ZoomButton>
+                </ButtonGroup>
+              )}
+            </Controls>
+            <Controls>
+              <ControlGroup>
+                <InfoButton onClick={toggleInfoBox}>
+                  <Icon name='info' size={24} />
+                </InfoButton>
+                {infoVisible && <InfoBox handleClose={() => setInfoVisible(!infoVisible)} />}
+              </ControlGroup>
+            </Controls>
           </>
         )}
       </TransformWrapper>
