@@ -24,6 +24,7 @@ import NodeDetails from './NodeDetails';
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
 import InfoBox from './InfoBox';
+import Button from '../styles/components';
 
 const Container = styled.div`
   background-color: ${props => props.theme.palette.background.main};
@@ -35,49 +36,54 @@ const Container = styled.div`
   position: relative;
 `;
 
+const Controls = styled.div`
+  display: inline-flex;
+  flex-direction: row;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+`;
+
 const ButtonGroup = styled.div`
+  background-color: ${props => props.theme.palette.background.main};
+  border-top-right-radius: ${props => props.theme.borderRadius}px;
+  padding-right: 13px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   position: absolute;
-  bottom: 0px;
-  width: fit-content;
-  margin-bottom: 10px;
+  left: 0;
+  bottom: 0;
 `;
 
-const ZoomButton = styled.button`
-  background-color: ${props => props.theme.palette.common.white};
+const ControlGroup = styled.div`
+  background-color: ${props => props.theme.palette.background.main};
+  border-top-left-radius: ${props => props.theme.borderRadius}px;
+  padding-left: 13px;
   display: flex;
-  align-items: center;
-  margin: 7px auto 7px 15px;
-  width: fit-content;
-  text-align: center;
-  padding: 5px 6px;
-  border: none;
-  &:hover {
-    cursor: pointer;
-  }
+  flex-direction: row;
+  position: absolute;
+  right: 0;
+  bottom: 0;
 `;
 
-const SwitchButton = styled.div`
-  position: absolute;
-  top: 0px;
-  margin-top: 10px;
-  margin: 7px;
+const ZoomButton = styled(Button)`
+  margin: 13px 0 13px 13px;
 `;
 
-const InfoButton = styled.button`
+const SelectionMode = styled.div`
+  margin: 13px 13px 13px auto;
   display: flex;
-  align-items: center;
-  position: absolute;
-  left: 97%;
-  width: fit-content;
-  bottom: 0px;
-  margin-bottom: 10px;
-  padding: 5px 6px;
-  border: none;
-  &:hover {
-    cursor: pointer;
-  }
+  flex-direction: row;
+`;
+
+const SelectionLabel = styled.div`
+  font-family: ${props => props.theme.fontFamily};
+  margin-right: 5px;
+  align-self: center;
+`;
+
+const InfoButton = styled(Button)`
+  margin: 13px 13px 13px 0;
 `;
 
 const StyledTippy = styled(Tippy)`
@@ -341,31 +347,35 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                 plugins={[followCursor]}
               />
             </TransformComponent>
-            <div>
-              <InfoButton onClick={toggleInfoBox}>
-                <Icon name='help-circle' size={26} />
-              </InfoButton>
-              {infoVisible && <InfoBox handleClose={toggleInfoBox} />}
-            </div>
-            {selectableNodes && (
-              <SwitchButton>
-                Selection mode
-                <ToggleButton value={selectionMode} onToggle={modeSwitch} />
-              </SwitchButton>
-            )}
-            {!hideZoomButtons && (
-              <ButtonGroup>
-                <ZoomButton onClick={() => zoomIn()}>
-                  <Icon name='plus' size={24} />
-                </ZoomButton>
-                <ZoomButton onClick={() => zoomOut()}>
-                  <Icon name='minus' size={24} />
-                </ZoomButton>
-                <ZoomButton onClick={() => resetTransform()}>
-                  <Icon name='maximize' size={24} />
-                </ZoomButton>
-              </ButtonGroup>
-            )}
+            <Controls>
+              {!hideZoomButtons && (
+                <ButtonGroup>
+                  <ZoomButton onClick={() => zoomIn()}>
+                    <Icon name='plus' size={24} />
+                  </ZoomButton>
+                  <ZoomButton onClick={() => zoomOut()}>
+                    <Icon name='minus' size={24} />
+                  </ZoomButton>
+                  <ZoomButton onClick={() => resetTransform()}>
+                    <Icon name='maximize' size={24} />
+                  </ZoomButton>
+                </ButtonGroup>
+              )}
+            </Controls>
+            <Controls>
+              <ControlGroup>
+              {selectableNodes && (
+                  <SelectionMode>
+                    <SelectionLabel>Selection mode</SelectionLabel>
+                    <ToggleButton value={selectionMode} onToggle={modeSwitch} />
+                  </SelectionMode>
+                )}
+                <InfoButton onClick={toggleInfoBox}>
+                  <Icon name='info' size={24} />
+                </InfoButton>
+                {infoVisible && <InfoBox handleClose={toggleInfoBox} />}
+              </ControlGroup>
+            </Controls>
           </>
         )}
       </TransformWrapper>
