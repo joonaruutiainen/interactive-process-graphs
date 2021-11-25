@@ -50,6 +50,7 @@ const usePopupInfoTool = (): GraphTool => {
           React.createElement(EdgeDetailsPopup, {
             edge: selectedEdge,
             dataPlacement: attrs['data-placement'],
+            onClose: () => setSelectedEdge(undefined),
           }),
         reference: tippyTargetElement,
         visible: true,
@@ -61,6 +62,7 @@ const usePopupInfoTool = (): GraphTool => {
           React.createElement(NodeDetailsPopup, {
             node: selectedNode,
             dataPlacement: attrs['data-placement'],
+            onClose: () => setSelectedNode(undefined),
           }),
         reference: tippyTargetElement,
         visible: true,

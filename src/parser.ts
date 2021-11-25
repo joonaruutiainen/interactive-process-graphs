@@ -11,6 +11,7 @@ type DefaultNode = {
   description: string;
   nextNodes: number[];
   previousNodes: number[];
+  data?: Record<string, unknown>;
 };
 
 type DefaultData = {
@@ -26,6 +27,7 @@ const defaultParser: IParser<DefaultData> = data => {
       id: node.id,
       type: node.type,
       description: node.description,
+      data: node.data,
     });
     node.nextNodes.forEach((next: number) => {
       edges.push({

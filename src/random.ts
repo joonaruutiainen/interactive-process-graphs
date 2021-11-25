@@ -39,7 +39,7 @@ export class RandomGraphGenerator {
     // Generate horizontal "rows" of nodes equal to nInputNodes
     let rows: NodeRow[] = [];
     for (let i = 0; i < this.nInputNodes; i++) {
-      const node = { id: i, type: 'INPUT' };
+      const node = { id: i, type: 'INPUT', data: {} };
       nodes.push(node);
       rows.push([node]);
     }
@@ -69,15 +69,15 @@ export class RandomGraphGenerator {
 
         // Split the row into two
         if (randomChance <= this.chanceToSkip + this.chanceToMerge + this.chanceToSplit) {
-          const nodeA = { id: column * 100 + index, type: 'SPLIT' };
-          const nodeB = { id: column * 10000 + index, type: 'SPLIT' };
+          const nodeA = { id: column * 100 + index, type: 'SPLIT', data: {} };
+          const nodeB = { id: column * 10000 + index, type: 'SPLIT', data: {} };
           nodes.push(nodeA, nodeB);
           edges.push({ from: lastNode(row).id, to: nodeA.id }, { from: lastNode(row).id, to: nodeB.id });
           return [[...row, nodeA], [nodeB]];
         }
 
         // Just add a new node
-        const node = { id: column * 100 + index, type: 'NEXT' };
+        const node = { id: column * 100 + index, type: 'NEXT', data: {} };
         nodes.push(node);
         edges.push({ from: lastNode(row).id, to: node.id });
         return [row.concat([node])];
