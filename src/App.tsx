@@ -82,7 +82,9 @@ type ProcessMode = 'examples' | 'random';
 
 const App: React.FC = () => {
   const [graph, setGraph] = useState<Graph>({ nodes: [], edges: [] });
-  const icons = importIcons(require.context('./icons', false, /\.(svg)$/));
+
+  // bypass using webpack-specific require.context if its not available (e.g. when using jest environment in testing)
+  const icons = importIcons(require.context && require.context('./icons', false, /\.(svg)$/));
 
   const [processMode, setProcessMode] = useState<ProcessMode>('examples');
   const otherMode = useMemo(() => (processMode === 'examples' ? 'random' : 'examples'), [processMode]);

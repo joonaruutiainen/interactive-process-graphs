@@ -8,6 +8,11 @@ jest.mock('./components/ProcessGraph', () => ({
   default: () => <div />,
 }));
 
+jest.mock('./utils/iconImporter', () => ({
+  __esModule: true,
+  default: () => ({ aa: 'asd' }),
+}));
+
 describe('App component', () => {
   it('renders without crashing', () => {
     render(<App />);

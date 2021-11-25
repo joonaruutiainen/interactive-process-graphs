@@ -33,7 +33,13 @@ describe('ProcessGraph component', () => {
     it('renders without crashing', () => {
       render(
         <ThemeProvider theme={defaultTheme}>
-          <ProcessGraphCanvas nodes={testNodes} edges={testEdges} width={100} height={100} />
+          <ProcessGraphCanvas
+            nodes={testNodes}
+            edges={testEdges}
+            width={100}
+            height={100}
+            icons={{ aa: 'asd', bee: 'asd' }}
+          />
         </ThemeProvider>
       );
     });

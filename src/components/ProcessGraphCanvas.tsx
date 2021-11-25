@@ -27,7 +27,6 @@ import { IconMap } from '../types/IconMap';
 
 import Button from '../styles/components';
 
-
 const Container = styled.div`
   background-color: ${props => props.theme.palette.background.main};
   border-radius: ${props => props.theme.borderRadius}px;
@@ -367,7 +366,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
             </Controls>
             <Controls>
               <ControlGroup>
-              {selectableNodes && (
+                {selectableNodes && (
                   <SelectionMode>
                     <SelectionLabel>Selection mode</SelectionLabel>
                     <ToggleButton value={selectionMode} onToggle={modeSwitch} />
