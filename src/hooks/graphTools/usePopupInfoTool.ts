@@ -5,6 +5,7 @@ import { EdgeClickCallback, GraphTool, NodeClickCallback } from './useGraphTools
 import { Node } from '../../types/Node';
 import { Edge } from '../../types/Edge';
 import { EdgeDetailsPopup, NodeDetailsPopup } from '../../components/DetailsPopup';
+import { IconMap } from '../../types/IconMap';
 
 type TippyAttrs = {
   'data-placement': Placement;
@@ -12,7 +13,7 @@ type TippyAttrs = {
   'data-escaped'?: string;
 };
 
-const usePopupInfoTool = (): GraphTool => {
+const usePopupInfoTool = (icons: IconMap): GraphTool => {
   const [selectedEdge, setSelectedEdge] = useState<Edge | undefined>();
   const [selectedNode, setSelectedNode] = useState<Node | undefined>();
   const [tippyTargetElement, setTippyTargetElement] = useState<Element | undefined>();
@@ -61,6 +62,7 @@ const usePopupInfoTool = (): GraphTool => {
         render: (attrs: TippyAttrs) =>
           React.createElement(NodeDetailsPopup, {
             node: selectedNode,
+            icon: icons[selectedNode.type] || selectedNode.id % 2 === 0 ? icons.shiba : icons.dog,
             dataPlacement: attrs['data-placement'],
             onClose: () => setSelectedNode(undefined),
           }),

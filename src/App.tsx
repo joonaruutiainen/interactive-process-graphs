@@ -1,6 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import styled from 'styled-components';
 
+import requireContext from 'require-context.macro';
+
 import { Node } from './types/Node';
 import { Edge } from './types/Edge';
 import { Graph } from './types/Graph';
@@ -96,8 +98,7 @@ type ProcessMode = 'examples' | 'random';
 const App: React.FC = () => {
   const [graph, setGraph] = useState<Graph>({ nodes: [], edges: [] });
 
-  // bypass using webpack-specific require.context if its not available (e.g. when using jest environment in testing)
-  const icons = importIcons(require.context && require.context('./icons', false, /\.(svg)$/));
+  const icons = importIcons(requireContext('./icons', false, /\.(svg)$/));
 
   const [processMode, setProcessMode] = useState<ProcessMode>('examples');
   const otherMode = useMemo(() => (processMode === 'examples' ? 'random' : 'examples'), [processMode]);

@@ -6,7 +6,6 @@ import { Placement } from 'tippy.js';
 import Arrow from './Arrow';
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
-import dogIcon from '../icons/dog.svg';
 
 const CLOSE_BUTTON_SIZE = 20;
 
@@ -100,6 +99,7 @@ export const EdgeDetailsPopup: React.FC<EdgeDetailsPopupProps> = ({ edge, dataPl
 
 interface NodeDetailsPopupProps extends DetailsPopupProps {
   node: Node;
+  icon: string;
   iconSize?: number;
 }
 
@@ -107,6 +107,7 @@ export const NodeDetailsPopup: React.FC<NodeDetailsPopupProps> = ({
   node,
   dataPlacement,
   iconSize = 40,
+  icon,
   onClose = undefined,
 }) => {
   const { id, type, description, data } = node;
@@ -115,8 +116,8 @@ export const NodeDetailsPopup: React.FC<NodeDetailsPopupProps> = ({
     <Container>
       <FirstRow>
         <img
-          src={dogIcon}
-          style={{ width: `${iconSize}px`, height: `${iconSize}px`, margin: '10px' }}
+          src={icon}
+          style={{ width: `${iconSize}px`, height: `${iconSize}px`, margin: '3px 10px 0 0' }}
           alt={`${type}icon`}
         />
         <Text>

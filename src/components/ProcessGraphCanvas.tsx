@@ -126,7 +126,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
   const reaflowNodes: NodeData[] = useMemo(() => nodes.map(node => nodeToNodeData(node, iconSize, icons)), [nodes]);
   const reaflowEdges: EdgeData[] = useMemo(() => edges.map(edgeToEdgeData), [edges]);
 
-  const popupInfoTool = usePopupInfoTool();
+  const popupInfoTool = usePopupInfoTool(icons);
   const [activeTool, setActiveTool, allTools] = useGraphTools([popupInfoTool, ...customGraphTools]);
   const activeToolTippyProps = useMemo(() => activeTool.getTippyProps?.(), [activeTool]);
 
