@@ -10,6 +10,17 @@ const exampleProcesses = [
         nextNodes: [4],
         previousNodes: [],
         description: 'Ingredient A tank',
+        data: {
+          mass_flow: '1.5kg/s',
+          pressure: 0.3,
+          liiba: 'laaba',
+          liirum: 'laarum',
+          asd: true,
+          asd1: {
+            asd2: 'asd',
+          },
+          asd3: ['asd', 'asd'],
+        },
       },
       {
         id: 2,
@@ -17,6 +28,12 @@ const exampleProcesses = [
         nextNodes: [5],
         previousNodes: [],
         description: 'Ingredient B tank',
+        data: {
+          mass_flow: '1.5kg/s',
+          pressure: '0.3',
+          liiba:
+            '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."',
+        },
       },
       {
         id: 3,
@@ -24,6 +41,16 @@ const exampleProcesses = [
         nextNodes: [6],
         previousNodes: [],
         description: 'Water tank',
+        data: {
+          mass_flow: '1.5kg/s',
+          pressure: '0.3',
+          liiba: 'laaba',
+          liirum: 'laarum',
+          mass_flow2: '1.5kg/s',
+          pressure2: '0.3',
+          liiba2: 'laaba',
+          liirum2: 'laarum',
+        },
       },
       {
         id: 4,
@@ -31,6 +58,16 @@ const exampleProcesses = [
         nextNodes: [7],
         previousNodes: [1],
         description: 'Pipe from ingredient A tank to mixing tank',
+        data: {
+          mass_flow: '1.5kg/s',
+          pressure: '0.3',
+          liiba: 'laaba',
+          liirum: 'laarum',
+          mass_flow2: '1.5kg/s',
+          pressure2: '0.3',
+          liiba2: 'laaba',
+          liirum2: 'laarum',
+        },
       },
       {
         id: 5,
