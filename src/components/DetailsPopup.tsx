@@ -2,8 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ts-react-feather-icons';
 import { Placement } from 'tippy.js';
-import { Node } from '../types/Node';
+
 import Arrow from './Arrow';
+import { Edge } from '../types/Edge';
+import { Node } from '../types/Node';
 
 const Container = styled.div`
   border: solid;
@@ -43,23 +45,40 @@ const Button = styled.div`
   }
 `;
 
-interface NodeDetailsProps {
-  node: Node;
+interface DetailsPopupProps {
   dataPlacement: Placement;
 }
 
-const NodeDetails: React.FC<NodeDetailsProps> = ({ node, dataPlacement }) => (
+export const DetailsPopup: React.FC<DetailsPopupProps> = ({ dataPlacement, children }) => (
   <Container>
     <ButtonContainer>
       <Button>
         <Icon name='x-circle' size={20} />
       </Button>
     </ButtonContainer>
-    <TypeText>{node.type}</TypeText>
-    <Text> id {node.id}</Text>
-    <Text> description {node.description}</Text>
+    {children}
     <Arrow placement={dataPlacement} />
   </Container>
 );
 
-export default NodeDetails;
+interface EdgeDetailsPopupProps extends DetailsPopupProps {
+  edge: Edge;
+}
+
+export const EdgeDetailsPopup: React.FC<EdgeDetailsPopupProps> = ({ edge, ...rest }) => (
+  <DetailsPopup {...rest}>
+    <TypeText>Edge {`${edge.from} -> ${edge.to}`}</TypeText>
+  </DetailsPopup>
+);
+
+interface NodeDetailsPopupProps extends DetailsPopupProps {
+  node: Node;
+}
+
+export const NodeDetailsPopup: React.FC<NodeDetailsPopupProps> = ({ node, ...rest }) => (
+  <DetailsPopup {...rest}>
+    <TypeText>{node.type}</TypeText>
+    <Text> id {node.id}</Text>
+    <Text> description {node.description}</Text>
+  </DetailsPopup>
+);

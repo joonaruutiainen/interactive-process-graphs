@@ -8,7 +8,8 @@ import ProcessGraph from './components/ProcessGraph';
 import exampleProcesses from './exampleProcesses';
 import defaultParser from './parser';
 import { RandomGraphGenerator } from './random';
-import { GraphTool, useMultiselectTool } from './hooks/useGraphTools';
+import { GraphTool } from './hooks/graphTools/useGraphTools';
+import useMultiselectTool from './hooks/graphTools/useMultiselectTool';
 
 const AppContainer = styled.div`
   display: flex;

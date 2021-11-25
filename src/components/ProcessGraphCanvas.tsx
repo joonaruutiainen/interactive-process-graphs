@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo, useRef, useContext } from 'react';
+import React, { useCallback, useMemo, useRef, useContext } from 'react';
 import {
   Canvas,
   EdgeData,
@@ -21,7 +21,8 @@ import icons from '../utils/icons';
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
 import useWindowDimensions from '../hooks/useWindowDimensions';
-import useGraphTools, { GraphTool, useInfoTool } from '../hooks/useGraphTools';
+import useGraphTools, { GraphTool } from '../hooks/graphTools/useGraphTools';
+import usePopupInfoTool from '../hooks/graphTools/usePopupInfoTool';
 
 const Container = styled.div`
   background-color: ${props => props.theme.palette.background.main};
@@ -96,16 +97,14 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
   const canvasRef = useRef<CanvasRef | null>(null);
   const theme = useContext(ThemeContext);
 
-  const infoTool = useInfoTool();
-  const [activeTool, setActiveTool, allTools] = useGraphTools([infoTool, ...customGraphTools]);
-
-  const [hoveredEdge, setHoveredEdge] = useState<EdgeData | undefined>();
-  let edgeHoverTimeout: ReturnType<typeof setTimeout>;
-
   const { width, height } = useWindowDimensions();
 
   const reaflowNodes: NodeData[] = useMemo(() => nodes.map(node => nodeToNodeData(node, iconSize)), [nodes]);
   const reaflowEdges: EdgeData[] = useMemo(() => edges.map(edgeToEdgeData), [edges]);
+
+  const popupInfoTool = usePopupInfoTool();
+  const [activeTool, setActiveTool, allTools] = useGraphTools([popupInfoTool, ...customGraphTools]);
+  const activeToolTippyProps = useMemo(() => activeTool.getTippyProps?.(), [activeTool]);
 
   const handleNodeClick = useCallback(
     (event: React.MouseEvent<SVGGElement, MouseEvent>, nodeData: NodeData): void => {
@@ -142,8 +141,6 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
       canvasRef?.current?.centerCanvas?.();
     }
   };
-
-  const activeToolTippyProps = activeTool.getTippyProps?.();
 
   return (
     <Container>
@@ -200,19 +197,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                     }}
                   />
                 }
-                edge={
-                  <ReaflowEdge
-                    style={{ stroke: theme.palette.secondary.main }}
-                    onClick={handleEdgeClick}
-                    onEnter={(_, edge) => {
-                      edgeHoverTimeout = setTimeout(() => setHoveredEdge(edge), 1000);
-                    }}
-                    onLeave={() => {
-                      clearTimeout(edgeHoverTimeout);
-                      setHoveredEdge(undefined);
-                    }}
-                  />
-                }
+                edge={<ReaflowEdge style={{ stroke: theme.palette.secondary.main }} onClick={handleEdgeClick} />}
                 onLayoutChange={layout => {
                   activeTool.reset?.();
                   resetTransform();
@@ -241,7 +226,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
             </TransformComponent>
             <div>
               {allTools.map(tool => (
-                <button type='button' onClick={() => setActiveTool(tool)}>
+                <button type='button' onClick={() => setActiveTool(tool)} disabled={activeTool.name === tool.name}>
                   {tool.name}
                 </button>
               ))}
