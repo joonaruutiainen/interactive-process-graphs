@@ -12,7 +12,7 @@ type DefaultNode = {
   description: string;
   nextNodes: number[];
   previousNodes: number[];
-  data: Record<string, string | undefined>;
+  data?: Record<string, unknown>;
 };
 
 type DefaultData = {

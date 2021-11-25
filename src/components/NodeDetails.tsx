@@ -37,11 +37,11 @@ const DataContainer = styled.div`
 
 const Title = styled.h3`
   padding: 0;
-  margin: 0 0 10px 0;
+  margin: 0;
   font-family: ${props => props.theme.fontFamily};
 `;
 
-const Text = styled.p`
+const Text = styled.div`
   margin: 0;
   padding: 0;
   color: ${props => props.theme.palette.common.black};
@@ -98,11 +98,12 @@ const NodeDetails: React.FC<NodeDetailsProps> = ({ node, dataPlacement, iconSize
         </ButtonContainer>
       </FirstRow>
       <DataContainer>
-        {Object.entries(data).map(([key, value]) => (
-          <Text>
-            {key}: {value}
-          </Text>
-        ))}
+        {data &&
+          Object.entries(data).map(([key, value]) => (
+            <Text key={key}>
+              {key}: {JSON.stringify(value)}
+            </Text>
+          ))}
       </DataContainer>
       <Arrow placement={dataPlacement} />
     </Container>
