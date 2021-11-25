@@ -12,6 +12,7 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({
   iconSize = 30,
   width,
   height,
+  icons,
 }) => (
   <ThemeProvider theme={defaultTheme}>
     <ProcessGraphCanvas
@@ -23,6 +24,7 @@ const ProcessGraph: React.FC<ProcessGraphProps> = ({
       iconSize={iconSize}
       width={width}
       height={height}
+      icons={icons}
     />
   </ThemeProvider>
 );

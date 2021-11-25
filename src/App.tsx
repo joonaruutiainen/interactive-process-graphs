@@ -7,6 +7,7 @@ import exampleProcesses from './exampleProcesses';
 import defaultParser from './parser';
 import { RandomGraphGenerator } from './random';
 import useWindowDimensions from './hooks/useWindowDimensions';
+import importIcons from './utils/iconImporter';
 
 const AppContainer = styled.div`
   display: flex;
@@ -81,6 +82,7 @@ type ProcessMode = 'examples' | 'random';
 
 const App: React.FC = () => {
   const [graph, setGraph] = useState<Graph>({ nodes: [], edges: [] });
+  const icons = importIcons(require.context('./icons', false, /\.(svg)$/));
 
   const [processMode, setProcessMode] = useState<ProcessMode>('examples');
   const otherMode = useMemo(() => (processMode === 'examples' ? 'random' : 'examples'), [processMode]);
@@ -168,6 +170,7 @@ const App: React.FC = () => {
         onSelectNodes={onSelectNodes}
         width={width * 0.9}
         height={height * 0.8}
+        icons={icons}
       />
     </AppContainer>
   );

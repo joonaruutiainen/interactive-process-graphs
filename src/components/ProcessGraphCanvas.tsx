@@ -19,11 +19,11 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { followCursor } from 'tippy.js';
 
-import icons from '../utils/icons';
 import NodeDetails from './NodeDetails';
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
 import InfoBox from './InfoBox';
+import { IconMap } from '../types/IconMap';
 
 const Container = styled.div`
   background-color: ${props => props.theme.palette.background.main};
@@ -84,7 +84,7 @@ const StyledTippy = styled(Tippy)`
   font-family: ${props => props.theme.fontFamily};
 `;
 
-const nodeToNodeData = (node: Node, iconSize: number): NodeData => {
+const nodeToNodeData = (node: Node, iconSize: number, icons: IconMap): NodeData => {
   const nodeWidth = node.type.length * 10 + iconSize * 2.1 >= 350 ? 350 : node.type.length * 10 + iconSize * 2.1;
   const nodeHeight = iconSize > 30 ? iconSize + 20 : 50;
   return {
@@ -114,6 +114,8 @@ export interface ProcessGraphProps {
   onSelectNodes?: (selection: number[]) => void;
 
   hideZoomButtons?: boolean;
+
+  icons: IconMap;
   iconSize?: number; // default is 30, icon and label positions in a node are messed up if this is changed (fix pls)
 
   width: number;
@@ -129,6 +131,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
   iconSize = 30,
   width,
   height,
+  icons,
 }) => {
   const canvasRef = useRef<CanvasRef | null>(null);
   const zoomRef = useRef<ReactZoomPanPinchRef>(null);
@@ -152,7 +155,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
     setPopupTargetNode(undefined);
   };
 
-  const nodeData: NodeData[] = useMemo(() => nodes.map(node => nodeToNodeData(node, iconSize)), [nodes]);
+  const nodeData: NodeData[] = useMemo(() => nodes.map(node => nodeToNodeData(node, iconSize, icons)), [nodes]);
   const edgeData: EdgeData[] = useMemo(() => edges.map(edgeToEdgeData), [edges]);
 
   const getEdgeTooltipText = (from: string | undefined, to: string | undefined): string => {
