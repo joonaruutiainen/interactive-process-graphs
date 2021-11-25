@@ -98,9 +98,9 @@ const NodeDetails: React.FC<NodeDetailsProps> = ({ node, dataPlacement, iconSize
         </ButtonContainer>
       </FirstRow>
       <DataContainer>
-        {Object.entries(data).map(val => (
+        {Object.entries(data).map(([key, value]) => (
           <Text>
-            {val[0]}: {val[1]}
+            {key}: {value}
           </Text>
         ))}
       </DataContainer>
