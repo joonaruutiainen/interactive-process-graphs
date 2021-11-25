@@ -343,9 +343,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
               )}
               {selectableNodes && (
                 <SelectionMode>
-                  <SelectionLabel>
-                    Selection mode
-                  </SelectionLabel>
+                  <SelectionLabel>Selection mode</SelectionLabel>
                   <ToggleButton value={selectionMode} onToggle={modeSwitch} />
                 </SelectionMode>
               )}
