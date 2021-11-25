@@ -37,19 +37,37 @@ const Container = styled.div`
 `;
 
 const Controls = styled.div`
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
-  bottom: 0px;
+  position: absolute;
+  bottom: 0;
   width: 100%;
 `;
 
 const ButtonGroup = styled.div`
+  background-color: ${props => props.theme.palette.background.main};
+  border-top-right-radius: ${props => props.theme.borderRadius}px;
+  padding-right: 13px;
   display: flex;
   flex-direction: row;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+`;
+
+const ControlGroup = styled.div`
+  background-color: ${props => props.theme.palette.background.main};
+  border-top-left-radius: ${props => props.theme.borderRadius}px;
+  padding-left: 13px;
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  right: 0;
+  bottom: 0;
 `;
 
 const ZoomButton = styled(Button)`
-  margin: 13px 0 3px 13px;
+  margin: 13px 0 13px 13px;
 `;
 
 const SelectionMode = styled.div`
@@ -341,16 +359,20 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                   </ZoomButton>
                 </ButtonGroup>
               )}
+            </Controls>
+            <Controls>
+              <ControlGroup>
               {selectableNodes && (
-                <SelectionMode>
-                  <SelectionLabel>Selection mode</SelectionLabel>
-                  <ToggleButton value={selectionMode} onToggle={modeSwitch} />
-                </SelectionMode>
-              )}
-              <InfoButton onClick={toggleInfoBox}>
-                <Icon name='info' size={24} />
-              </InfoButton>
-              {infoVisible && <InfoBox handleClose={toggleInfoBox} />}
+                  <SelectionMode>
+                    <SelectionLabel>Selection mode</SelectionLabel>
+                    <ToggleButton value={selectionMode} onToggle={modeSwitch} />
+                  </SelectionMode>
+                )}
+                <InfoButton onClick={toggleInfoBox}>
+                  <Icon name='info' size={24} />
+                </InfoButton>
+                {infoVisible && <InfoBox handleClose={toggleInfoBox} />}
+              </ControlGroup>
             </Controls>
           </>
         )}
