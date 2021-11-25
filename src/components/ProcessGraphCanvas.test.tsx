@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, cleanup } from '@testing-library/react';
 import { ThemeProvider } from 'styled-components';
-import defaultTheme from '../theme';
+import defaultTheme from '../styles/theme';
 import ProcessGraphCanvas from './ProcessGraphCanvas';
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
