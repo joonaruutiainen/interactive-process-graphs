@@ -197,7 +197,7 @@ const App: React.FC = () => {
         edges={graph.edges}
         customGraphTools={[multiselectTool, customClickTool]}
         width={width * 0.9}
-        height={height * 0.9}
+        height={height * 0.7}
       />
     </AppContainer>
   );

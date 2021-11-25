@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useContext } from 'react';
+import React, { useCallback, useState, useEffect, useMemo, useRef, useContext } from 'react';
 import {
   Canvas,
   EdgeData,
@@ -69,24 +69,8 @@ const ZoomButton = styled(Button)`
   margin: 13px 0 13px 13px;
 `;
 
-const SelectionMode = styled.div`
-  margin: 13px 13px 13px auto;
-  display: flex;
-  flex-direction: row;
-`;
-
-const SelectionLabel = styled.div`
-  font-family: ${props => props.theme.fontFamily};
-  margin-right: 5px;
-  align-self: center;
-`;
-
 const InfoButton = styled(Button)`
   margin: 13px 13px 13px 0;
-`;
-
-const StyledTippy = styled(Tippy)`
-  font-family: ${props => props.theme.fontFamily};
 `;
 
 const nodeToNodeData = (node: Node, iconSize: number): NodeData => {
@@ -133,7 +117,8 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
   const canvasRef = useRef<CanvasRef | null>(null);
   const zoomRef = useRef<ReactZoomPanPinchRef>(null);
   const theme = useContext(ThemeContext);
-  
+  const [infoVisible, setInfoVisible] = useState<boolean>(false);
+
   const reaflowNodes: NodeData[] = useMemo(() => nodes.map(node => nodeToNodeData(node, iconSize)), [nodes]);
   const reaflowEdges: EdgeData[] = useMemo(() => edges.map(edgeToEdgeData), [edges]);
 
@@ -179,7 +164,6 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
 
   useEffect(() => {
     if (!canvasRef.current || !zoomRef.current) return;
-
     fitGraph(canvasRef.current.layout);
     zoomRef.current.setTransform(
       zoomRef.current.state.positionX,
@@ -257,7 +241,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                   setInfoVisible(false);
                 }}
                 onCanvasClick={() => {
-                  activeTool.reset();
+                  activeTool.reset?.();
                   setInfoVisible(false);
                 }}
               />
@@ -280,13 +264,6 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                 }}
               />
             </TransformComponent>
-            <div>
-              {allTools.map(tool => (
-                <button type='button' onClick={() => setActiveTool(tool)} disabled={activeTool.name === tool.name}>
-                  {tool.name}
-                </button>
-              ))}
-            </div>
             <Controls>
               {!hideZoomButtons && (
                 <ButtonGroup>
@@ -299,15 +276,21 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                   <ZoomButton onClick={() => resetTransform()}>
                     <Icon name='maximize' size={24} />
                   </ZoomButton>
+                  {/* TODO: Custom buttons for tools */}
+                  {allTools.map(tool => (
+                    <button type='button' onClick={() => setActiveTool(tool)} disabled={activeTool.name === tool.name}>
+                      {tool.name}
+                    </button>
+                  ))}
                 </ButtonGroup>
               )}
             </Controls>
             <Controls>
               <ControlGroup>
-                <InfoButton onClick={toggleInfoBox}>
+                <InfoButton onClick={() => setInfoVisible(!infoVisible)}>
                   <Icon name='info' size={24} />
                 </InfoButton>
-                {infoVisible && <InfoBox handleClose={() => setInfoVisible(!infoVisible)} />}
+                {infoVisible && <InfoBox handleClose={() => setInfoVisible(false)} />}
               </ControlGroup>
             </Controls>
           </>
