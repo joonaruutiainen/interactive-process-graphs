@@ -9,7 +9,6 @@ import {
   Edge as ReaflowEdge,
   MarkerArrow,
   Label,
-  ElkRoot,
 } from 'reaflow';
 import styled, { ThemeContext } from 'styled-components';
 import { TransformWrapper, TransformComponent, ReactZoomPanPinchRef } from 'react-zoom-pan-pinch';
@@ -158,23 +157,9 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
     [activeTool]
   );
 
-  const fitGraph = (layout: ElkRoot) => {
-    if (layout.height && layout.width) {
-      // TODO: calculate the width of icons to be added to layout width
-      // total width of icons = number of node columns * iconSize
-      const layoutWidth: number = layout.width + 300; // replace 300 with total width of icons
-      const layoutHeight: number = layout.height; // if iconSize > minimun node size (50), this has to be increased as well
-      const widthZoom = width / layoutWidth;
-      const heightZoom = height / layoutHeight;
-      const scale = Math.min(heightZoom, widthZoom, 1);
-      canvasRef?.current?.setZoom?.(scale - 1);
-      canvasRef?.current?.centerCanvas?.();
-    }
-  };
-
   useEffect(() => {
     if (!canvasRef.current || !zoomRef.current) return;
-    fitGraph(canvasRef.current.layout);
+    canvasRef.current.fitCanvas?.();
     zoomRef.current.setTransform(
       zoomRef.current.state.positionX,
       zoomRef.current.state.positionY,
@@ -244,10 +229,10 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                   />
                 }
                 edge={<ReaflowEdge style={{ stroke: theme.palette.secondary.main }} onClick={handleEdgeClick} />}
-                onLayoutChange={layout => {
+                onLayoutChange={() => {
                   activeTool.reset?.();
                   resetTransform();
-                  fitGraph(layout);
+                  canvasRef?.current?.fitCanvas?.();
                   setInfoVisible(false);
                 }}
                 onCanvasClick={() => {
