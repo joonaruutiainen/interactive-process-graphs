@@ -160,10 +160,8 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
 
   const fitGraph = (layout: ElkRoot) => {
     if (layout.height && layout.width) {
-      // TODO: calculate the width of icons to be added to layout width
-      // total width of icons = number of node columns * iconSize
-      const layoutWidth: number = layout.width + 300; // replace 300 with total width of icons
-      const layoutHeight: number = layout.height; // if iconSize > minimun node size (50), this has to be increased as well
+      const layoutWidth: number = layout.width;
+      const layoutHeight: number = layout.height;
       const widthZoom = width / layoutWidth;
       const heightZoom = height / layoutHeight;
       const scale = Math.min(heightZoom, widthZoom, 1);
