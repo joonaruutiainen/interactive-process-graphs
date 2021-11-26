@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Placement } from 'tippy.js';
 
 import { EdgeClickCallback, GraphTool, NodeClickCallback } from './useGraphTools';
@@ -18,33 +18,39 @@ const usePopupInfoTool = (icons: IconMap): GraphTool => {
   const [selectedNode, setSelectedNode] = useState<Node | undefined>();
   const [tippyTargetElement, setTippyTargetElement] = useState<Element | undefined>();
 
-  const reset = (): void => {
+  const reset: () => void = useCallback(() => {
     setSelectedEdge(undefined);
     setSelectedNode(undefined);
     setTippyTargetElement(undefined);
-  };
+  }, []);
 
-  const onEdgeClick: EdgeClickCallback = (edge, event) => {
-    if (selectedEdge?.from === edge.from && selectedEdge.to === edge.to) {
-      reset();
-    } else {
-      setSelectedEdge(edge);
-      setSelectedNode(undefined);
-      setTippyTargetElement(event.target as Element);
-    }
-  };
+  const onEdgeClick: EdgeClickCallback = useCallback(
+    (edge, event) => {
+      if (selectedEdge?.from === edge.from && selectedEdge.to === edge.to) {
+        reset();
+      } else {
+        setSelectedEdge(edge);
+        setSelectedNode(undefined);
+        setTippyTargetElement(event.target as Element);
+      }
+    },
+    [selectedEdge]
+  );
 
-  const onNodeClick: NodeClickCallback = (node, event) => {
-    if (selectedNode?.id === node.id) {
-      reset();
-    } else {
-      setSelectedEdge(undefined);
-      setSelectedNode(node);
-      setTippyTargetElement(event.target as Element);
-    }
-  };
+  const onNodeClick: NodeClickCallback = useCallback(
+    (node, event) => {
+      if (selectedNode?.id === node.id) {
+        reset();
+      } else {
+        setSelectedEdge(undefined);
+        setSelectedNode(node);
+        setTippyTargetElement(event.target as Element);
+      }
+    },
+    [selectedNode]
+  );
 
-  const getTippyProps = () => {
+  const getTippyProps = useCallback(() => {
     if (selectedEdge) {
       return {
         render: (attrs: TippyAttrs) =>
@@ -75,7 +81,7 @@ const usePopupInfoTool = (icons: IconMap): GraphTool => {
       reference: undefined,
       visible: false,
     };
-  };
+  }, [selectedEdge, selectedNode, tippyTargetElement, icons]);
 
   return { name: 'Node Info Tool', reset, onEdgeClick, onNodeClick, getTippyProps };
 };

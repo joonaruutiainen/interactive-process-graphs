@@ -74,7 +74,7 @@ const InfoButton = styled(Button)`
   margin: 13px 13px 13px 0;
 `;
 
-const nodeToNodeData = (node: Node, iconSize: number, icons: IconMap): NodeData => {
+const nodeToNodeData = (node: Node, iconSize: number, iconUrl: string): NodeData => {
   const nodeWidth = node.type.length * 10 + iconSize * 2.1 >= 350 ? 350 : node.type.length * 10 + iconSize * 2.1;
   const nodeHeight = iconSize > 30 ? iconSize + 20 : 50;
   return {
@@ -83,7 +83,7 @@ const nodeToNodeData = (node: Node, iconSize: number, icons: IconMap): NodeData 
     width: nodeWidth,
     height: nodeHeight,
     icon: {
-      url: icons[node.type] || node.id % 2 === 0 ? icons.shiba : icons.dog,
+      url: iconUrl,
       height: iconSize,
       width: iconSize,
     },
@@ -123,7 +123,13 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
   const theme = useContext(ThemeContext);
   const [infoVisible, setInfoVisible] = useState<boolean>(false);
 
-  const reaflowNodes: NodeData[] = useMemo(() => nodes.map(node => nodeToNodeData(node, iconSize, icons)), [nodes]);
+  const reaflowNodes: NodeData[] = useMemo(
+    () =>
+      nodes.map(node =>
+        nodeToNodeData(node, iconSize, icons[node.type] || node.id % 2 === 0 ? icons.shiba : icons.dog)
+      ),
+    [nodes, icons]
+  );
   const reaflowEdges: EdgeData[] = useMemo(() => edges.map(edgeToEdgeData), [edges]);
 
   const popupInfoTool = usePopupInfoTool(icons);

@@ -95,10 +95,10 @@ const StyledSelect = styled.select`
 
 type ProcessMode = 'examples' | 'random';
 
+const icons = importIcons(requireContext('./icons', false, /\.(svg)$/));
+
 const App: React.FC = () => {
   const [graph, setGraph] = useState<Graph>({ nodes: [], edges: [] });
-
-  const icons = importIcons(requireContext('./icons', false, /\.(svg)$/));
 
   const [processMode, setProcessMode] = useState<ProcessMode>('examples');
   const otherMode = useMemo(() => (processMode === 'examples' ? 'random' : 'examples'), [processMode]);
