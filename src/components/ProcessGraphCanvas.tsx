@@ -9,6 +9,7 @@ import {
   Edge as ReaflowEdge,
   MarkerArrow,
   Label,
+  ElkRoot,
 } from 'reaflow';
 import styled, { ThemeContext } from 'styled-components';
 import { TransformWrapper, TransformComponent, ReactZoomPanPinchRef } from 'react-zoom-pan-pinch';
@@ -157,9 +158,21 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
     [activeTool]
   );
 
+  const fitGraph = (layout: ElkRoot) => {
+    if (layout.height && layout.width) {
+      const layoutWidth: number = layout.width;
+      const layoutHeight: number = layout.height;
+      const widthZoom = width / layoutWidth;
+      const heightZoom = height / layoutHeight;
+      const scale = Math.min(heightZoom, widthZoom, 1);
+      canvasRef?.current?.setZoom?.(scale - 1);
+      canvasRef?.current?.centerCanvas?.();
+    }
+  };
+
   useEffect(() => {
     if (!canvasRef.current || !zoomRef.current) return;
-    canvasRef.current.fitCanvas?.();
+    fitGraph(canvasRef.current.layout);
     zoomRef.current.setTransform(
       zoomRef.current.state.positionX,
       zoomRef.current.state.positionY,
@@ -229,10 +242,10 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                   />
                 }
                 edge={<ReaflowEdge style={{ stroke: theme.palette.secondary.main }} onClick={handleEdgeClick} />}
-                onLayoutChange={() => {
+                onLayoutChange={layout => {
                   activeTool.reset?.();
                   resetTransform();
-                  canvasRef?.current?.fitCanvas?.();
+                  fitGraph(layout);
                   setInfoVisible(false);
                 }}
                 onCanvasClick={() => {
