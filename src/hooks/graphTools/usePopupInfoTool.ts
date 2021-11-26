@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Placement } from 'tippy.js';
 
 import { EdgeClickCallback, GraphTool, NodeClickCallback } from './useGraphTools';
 import { Node } from '../../types/Node';
 import { Edge } from '../../types/Edge';
 import { EdgeDetailsPopup, NodeDetailsPopup } from '../../components/DetailsPopup';
+import { IconMap } from '../../types/IconMap';
 
 type TippyAttrs = {
   'data-placement': Placement;
@@ -12,38 +13,44 @@ type TippyAttrs = {
   'data-escaped'?: string;
 };
 
-const usePopupInfoTool = (): GraphTool => {
+const usePopupInfoTool = (icons: IconMap): GraphTool => {
   const [selectedEdge, setSelectedEdge] = useState<Edge | undefined>();
   const [selectedNode, setSelectedNode] = useState<Node | undefined>();
   const [tippyTargetElement, setTippyTargetElement] = useState<Element | undefined>();
 
-  const reset = (): void => {
+  const reset: () => void = useCallback(() => {
     setSelectedEdge(undefined);
     setSelectedNode(undefined);
     setTippyTargetElement(undefined);
-  };
+  }, []);
 
-  const onEdgeClick: EdgeClickCallback = (edge, event) => {
-    if (selectedEdge?.from === edge.from && selectedEdge.to === edge.to) {
-      reset();
-    } else {
-      setSelectedEdge(edge);
-      setSelectedNode(undefined);
-      setTippyTargetElement(event.target as Element);
-    }
-  };
+  const onEdgeClick: EdgeClickCallback = useCallback(
+    (edge, event) => {
+      if (selectedEdge?.from === edge.from && selectedEdge.to === edge.to) {
+        reset();
+      } else {
+        setSelectedEdge(edge);
+        setSelectedNode(undefined);
+        setTippyTargetElement(event.target as Element);
+      }
+    },
+    [selectedEdge]
+  );
 
-  const onNodeClick: NodeClickCallback = (node, event) => {
-    if (selectedNode?.id === node.id) {
-      reset();
-    } else {
-      setSelectedEdge(undefined);
-      setSelectedNode(node);
-      setTippyTargetElement(event.target as Element);
-    }
-  };
+  const onNodeClick: NodeClickCallback = useCallback(
+    (node, event) => {
+      if (selectedNode?.id === node.id) {
+        reset();
+      } else {
+        setSelectedEdge(undefined);
+        setSelectedNode(node);
+        setTippyTargetElement(event.target as Element);
+      }
+    },
+    [selectedNode]
+  );
 
-  const getTippyProps = () => {
+  const getTippyProps = useCallback(() => {
     if (selectedEdge) {
       return {
         render: (attrs: TippyAttrs) =>
@@ -61,6 +68,7 @@ const usePopupInfoTool = (): GraphTool => {
         render: (attrs: TippyAttrs) =>
           React.createElement(NodeDetailsPopup, {
             node: selectedNode,
+            icon: icons[selectedNode.type] || selectedNode.id % 2 === 0 ? icons.shiba : icons.dog,
             dataPlacement: attrs['data-placement'],
             onClose: () => setSelectedNode(undefined),
           }),
@@ -73,7 +81,7 @@ const usePopupInfoTool = (): GraphTool => {
       reference: undefined,
       visible: false,
     };
-  };
+  }, [selectedEdge, selectedNode, tippyTargetElement, icons]);
 
   return { name: 'Node Info Tool', reset, onEdgeClick, onNodeClick, getTippyProps };
 };

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 
 import { GraphTool, NodeClickCallback } from './useGraphTools';
 import { Node } from '../../types/Node';
@@ -6,21 +6,24 @@ import { Node } from '../../types/Node';
 const useMultiselectTool = (onUpdate?: (nodes: Node[]) => void): GraphTool => {
   const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
 
-  const reset = (): void => {
+  const reset: () => void = useCallback(() => {
     setSelectedNodes([]);
-  };
+    onUpdate?.([]);
+  }, [onUpdate]);
 
-  const onNodeClick: NodeClickCallback = node => {
-    if (selectedNodes.find(n => n.id === node.id)) {
-      setSelectedNodes(selectedNodes.filter(n => n.id !== node.id));
-    } else {
-      setSelectedNodes([...selectedNodes, node]);
-    }
-  };
-
-  useEffect(() => {
-    onUpdate?.(selectedNodes);
-  }, [selectedNodes]);
+  const onNodeClick: NodeClickCallback = useCallback(
+    node => {
+      let nodes: Node[];
+      if (selectedNodes.find(n => n.id === node.id)) {
+        nodes = selectedNodes.filter(n => n.id !== node.id);
+      } else {
+        nodes = [...selectedNodes, node];
+      }
+      setSelectedNodes(nodes);
+      onUpdate?.(nodes);
+    },
+    [selectedNodes, onUpdate]
+  );
 
   return { name: 'Multiselect Tool', reset, onNodeClick };
 };

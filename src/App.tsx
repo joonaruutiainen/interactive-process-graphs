@@ -1,6 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import styled from 'styled-components';
 
+import requireContext from 'require-context.macro';
+
 import { Node } from './types/Node';
 import { Edge } from './types/Edge';
 import { Graph } from './types/Graph';
@@ -11,6 +13,7 @@ import { RandomGraphGenerator } from './random';
 import { GraphTool } from './hooks/graphTools/useGraphTools';
 import useMultiselectTool from './hooks/graphTools/useMultiselectTool';
 import useWindowDimensions from './hooks/useWindowDimensions';
+import importIcons from './utils/iconImporter';
 
 const AppContainer = styled.div`
   display: flex;
@@ -91,6 +94,8 @@ const StyledSelect = styled.select`
 `;
 
 type ProcessMode = 'examples' | 'random';
+
+const icons = importIcons(requireContext('./icons', false, /\.(svg)$/));
 
 const App: React.FC = () => {
   const [graph, setGraph] = useState<Graph>({ nodes: [], edges: [] });
@@ -198,6 +203,7 @@ const App: React.FC = () => {
         customGraphTools={[multiselectTool, customClickTool]}
         width={width * 0.9}
         height={height * 0.7}
+        icons={icons}
       />
     </AppContainer>
   );

@@ -17,12 +17,13 @@ import { Icon } from 'ts-react-feather-icons';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 
-import icons from '../utils/icons';
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
 import useGraphTools, { GraphTool } from '../hooks/graphTools/useGraphTools';
 import usePopupInfoTool from '../hooks/graphTools/usePopupInfoTool';
 import InfoBox from './InfoBox';
+import { IconMap } from '../types/IconMap';
+
 import Button from '../styles/components';
 
 const Container = styled.div`
@@ -73,7 +74,7 @@ const InfoButton = styled(Button)`
   margin: 13px 13px 13px 0;
 `;
 
-const nodeToNodeData = (node: Node, iconSize: number): NodeData => {
+const nodeToNodeData = (node: Node, iconSize: number, iconUrl: string): NodeData => {
   const nodeWidth = node.type.length * 10 + iconSize * 2.1 >= 350 ? 350 : node.type.length * 10 + iconSize * 2.1;
   const nodeHeight = iconSize > 30 ? iconSize + 20 : 50;
   return {
@@ -82,7 +83,7 @@ const nodeToNodeData = (node: Node, iconSize: number): NodeData => {
     width: nodeWidth,
     height: nodeHeight,
     icon: {
-      url: icons[node.type] || node.id % 2 === 0 ? icons.shiba : icons.dog,
+      url: iconUrl,
       height: iconSize,
       width: iconSize,
     },
@@ -99,6 +100,8 @@ export interface ProcessGraphProps {
   nodes: Node[];
   edges: Edge[];
   hideZoomButtons?: boolean;
+
+  icons: IconMap;
   iconSize?: number; // default is 30, icon and label positions in a node are messed up if this is changed (fix pls)
   customGraphTools?: GraphTool[];
   width: number;
@@ -113,16 +116,23 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
   customGraphTools = [],
   width,
   height,
+  icons,
 }) => {
   const canvasRef = useRef<CanvasRef | null>(null);
   const zoomRef = useRef<ReactZoomPanPinchRef>(null);
   const theme = useContext(ThemeContext);
   const [infoVisible, setInfoVisible] = useState<boolean>(false);
 
-  const reaflowNodes: NodeData[] = useMemo(() => nodes.map(node => nodeToNodeData(node, iconSize)), [nodes]);
+  const reaflowNodes: NodeData[] = useMemo(
+    () =>
+      nodes.map(node =>
+        nodeToNodeData(node, iconSize, icons[node.type] || node.id % 2 === 0 ? icons.shiba : icons.dog)
+      ),
+    [nodes, icons]
+  );
   const reaflowEdges: EdgeData[] = useMemo(() => edges.map(edgeToEdgeData), [edges]);
 
-  const popupInfoTool = usePopupInfoTool();
+  const popupInfoTool = usePopupInfoTool(icons);
   const [activeTool, setActiveTool, allTools] = useGraphTools([popupInfoTool, ...customGraphTools]);
   const activeToolTippyProps = useMemo(() => activeTool.getTippyProps?.(), [activeTool]);
 
