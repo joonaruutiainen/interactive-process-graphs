@@ -12,7 +12,7 @@ const Box = styled.div`
   width: 500px;
   right: 0;
   bottom: 1;
-  margin: 13px 13px 13px 0;
+  margin: 13px 13px 8px 0;
   background-color: ${props => props.theme.palette.common.white};
 `;
 
