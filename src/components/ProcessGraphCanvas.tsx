@@ -15,7 +15,6 @@ import styled, { ThemeContext } from 'styled-components';
 import { TransformWrapper, TransformComponent, ReactZoomPanPinchRef } from 'react-zoom-pan-pinch';
 import { Icon } from 'ts-react-feather-icons';
 import Tippy from '@tippyjs/react';
-import 'tippy.js/dist/tippy.css';
 
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
