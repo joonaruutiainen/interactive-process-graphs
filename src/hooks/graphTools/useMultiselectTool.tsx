@@ -1,4 +1,5 @@
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
+import { Icon } from 'ts-react-feather-icons';
 
 import { GraphTool, NodeClickCallback } from './useGraphTools';
 import { Node } from '../../types/Node';
@@ -25,7 +26,7 @@ const useMultiselectTool = (onUpdate?: (nodes: Node[]) => void): GraphTool => {
     [selectedNodes, onUpdate]
   );
 
-  return { name: 'Multiselect Tool', reset, onNodeClick };
+  return { name: 'Multiselect Tool', icon: <Icon name='check-square' />, reset, onNodeClick };
 };
 
 export default useMultiselectTool;

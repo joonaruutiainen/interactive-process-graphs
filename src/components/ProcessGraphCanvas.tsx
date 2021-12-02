@@ -66,8 +66,14 @@ const ControlGroup = styled.div`
   bottom: 0;
 `;
 
-const ZoomButton = styled(Button)`
+const ControlButton = styled(Button)`
   margin: 13px 0 13px 13px;
+`;
+
+const ToolButton = styled(ControlButton)`
+  &:disabled {
+    opacity: 0.5;
+  }
 `;
 
 const InfoButton = styled(Button)`
@@ -276,20 +282,20 @@ const ProcessGraphCanvas: React.FC<ProcessGraphCanvasProps> = ({
             <Controls>
               {!hideZoomButtons && (
                 <ButtonGroup>
-                  <ZoomButton onClick={() => zoomIn()}>
+                  <ControlButton onClick={() => zoomIn()}>
                     <Icon name='plus' size={24} />
-                  </ZoomButton>
-                  <ZoomButton onClick={() => zoomOut()}>
+                  </ControlButton>
+                  <ControlButton onClick={() => zoomOut()}>
                     <Icon name='minus' size={24} />
-                  </ZoomButton>
-                  <ZoomButton onClick={() => resetTransform()}>
+                  </ControlButton>
+                  <ControlButton onClick={() => resetTransform()}>
                     <Icon name='maximize' size={24} />
-                  </ZoomButton>
+                  </ControlButton>
                   {/* TODO: Custom buttons for tools */}
                   {allTools.map(tool => (
-                    <button type='button' onClick={() => setActiveTool(tool)} disabled={activeTool.name === tool.name}>
-                      {tool.name}
-                    </button>
+                    <ToolButton onClick={() => setActiveTool(tool)} disabled={activeTool.name === tool.name}>
+                      {tool.icon}
+                    </ToolButton>
                   ))}
                 </ButtonGroup>
               )}

@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import styled, { DefaultTheme } from 'styled-components';
+import { Icon } from 'ts-react-feather-icons';
 
 import requireContext from 'require-context.macro';
 
@@ -123,6 +124,7 @@ const App: React.FC = () => {
 
   const useCustomClickTool = (): GraphTool => ({
     name: 'Custom Click Tool',
+    icon: <Icon name='tool' />,
     onNodeClick: (node: Node) => setClickedNode(node.id.toString()),
     onEdgeClick: (edge: Edge) => setClickedEdge(`${edge.from}-${edge.to}`),
   });
