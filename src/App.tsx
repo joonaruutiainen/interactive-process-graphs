@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { DefaultTheme } from 'styled-components';
 
 import requireContext from 'require-context.macro';
 
@@ -14,7 +14,7 @@ import { GraphTool } from './hooks/graphTools/useGraphTools';
 import useMultiselectTool from './hooks/graphTools/useMultiselectTool';
 import useWindowDimensions from './hooks/useWindowDimensions';
 import importIcons from './utils/iconImporter';
-import { lightTheme } from './styles/themes';
+import { darkTheme, lightTheme } from './styles/themes';
 
 const AppContainer = styled.div`
   display: flex;
@@ -99,6 +99,7 @@ type ProcessMode = 'examples' | 'random';
 const icons = importIcons(requireContext('./icons', false, /\.(svg)$/));
 
 const App: React.FC = () => {
+  const [theme, setTheme] = useState<DefaultTheme>(lightTheme);
   const [graph, setGraph] = useState<Graph>({ nodes: [], edges: [] });
 
   const [processMode, setProcessMode] = useState<ProcessMode>('examples');
@@ -138,6 +139,15 @@ const App: React.FC = () => {
 
   const { width, height } = useWindowDimensions();
 
+  const changeTheme = (value: string) => {
+    if (value === 'light') {
+      setTheme(lightTheme);
+    }
+    if (value === "dark") {
+      setTheme(darkTheme);
+    }
+  }
+
   return (
     <AppContainer>
       <RowContainer>
@@ -145,6 +155,12 @@ const App: React.FC = () => {
           <StyledButton onClick={() => setProcessMode(otherMode)} type='button'>
             Switch to {otherMode}
           </StyledButton>
+          <div>
+            <select onChange={event => changeTheme(event.target.value)}>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
           {processMode === 'examples' ? (
             <StyledSelect
               value={selectedProcess.name}
@@ -205,7 +221,7 @@ const App: React.FC = () => {
         width={width * 0.9}
         height={height * 0.7}
         icons={icons}
-        theme={lightTheme}
+        theme={theme}
       />
     </AppContainer>
   );

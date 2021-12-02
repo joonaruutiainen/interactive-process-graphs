@@ -65,6 +65,7 @@ const Button = styled.div`
   &:hover {
     cursor: pointer;
   }
+  color: ${props => props.theme.palette.primary.text};
 `;
 
 interface DetailsPopupProps {
