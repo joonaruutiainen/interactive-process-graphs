@@ -216,6 +216,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                   <ReaflowNode
                     style={{
                       fill: theme.palette.primary.main,
+                      stroke: theme.palette.secondary.main,
                       strokeWidth: 2,
                       rx: theme.borderRadius,
                       ry: theme.borderRadius,
@@ -236,8 +237,8 @@ const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
                 arrow={
                   <MarkerArrow
                     style={{
-                      stroke: theme.palette.primary.main,
-                      fill: theme.palette.primary.main,
+                      stroke: theme.palette.secondary.main,
+                      fill: theme.palette.secondary.main,
                     }}
                   />
                 }

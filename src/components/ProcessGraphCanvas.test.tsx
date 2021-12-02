@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, cleanup } from '@testing-library/react';
 import { ThemeProvider } from 'styled-components';
-import defaultTheme from '../styles/theme';
+import { lightTheme } from '../styles/themes';
 import ProcessGraphCanvas from './ProcessGraphCanvas';
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
@@ -32,7 +32,7 @@ describe('ProcessGraph component', () => {
   describe('with two nodes', () => {
     it('renders without crashing', () => {
       render(
-        <ThemeProvider theme={defaultTheme}>
+        <ThemeProvider theme={lightTheme}>
           <ProcessGraphCanvas
             nodes={testNodes}
             edges={testEdges}

@@ -17,7 +17,7 @@ const Container = styled.div`
   margin: 10px;
   width: 230px;
   flex-wrap: wrap;
-  background-color: ${props => props.theme.palette.common.white};
+  background-color: ${props => props.theme.palette.primary.main};
 `;
 
 const FirstRow = styled.div`
@@ -45,7 +45,7 @@ const Title = styled.h3`
 const Text = styled.div`
   margin: 0;
   padding: 0;
-  color: ${props => props.theme.palette.common.black};
+  color: ${props => props.theme.palette.primary.text};
   font-family: ${props => props.theme.fontFamily};
 `;
 

@@ -12,7 +12,7 @@ const Box = styled.div`
   width: 500px;
   left: 75%;
   flex-wrap: wrap;
-  background-color: ${props => props.theme.palette.common.white};
+  background-color: ${props => props.theme.palette.primary.main};
 `;
 
 const ButtonContainer = styled.div`

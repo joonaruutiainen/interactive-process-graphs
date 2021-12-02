@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import theme from './theme';
+import { lightTheme } from './themes';
 
 const Button = styled.button`
-  background-color: ${theme.palette.common.white};
+  background-color: ${lightTheme.palette.primary.main};
   display: flex;
   align-items: center;
   width: fit-content;
