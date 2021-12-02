@@ -10,9 +10,10 @@ const Box = styled.div`
   padding: 10px;
   bottom: 50px;
   width: 500px;
-  left: 75%;
-  flex-wrap: wrap;
   background-color: ${props => props.theme.palette.primary.main};
+  right: 0;
+  bottom: 1;
+  margin: 13px 13px 8px 0;
 `;
 
 const ButtonContainer = styled.div`
