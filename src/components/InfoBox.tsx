@@ -10,10 +10,10 @@ const Box = styled.div`
   padding: 10px;
   bottom: 50px;
   width: 500px;
+  background-color: ${props => props.theme.palette.primary.main};
   right: 0;
   bottom: 1;
   margin: 13px 13px 8px 0;
-  background-color: ${props => props.theme.palette.common.white};
 `;
 
 const ButtonContainer = styled.div`
@@ -30,16 +30,19 @@ const CloseButton = styled.div`
   &:hover {
     cursor: pointer;
   }
+  color: ${props => props.theme.palette.primary.text};
 `;
 
 const TitleText = styled.h3`
   padding: 0;
   margin: 0 0 10px 0;
+  color: ${props => props.theme.palette.primary.text};
 `;
 
 const TextContainer = styled.div`
   overflow-wrap: break-word;
   font-family: ${props => props.theme.fontFamily};
+  color: ${props => props.theme.palette.primary.text};
 `;
 
 interface InfoBoxProps {
