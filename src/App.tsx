@@ -143,10 +143,10 @@ const App: React.FC = () => {
     if (value === 'light') {
       setTheme(lightTheme);
     }
-    if (value === "dark") {
+    if (value === 'dark') {
       setTheme(darkTheme);
     }
-  }
+  };
 
   return (
     <AppContainer>
@@ -157,8 +157,8 @@ const App: React.FC = () => {
           </StyledButton>
           <div>
             <select onChange={event => changeTheme(event.target.value)}>
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
+              <option value='light'>Light</option>
+              <option value='dark'>Dark</option>
             </select>
           </div>
           {processMode === 'examples' ? (
