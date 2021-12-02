@@ -1,10 +1,13 @@
 import React from 'react';
-import { ThemeProvider } from 'styled-components';
-import { lightTheme } from '../styles/themes';
-import ProcessGraphCanvas, { ProcessGraphProps } from './ProcessGraphCanvas';
+import { ThemeProvider, DefaultTheme } from 'styled-components';
+import ProcessGraphCanvas, { ProcessGraphCanvasProps } from './ProcessGraphCanvas';
 
-const ProcessGraph: React.FC<ProcessGraphProps> = props => (
-  <ThemeProvider theme={lightTheme}>
+interface ProcessGraphProps extends ProcessGraphCanvasProps {
+  theme: DefaultTheme;
+}
+
+const ProcessGraph: React.FC<ProcessGraphProps> = ({ theme, ...props }) => (
+  <ThemeProvider theme={theme}>
     <ProcessGraphCanvas {...props} />
   </ThemeProvider>
 );

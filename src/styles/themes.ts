@@ -43,5 +43,5 @@ export const darkTheme: DefaultTheme = {
       main: '#121212',
       text: '#ffffff',
     },
-  },    
+  },
 };

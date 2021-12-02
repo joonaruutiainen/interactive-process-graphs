@@ -96,7 +96,7 @@ const edgeToEdgeData = (edge: Edge): EdgeData => ({
   to: edge.to.toString(),
 });
 
-export interface ProcessGraphProps {
+export interface ProcessGraphCanvasProps {
   nodes: Node[];
   edges: Edge[];
   hideZoomButtons?: boolean;
@@ -108,7 +108,7 @@ export interface ProcessGraphProps {
   height: number;
 }
 
-const ProcessGraphCanvas: React.FC<ProcessGraphProps> = ({
+const ProcessGraphCanvas: React.FC<ProcessGraphCanvasProps> = ({
   nodes,
   edges,
   hideZoomButtons = false,
