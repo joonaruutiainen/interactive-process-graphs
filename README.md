@@ -1,4 +1,4 @@
-[![CI/CD](https://github.com/joonaruutiainen/interactive-process-graphs/actions/workflows/cicd.yml/badge.svg?branch=main)](https://github.com/joonaruutiainen/interactive-process-graphs/actions/workflows/cicd.yml) ![License](https://img.shields.io/github/license/joonaruutiainen/interactive-process-graphs) [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=joonaruutiainen_interactive-process-graphs)](https://sonarcloud.io/dashboard?id=joonaruutiainen_interactive-process-graphs) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=joonaruutiainen_interactive-process-graphs&metric=coverage)](https://sonarcloud.io/dashboard?id=joonaruutiainen_interactive-process-graphs)
+[![CI/CD](https://github.com/joonaruutiainen/interactive-process-graphs/actions/workflows/cicd.yml/badge.svg?branch=main)](https://github.com/joonaruutiainen/interactive-process-graphs/actions/workflows/cicd.yml) ![License](https://img.shields.io/github/license/joonaruutiainen/interactive-process-graphs) [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=joonaruutiainen_interactive-process-graphs)](https://sonarcloud.io/dashboard?id=joonaruutiainen_interactive-process-graphs)
 
 # Interactive process graphs with React
 
@@ -7,7 +7,7 @@ This project is part of the "Software Engineering Project" -course at Tampere Un
 ## Getting started
 
 1.  Clone this repository
-2.  Run `npm install` to install dependencies
+2.  Run `npm install --legacy-peer-deps` to install dependencies
 3.  Run `npm start` to start the application in development mode
 
 ## VSCode Plugins
