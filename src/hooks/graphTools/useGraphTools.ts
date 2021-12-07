@@ -9,6 +9,7 @@ export type NodeClickCallback = (node: Node, event: React.MouseEvent<SVGGElement
 
 export interface GraphTool {
   name: string;
+  icon: React.ReactElement;
   reset?: () => void;
   onEdgeClick?: EdgeClickCallback;
   onNodeClick?: NodeClickCallback;

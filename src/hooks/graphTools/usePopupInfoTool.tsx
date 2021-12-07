@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Placement } from 'tippy.js';
+import { Icon } from 'ts-react-feather-icons';
 
 import { EdgeClickCallback, GraphTool, NodeClickCallback } from './useGraphTools';
 import { Node } from '../../types/Node';
@@ -83,7 +84,14 @@ const usePopupInfoTool = (icons: IconMap): GraphTool => {
     };
   }, [selectedEdge, selectedNode, tippyTargetElement, icons]);
 
-  return { name: 'Node Info Tool', reset, onEdgeClick, onNodeClick, getTippyProps };
+  return {
+    name: 'Node Info Tool',
+    icon: <Icon name='mouse-pointer' />,
+    reset,
+    onEdgeClick,
+    onNodeClick,
+    getTippyProps,
+  };
 };
 
 export default usePopupInfoTool;
