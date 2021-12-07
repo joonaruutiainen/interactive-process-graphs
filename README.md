@@ -14,3 +14,36 @@ This project is part of the "Software Engineering Project" -course at Tampere Un
 
 -   [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) - `dbaeumer.vscode-eslint`
 -   [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) - `esbenp.prettier-vscode`
+
+## Theming
+
+Custom theme can be provided for the `ProcessGraph` component via the `theme` prop.
+Light theme is used as default but this package includes a dark theme as well.
+Primary color is for the background of the buttons and nodes,
+secondary color is for the edges,
+and backgorund color is for the background of the canvas.
+
+```json
+{
+  "borderRadius": 7,
+  "fontFamily": "Helvetica",
+  "palette": {
+    "common": {
+      "black": "#000000",
+      "white": "#ffffff",
+    },
+    "primary": {
+      "main": "#ffffff",
+      "text": "#000000",
+    },
+    "secondary": {
+      "main": "#dfe4e7",
+      "text": "#ffffff",
+    },
+    "background": {
+      "main": "#bfbfbf",
+      "text": "#000000",
+    },
+  },
+}
+```
