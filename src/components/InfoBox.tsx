@@ -19,8 +19,8 @@ const Box = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: end;
-  align-items: flex-end;
+  justify-content: space-between;
+  align-items: flex-start;
 `;
 
 const CloseButton = styled.div`
@@ -52,18 +52,18 @@ interface InfoBoxProps {
 const InfoBox: React.FC<InfoBoxProps> = ({ handleClose }) => (
   <Box>
     <ButtonContainer>
+      <TitleText>Instructions</TitleText>
       <CloseButton onClick={handleClose}>
         <Icon name='x-circle' size={20} />
       </CloseButton>
     </ButtonContainer>
-    <TitleText>Instructions</TitleText>
     <TextContainer>
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys
-      standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a
-      type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
-      remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing
-      Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions
-      of Lorem Ipsum.
+      Use tool chain buttons or mouse scroll wheel to zoom the canvas. <br />
+      Move around the graph by grabbing the canvas and moving mouse. <br />
+      <br />
+      Info tool: View details of nodes and edges by clicking. <br />
+      Selection tool: Select nodes by clicking, deselect by clicking again. <br />
+      go win rush b
     </TextContainer>
   </Box>
 );
