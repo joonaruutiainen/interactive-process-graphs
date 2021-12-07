@@ -60,10 +60,10 @@ const InfoBox: React.FC<InfoBoxProps> = ({ handleClose }) => (
     <TextContainer>
       Use tool chain buttons or mouse scroll wheel to zoom the canvas. <br />
       Move around the graph by grabbing the canvas and moving mouse. <br />
+      Reset zoom and transform using the tool chain button. <br />
       <br />
       Info tool: View details of nodes and edges by clicking. <br />
       Selection tool: Select nodes by clicking, deselect by clicking again. <br />
-      go win rush b
     </TextContainer>
   </Box>
 );
