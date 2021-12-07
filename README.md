@@ -17,11 +17,12 @@ This project is part of the "Software Engineering Project" -course at Tampere Un
 
 ## Theming
 
-Custom theme can be provided for the `ProcessGraph` component via the `theme` prop.
+A custom theme can be provided for the `ProcessGraph` component via the `theme` prop.
 Light theme is used as default but this package includes a dark theme as well.
-Primary color is for the background of the buttons and nodes,
-secondary color is for the edges,
-and backgorund color is for the background of the canvas.
+Changing theme at runtime is currently not supported.
+The primary color is for the background of the buttons and nodes,
+the secondary color is for the edges,
+and the background color is for the background of the canvas.
 
 ```json
 {
