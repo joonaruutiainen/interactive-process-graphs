@@ -14,7 +14,7 @@ type TippyAttrs = {
   'data-escaped'?: string;
 };
 
-const usePopupInfoTool = (icons: IconMap): GraphTool => {
+const usePopupInfoTool = (icons?: IconMap): GraphTool => {
   const [selectedEdge, setSelectedEdge] = useState<Edge | undefined>();
   const [selectedNode, setSelectedNode] = useState<Node | undefined>();
   const [tippyTargetElement, setTippyTargetElement] = useState<Element | undefined>();
@@ -69,7 +69,7 @@ const usePopupInfoTool = (icons: IconMap): GraphTool => {
         render: (attrs: TippyAttrs) =>
           React.createElement(NodeDetailsPopup, {
             node: selectedNode,
-            icon: icons[selectedNode.type] || selectedNode.id % 2 === 0 ? icons.shiba : icons.dog,
+            icon: icons && (icons[selectedNode.type] || selectedNode.id % 2 === 0 ? icons.shiba : icons.dog),
             dataPlacement: attrs['data-placement'],
             onClose: () => setSelectedNode(undefined),
           }),

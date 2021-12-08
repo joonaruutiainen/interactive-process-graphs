@@ -100,7 +100,7 @@ export const EdgeDetailsPopup: React.FC<EdgeDetailsPopupProps> = ({ edge, dataPl
 
 interface NodeDetailsPopupProps extends DetailsPopupProps {
   node: Node;
-  icon: string;
+  icon?: string;
   iconSize?: number;
 }
 
@@ -116,11 +116,13 @@ export const NodeDetailsPopup: React.FC<NodeDetailsPopupProps> = ({
   return (
     <Container>
       <FirstRow>
-        <img
-          src={icon}
-          style={{ width: `${iconSize}px`, height: `${iconSize}px`, margin: '3px 10px 0 0' }}
-          alt={`${type}icon`}
-        />
+        {icon && (
+          <img
+            src={icon}
+            style={{ width: `${iconSize}px`, height: `${iconSize}px`, margin: '3px 10px 0 0' }}
+            alt={`${type}icon`}
+          />
+        )}
         <Text>
           <Title>
             {type} {id}
