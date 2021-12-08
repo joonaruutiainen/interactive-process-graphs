@@ -25,8 +25,6 @@ import { IconMap } from '../types/IconMap';
 
 import Button from '../styles/components';
 
-const ICON_SIZE = 30; // default is 30, icon and label positions in a node are messed up if this is changed (fix pls)
-
 const Container = styled.div`
   background-color: ${props => props.theme.palette.background.main};
   border-radius: ${props => props.theme.borderRadius}px;
@@ -81,24 +79,40 @@ const InfoButton = styled(Button)`
   margin: 13px 13px 13px 0;
 `;
 
+// Default is 30, icon and label positions in a node are messed up if this is changed (fix pls)
+const ICON_SIZE = 30;
+
+// Explicitly reserves 0x0 space for icon to prevent default reservation
+const EMPTY_ICON = {
+  url: '',
+  height: 0,
+  width: 0,
+};
+
 const nodeToNodeData = (node: Node, iconUrl?: string): NodeData => {
-  const nodeWidth = iconUrl ? node.type.length * 10 + ICON_SIZE * 2.1 : node.type.length * 10 + 42;
-  const maxWidth = iconUrl ? 350 : 320;
-  const width = nodeWidth >= maxWidth ? maxWidth : nodeWidth;
-  const height = ICON_SIZE > 30 ? ICON_SIZE + 20 : 50;
-  const url = iconUrl || '';
-  const iconHeight = iconUrl ? ICON_SIZE : 0;
-  const iconWidth = iconUrl ? ICON_SIZE : 0;
+  let nodeWidth = node.type.length * 10;
+  let maxWidth = 320;
+  let icon;
+
+  if (iconUrl) {
+    nodeWidth += ICON_SIZE * 2.1;
+    maxWidth += ICON_SIZE;
+    icon = {
+      url: iconUrl,
+      height: ICON_SIZE,
+      width: ICON_SIZE,
+    };
+  } else {
+    nodeWidth += 42;
+    icon = EMPTY_ICON;
+  }
+
   return {
     id: node.id.toString(),
     text: node.type,
-    width,
-    height,
-    icon: {
-      url,
-      height: iconHeight,
-      width: iconWidth,
-    },
+    width: Math.min(nodeWidth, maxWidth),
+    height: Math.max(ICON_SIZE + 20, 50),
+    icon,
   };
 };
 
