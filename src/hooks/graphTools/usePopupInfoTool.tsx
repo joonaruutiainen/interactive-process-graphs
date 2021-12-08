@@ -69,7 +69,7 @@ const usePopupInfoTool = (icons?: IconMap): GraphTool => {
         render: (attrs: TippyAttrs) =>
           React.createElement(NodeDetailsPopup, {
             node: selectedNode,
-            icon: icons && (icons[selectedNode.type] || selectedNode.id % 2 === 0 ? icons.shiba : icons.dog),
+            icon: icons && icons[selectedNode.type],
             dataPlacement: attrs['data-placement'],
             onClose: () => setSelectedNode(undefined),
           }),

@@ -134,10 +134,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphCanvasProps> = ({
   const [infoVisible, setInfoVisible] = useState<boolean>(false);
 
   const reaflowNodes: NodeData[] = useMemo(
-    () =>
-      nodes.map(node =>
-        nodeToNodeData(node, icons && (icons[node.type] || node.id % 2 === 0 ? icons?.shiba : icons?.dog))
-      ),
+    () => nodes.map(node => nodeToNodeData(node, icons && icons[node.type])),
     [nodes, icons]
   );
   const reaflowEdges: EdgeData[] = useMemo(() => edges.map(edgeToEdgeData), [edges]);
