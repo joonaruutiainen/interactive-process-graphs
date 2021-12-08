@@ -98,7 +98,7 @@ const StyledSelect = styled.select`
 
 type ProcessMode = 'examples' | 'random';
 
-const ICONS = importIcons(requireContext('./icons', false, /\.(svg)$/));
+const ICONS = importIcons(requireContext('./defaultIcons', false, /\.(svg)$/));
 
 const App: React.FC = () => {
   const [theme, setTheme] = useState<DefaultTheme>(lightTheme);
