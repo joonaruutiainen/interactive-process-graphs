@@ -410,25 +410,6 @@ const exampleProcesses = [
       },
     ],
   },
-  {
-    name: 'broken',
-    nodes: [
-      {
-        id: 28,
-        type: 'pipe',
-        nextNodes: [],
-        previousNodes: [],
-        description: 'Pipe from cooling tank pump to storage tank',
-      },
-      {
-        id: 29,
-        type: 'tank',
-        nextNodes: [1],
-        previousNodes: [2],
-        description: 'Storage tank',
-      },
-    ],
-  },
 ];
 
 export default exampleProcesses;

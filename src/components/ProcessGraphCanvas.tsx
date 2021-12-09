@@ -14,7 +14,8 @@ import {
 import styled, { ThemeContext } from 'styled-components';
 import { TransformWrapper, TransformComponent, ReactZoomPanPinchRef } from 'react-zoom-pan-pinch';
 import { Icon } from 'ts-react-feather-icons';
-import Tippy from '@tippyjs/react';
+import Tippy, { useSingleton } from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
 
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
@@ -65,11 +66,14 @@ const ControlGroup = styled.div`
   bottom: 0;
 `;
 
-const ControlButton = styled(Button)`
+const ButtonDiv = styled.div`
+  display: inline-block;
+  width: min-width;
+  height: min-height;
   margin: 13px 0 13px 13px;
 `;
 
-const ToolButton = styled(ControlButton)`
+const ToolButton = styled(Button)`
   &:disabled {
     opacity: 0.5;
   }
@@ -77,6 +81,10 @@ const ToolButton = styled(ControlButton)`
 
 const InfoButton = styled(Button)`
   margin: 13px 13px 13px 0;
+`;
+
+const StyledTippy = styled(Tippy)`
+  font-family: ${props => props.theme.fontFamily};
 `;
 
 // Default is 30, icon and label positions in a node are messed up if this is changed (fix pls)
@@ -146,6 +154,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphCanvasProps> = ({
   const zoomRef = useRef<ReactZoomPanPinchRef>(null);
   const theme = useContext(ThemeContext);
   const [infoVisible, setInfoVisible] = useState<boolean>(false);
+  const [tooltipSource, tooltipTarget] = useSingleton();
 
   const reaflowNodes: NodeData[] = useMemo(
     () => nodes.map(node => nodeToNodeData(node, icons?.[node.type])),
@@ -294,32 +303,51 @@ const ProcessGraphCanvas: React.FC<ProcessGraphCanvasProps> = ({
                 }}
               />
             </TransformComponent>
+
+            <StyledTippy singleton={tooltipSource} arrow={false} />
             <Controls>
               {!hideZoomButtons && (
                 <ButtonGroup>
-                  <ControlButton onClick={() => zoomIn()}>
-                    <Icon name='plus' size={24} />
-                  </ControlButton>
-                  <ControlButton onClick={() => zoomOut()}>
-                    <Icon name='minus' size={24} />
-                  </ControlButton>
-                  <ControlButton onClick={() => resetTransform()}>
-                    <Icon name='maximize' size={24} />
-                  </ControlButton>
-                  {/* TODO: Custom buttons for tools */}
+                  <Tippy content='Zoom in' singleton={tooltipTarget}>
+                    <ButtonDiv>
+                      <Button onClick={() => zoomIn()}>
+                        <Icon name='plus' size={24} />
+                      </Button>
+                    </ButtonDiv>
+                  </Tippy>
+                  <Tippy content='Zoom out' singleton={tooltipTarget}>
+                    <ButtonDiv>
+                      <Button onClick={() => zoomOut()}>
+                        <Icon name='minus' size={24} />
+                      </Button>
+                    </ButtonDiv>
+                  </Tippy>
+                  <Tippy content='Reset zoom' singleton={tooltipTarget}>
+                    <ButtonDiv>
+                      <Button onClick={() => resetTransform()}>
+                        <Icon name='maximize' size={24} />
+                      </Button>
+                    </ButtonDiv>
+                  </Tippy>
                   {allTools.map(tool => (
-                    <ToolButton onClick={() => setActiveTool(tool)} disabled={activeTool.name === tool.name}>
-                      {tool.icon}
-                    </ToolButton>
+                    <Tippy key={tool.name} content={tool.name} singleton={tooltipTarget}>
+                      <ButtonDiv>
+                        <ToolButton onClick={() => setActiveTool(tool)} disabled={activeTool.name === tool.name}>
+                          {tool.icon}
+                        </ToolButton>
+                      </ButtonDiv>
+                    </Tippy>
                   ))}
                 </ButtonGroup>
               )}
             </Controls>
             <Controls>
               <ControlGroup>
-                <InfoButton onClick={() => setInfoVisible(!infoVisible)}>
-                  <Icon name='info' size={24} />
-                </InfoButton>
+                <Tippy content='Instructions' singleton={tooltipTarget}>
+                  <InfoButton onClick={() => setInfoVisible(!infoVisible)}>
+                    <Icon name='info' size={24} />
+                  </InfoButton>
+                </Tippy>
                 {infoVisible && <InfoBox handleClose={() => setInfoVisible(false)} />}
               </ControlGroup>
             </Controls>
