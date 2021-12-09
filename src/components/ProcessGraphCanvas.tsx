@@ -66,11 +66,14 @@ const ControlGroup = styled.div`
   bottom: 0;
 `;
 
-const ControlButton = styled(Button)`
+const ButtonDiv = styled.div`
+  display: inline-block;
+  width: min-width;
+  height: min-height;
   margin: 13px 0 13px 13px;
 `;
 
-const ToolButton = styled(ControlButton)`
+const ToolButton = styled(Button)`
   &:disabled {
     opacity: 0.5;
   }
@@ -111,7 +114,7 @@ const nodeToNodeData = (node: Node, iconUrl?: string): NodeData => {
     nodeWidth += 42;
     icon = EMPTY_ICON;
   }
-  
+
   return {
     id: node.id.toString(),
     text: node.type,
@@ -306,26 +309,34 @@ const ProcessGraphCanvas: React.FC<ProcessGraphCanvasProps> = ({
               {!hideZoomButtons && (
                 <ButtonGroup>
                   <Tippy content='Zoom in' singleton={tooltipTarget}>
-                    <ControlButton onClick={() => zoomIn()}>
-                      <Icon name='plus' size={24} />
-                    </ControlButton>
+                    <ButtonDiv>
+                      <Button onClick={() => zoomIn()}>
+                        <Icon name='plus' size={24} />
+                      </Button>
+                    </ButtonDiv>
                   </Tippy>
                   <Tippy content='Zoom out' singleton={tooltipTarget}>
-                    <ControlButton onClick={() => zoomOut()}>
-                      <Icon name='minus' size={24} />
-                    </ControlButton>
+                    <ButtonDiv>
+                      <Button onClick={() => zoomOut()}>
+                        <Icon name='minus' size={24} />
+                      </Button>
+                    </ButtonDiv>
                   </Tippy>
                   <Tippy content='Reset zoom' singleton={tooltipTarget}>
-                    <ControlButton onClick={() => resetTransform()}>
-                      <Icon name='maximize' size={24} />
-                    </ControlButton>
+                    <ButtonDiv>
+                      <Button onClick={() => resetTransform()}>
+                        <Icon name='maximize' size={24} />
+                      </Button>
+                    </ButtonDiv>
                   </Tippy>
                   {/* TODO: Custom buttons for tools */}
                   {allTools.map(tool => (
-                    <Tippy content={tool.name} singleton={tooltipTarget}>
-                      <ToolButton onClick={() => setActiveTool(tool)} disabled={activeTool.name === tool.name}>
-                        {tool.icon}
-                      </ToolButton>
+                    <Tippy key={tool.name} content={tool.name} singleton={tooltipTarget}>
+                      <ButtonDiv>
+                        <ToolButton onClick={() => setActiveTool(tool)} disabled={activeTool.name === tool.name}>
+                          {tool.icon}
+                        </ToolButton>
+                      </ButtonDiv>
                     </Tippy>
                   ))}
                 </ButtonGroup>
