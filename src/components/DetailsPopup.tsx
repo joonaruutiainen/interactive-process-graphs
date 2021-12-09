@@ -20,11 +20,15 @@ const Container = styled.div`
   background-color: ${props => props.theme.palette.primary.main};
 `;
 
+interface FirstRowProps {
+  isEdge?: boolean;
+}
+
 const FirstRow = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  padding-bottom: 10px;
+  padding-bottom: ${(props: FirstRowProps) => (props.isEdge ? 0 : '10px')};
 `;
 
 const Spacer = styled.span`
@@ -82,7 +86,7 @@ export const EdgeDetailsPopup: React.FC<EdgeDetailsPopupProps> = ({ edge, dataPl
 
   return (
     <Container>
-      <FirstRow>
+      <FirstRow isEdge>
         <Text>
           Edge from {from} to {to}
         </Text>
@@ -100,7 +104,7 @@ export const EdgeDetailsPopup: React.FC<EdgeDetailsPopupProps> = ({ edge, dataPl
 
 interface NodeDetailsPopupProps extends DetailsPopupProps {
   node: Node;
-  icon: string;
+  icon?: string;
   iconSize?: number;
 }
 
@@ -116,11 +120,13 @@ export const NodeDetailsPopup: React.FC<NodeDetailsPopupProps> = ({
   return (
     <Container>
       <FirstRow>
-        <img
-          src={icon}
-          style={{ width: `${iconSize}px`, height: `${iconSize}px`, margin: '3px 10px 0 0' }}
-          alt={`${type}icon`}
-        />
+        {icon && (
+          <img
+            src={icon}
+            style={{ width: `${iconSize}px`, height: `${iconSize}px`, margin: '3px 10px 0 0' }}
+            alt={`${type}icon`}
+          />
+        )}
         <Text>
           <Title>
             {type} {id}
