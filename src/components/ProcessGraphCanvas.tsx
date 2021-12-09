@@ -14,7 +14,8 @@ import {
 import styled, { ThemeContext } from 'styled-components';
 import { TransformWrapper, TransformComponent, ReactZoomPanPinchRef } from 'react-zoom-pan-pinch';
 import { Icon } from 'ts-react-feather-icons';
-import Tippy from '@tippyjs/react';
+import Tippy, { useSingleton } from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
 
 import { Edge } from '../types/Edge';
 import { Node } from '../types/Node';
@@ -79,6 +80,10 @@ const InfoButton = styled(Button)`
   margin: 13px 13px 13px 0;
 `;
 
+const StyledTippy = styled(Tippy)`
+  font-family: ${props => props.theme.fontFamily};
+`;
+
 const nodeToNodeData = (node: Node, iconSize: number, iconUrl: string): NodeData => {
   const nodeWidth = node.type.length * 10 + iconSize * 2.1 >= 350 ? 350 : node.type.length * 10 + iconSize * 2.1;
   const nodeHeight = iconSize > 30 ? iconSize + 20 : 50;
@@ -127,6 +132,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphCanvasProps> = ({
   const zoomRef = useRef<ReactZoomPanPinchRef>(null);
   const theme = useContext(ThemeContext);
   const [infoVisible, setInfoVisible] = useState<boolean>(false);
+  const [tooltipSource, tooltipTarget] = useSingleton();
 
   const reaflowNodes: NodeData[] = useMemo(
     () =>
@@ -278,32 +284,44 @@ const ProcessGraphCanvas: React.FC<ProcessGraphCanvasProps> = ({
                 }}
               />
             </TransformComponent>
+
+            <StyledTippy singleton={tooltipSource} arrow={false} />
             <Controls>
               {!hideZoomButtons && (
                 <ButtonGroup>
-                  <ControlButton onClick={() => zoomIn()}>
-                    <Icon name='plus' size={24} />
-                  </ControlButton>
-                  <ControlButton onClick={() => zoomOut()}>
-                    <Icon name='minus' size={24} />
-                  </ControlButton>
-                  <ControlButton onClick={() => resetTransform()}>
-                    <Icon name='maximize' size={24} />
-                  </ControlButton>
+                  <Tippy content='Zoom in' singleton={tooltipTarget}>
+                    <ControlButton onClick={() => zoomIn()}>
+                      <Icon name='plus' size={24} />
+                    </ControlButton>
+                  </Tippy>
+                  <Tippy content='Zoom out' singleton={tooltipTarget}>
+                    <ControlButton onClick={() => zoomOut()}>
+                      <Icon name='minus' size={24} />
+                    </ControlButton>
+                  </Tippy>
+                  <Tippy content='Reset zoom' singleton={tooltipTarget}>
+                    <ControlButton onClick={() => resetTransform()}>
+                      <Icon name='maximize' size={24} />
+                    </ControlButton>
+                  </Tippy>
                   {/* TODO: Custom buttons for tools */}
                   {allTools.map(tool => (
-                    <ToolButton onClick={() => setActiveTool(tool)} disabled={activeTool.name === tool.name}>
-                      {tool.icon}
-                    </ToolButton>
+                    <Tippy content={tool.name} singleton={tooltipTarget}>
+                      <ToolButton onClick={() => setActiveTool(tool)} disabled={activeTool.name === tool.name}>
+                        {tool.icon}
+                      </ToolButton>
+                    </Tippy>
                   ))}
                 </ButtonGroup>
               )}
             </Controls>
             <Controls>
               <ControlGroup>
-                <InfoButton onClick={() => setInfoVisible(!infoVisible)}>
-                  <Icon name='info' size={24} />
-                </InfoButton>
+                <Tippy content='Instructions' singleton={tooltipTarget}>
+                  <InfoButton onClick={() => setInfoVisible(!infoVisible)}>
+                    <Icon name='info' size={24} />
+                  </InfoButton>
+                </Tippy>
                 {infoVisible && <InfoBox handleClose={() => setInfoVisible(false)} />}
               </ControlGroup>
             </Controls>
