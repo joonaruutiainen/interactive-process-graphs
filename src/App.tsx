@@ -16,6 +16,7 @@ import useMultiselectTool from './hooks/graphTools/useMultiselectTool';
 import useWindowDimensions from './hooks/useWindowDimensions';
 import importIcons from './utils/iconImporter';
 import { darkTheme, lightTheme } from './styles/themes';
+import { IconMap } from './types/IconMap';
 
 const AppContainer = styled.div`
   display: flex;
@@ -97,10 +98,11 @@ const StyledSelect = styled.select`
 
 type ProcessMode = 'examples' | 'random';
 
-const icons = importIcons(requireContext('./icons', false, /\.(svg)$/));
+const ICONS = importIcons(requireContext('./defaultIcons', false, /\.(svg)$/));
 
 const App: React.FC = () => {
   const [theme, setTheme] = useState<DefaultTheme>(lightTheme);
+  const [icons, setIcons] = useState<IconMap | undefined>(ICONS);
   const [graph, setGraph] = useState<Graph>({ nodes: [], edges: [] });
 
   const [processMode, setProcessMode] = useState<ProcessMode>('examples');
@@ -150,6 +152,15 @@ const App: React.FC = () => {
     }
   };
 
+  const changeIcons = (value: string) => {
+    if (value === 'yes') {
+      setIcons(ICONS);
+    }
+    if (value === 'no') {
+      setIcons(undefined);
+    }
+  };
+
   return (
     <AppContainer>
       <RowContainer>
@@ -161,6 +172,13 @@ const App: React.FC = () => {
             <select onChange={event => changeTheme(event.target.value)}>
               <option value='light'>Light</option>
               <option value='dark'>Dark</option>
+            </select>
+          </div>
+          <div>
+            icons:
+            <select onChange={event => changeIcons(event.target.value)}>
+              <option value='yes'>yes</option>
+              <option value='no'>no</option>
             </select>
           </div>
           {processMode === 'examples' ? (

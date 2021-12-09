@@ -12,5 +12,11 @@ This project is part of the "Software Engineering Project" -course at Tampere Un
 
 ## VSCode Plugins
 
--   [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) - `dbaeumer.vscode-eslint`
--   [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) - `esbenp.prettier-vscode`
+- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) - `dbaeumer.vscode-eslint`
+- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) - `esbenp.prettier-vscode`
+
+## Icons
+
+Icons for node types can be provided as a prop to `ProcessGraph`. ProcessGraph expects icons that are already imported, as a object of type `IconMap`(`[key: string]: string;`). The key should correspond with types present in the application and value should be an url of an imported icon, e.g. `pipe: "/static/media/pipe.842fbf6a.svg"`. If a matching icon is not found, no icon is used. Some default icons are provided with the package.
+
+Helper function `iconImporter` is provided for easily importing all the icons inside a given folder, using Webpack's [require.context](https://webpack.js.org/guides/dependency-management/#requirecontext).
