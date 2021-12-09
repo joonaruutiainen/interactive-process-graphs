@@ -329,7 +329,6 @@ const ProcessGraphCanvas: React.FC<ProcessGraphCanvasProps> = ({
                       </Button>
                     </ButtonDiv>
                   </Tippy>
-                  {/* TODO: Custom buttons for tools */}
                   {allTools.map(tool => (
                     <Tippy key={tool.name} content={tool.name} singleton={tooltipTarget}>
                       <ButtonDiv>
