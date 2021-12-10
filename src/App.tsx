@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import styled, { DefaultTheme } from 'styled-components';
+import styled from 'styled-components';
 import { Icon } from 'ts-react-feather-icons';
 
 import requireContext from 'require-context.macro';
@@ -15,7 +15,8 @@ import { GraphTool } from './hooks/graphTools/useGraphTools';
 import useMultiselectTool from './hooks/graphTools/useMultiselectTool';
 import useWindowDimensions from './hooks/useWindowDimensions';
 import importIcons from './utils/iconImporter';
-import { darkTheme, lightTheme } from './styles/themes';
+import { lightTheme } from './styles/themes';
+import { IconMap } from './types/IconMap';
 
 const AppContainer = styled.div`
   display: flex;
@@ -32,14 +33,14 @@ const RowContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-height: 150px;
+  max-height: 200px;
   margin: 5px;
 `;
 
 const ProcessSelectionContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
   width: 25%;
   margin-left: 5%;
@@ -48,10 +49,11 @@ const ProcessSelectionContainer = styled.div`
 const RggContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   width: 180px;
   height: 110px;
+  margin-bottom: 5px;
   font-family: Helvetica;
 `;
 
@@ -75,7 +77,9 @@ const SelectionContainer = styled.div`
 `;
 
 const StyledButton = styled.button`
+  width: 140px;
   padding: 6px;
+  margin-bottom: 5px;
   background-color: #2b2c3d;
   color: white;
   font-family: Helvetica;
@@ -89,6 +93,8 @@ const StyledInput = styled.input`
 `;
 
 const StyledSelect = styled.select`
+  width: 170px;
+  margin: 5px;
   padding: 3px;
   text-align: center;
   border-radius: 5px;
@@ -97,10 +103,10 @@ const StyledSelect = styled.select`
 
 type ProcessMode = 'examples' | 'random';
 
-const icons = importIcons(requireContext('./icons', false, /\.(svg)$/));
+const ICONS = importIcons(requireContext('./defaultIcons', false, /\.(svg)$/));
 
 const App: React.FC = () => {
-  const [theme, setTheme] = useState<DefaultTheme>(lightTheme);
+  const [icons, setIcons] = useState<IconMap | undefined>(ICONS);
   const [graph, setGraph] = useState<Graph>({ nodes: [], edges: [] });
 
   const [processMode, setProcessMode] = useState<ProcessMode>('examples');
@@ -109,7 +115,7 @@ const App: React.FC = () => {
   const [selectedProcess, setSelectedProcess] = useState(exampleProcesses[0]);
   const [rgg, setRgg] = useState(new RandomGraphGenerator(5, 5));
 
-  const [selectedNodes, setSelectedNodes] = useState<string>('');
+  const [selectedNodes, setSelectedNodes] = useState<string>('none');
 
   const multiselectTool = useMultiselectTool((nodes: Node[]) => {
     if (nodes.length > 0) {
@@ -139,14 +145,19 @@ const App: React.FC = () => {
     }
   }, [processMode, selectedProcess, rgg]);
 
+  useEffect(() => {
+    setClickedNode('none');
+    setClickedEdge('none');
+  }, [graph]);
+
   const { width, height } = useWindowDimensions();
 
-  const changeTheme = (value: string) => {
-    if (value === 'light') {
-      setTheme(lightTheme);
+  const changeIcons = (value: string) => {
+    if (value === 'yes') {
+      setIcons(ICONS);
     }
-    if (value === 'dark') {
-      setTheme(darkTheme);
+    if (value === 'no') {
+      setIcons(undefined);
     }
   };
 
@@ -157,12 +168,6 @@ const App: React.FC = () => {
           <StyledButton onClick={() => setProcessMode(otherMode)} type='button'>
             Switch to {otherMode}
           </StyledButton>
-          <div>
-            <select onChange={event => changeTheme(event.target.value)}>
-              <option value='light'>Light</option>
-              <option value='dark'>Dark</option>
-            </select>
-          </div>
           {processMode === 'examples' ? (
             <StyledSelect
               value={selectedProcess.name}
@@ -171,7 +176,6 @@ const App: React.FC = () => {
                 const process = exampleProcesses.find(p => p.name === e.target.value);
                 if (process) setSelectedProcess(process);
               }}
-              style={{ marginTop: '20px' }}
             >
               {exampleProcesses.map(process => (
                 <option value={process.name} key={process.name}>
@@ -205,6 +209,10 @@ const App: React.FC = () => {
               </RowContainer>
             </RggContainer>
           )}
+          <StyledSelect onChange={event => changeIcons(event.target.value)}>
+            <option value='yes'>Icons ON</option>
+            <option value='no'>Icons OFF</option>
+          </StyledSelect>
         </ProcessSelectionContainer>
         <OnClickContainer>
           <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>Custom onClicks</div>
@@ -223,7 +231,7 @@ const App: React.FC = () => {
         width={width * 0.9}
         height={height * 0.7}
         icons={icons}
-        theme={theme}
+        theme={lightTheme}
       />
     </AppContainer>
   );

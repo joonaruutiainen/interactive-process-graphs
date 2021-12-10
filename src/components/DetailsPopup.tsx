@@ -15,7 +15,7 @@ const Container = styled.div`
   border-radius: ${props => props.theme.borderRadius}px;
   padding: 10px;
   margin: 10px;
-  width: 230px;
+  width: 250px;
   flex-wrap: wrap;
   background-color: ${props => props.theme.palette.primary.main};
 `;
@@ -24,7 +24,6 @@ const FirstRow = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  padding-bottom: 10px;
 `;
 
 const Spacer = styled.span`
@@ -34,6 +33,7 @@ const Spacer = styled.span`
 const DataContainer = styled.div`
   overflow-y: auto;
   max-height: 150px;
+  padding-top: 10px;
 `;
 
 const Title = styled.h3`
@@ -100,14 +100,14 @@ export const EdgeDetailsPopup: React.FC<EdgeDetailsPopupProps> = ({ edge, dataPl
 
 interface NodeDetailsPopupProps extends DetailsPopupProps {
   node: Node;
-  icon: string;
+  icon?: string;
   iconSize?: number;
 }
 
 export const NodeDetailsPopup: React.FC<NodeDetailsPopupProps> = ({
   node,
   dataPlacement,
-  iconSize = 40,
+  iconSize = 70,
   icon,
   onClose = undefined,
 }) => {
@@ -116,11 +116,13 @@ export const NodeDetailsPopup: React.FC<NodeDetailsPopupProps> = ({
   return (
     <Container>
       <FirstRow>
-        <img
-          src={icon}
-          style={{ width: `${iconSize}px`, height: `${iconSize}px`, margin: '3px 10px 0 0' }}
-          alt={`${type}icon`}
-        />
+        {icon && (
+          <img
+            src={icon}
+            style={{ width: `${iconSize}px`, height: `${iconSize}px`, marginRight: '10px' }}
+            alt={`${type}icon`}
+          />
+        )}
         <Text>
           <Title>
             {type} {id}
@@ -134,14 +136,15 @@ export const NodeDetailsPopup: React.FC<NodeDetailsPopupProps> = ({
           </Button>
         </ButtonContainer>
       </FirstRow>
-      <DataContainer>
-        {data &&
-          Object.entries(data).map(([key, value]) => (
+      {data && (
+        <DataContainer>
+          {Object.entries(data).map(([key, value]) => (
             <Text key={key}>
               {key}: {JSON.stringify(value)}
             </Text>
           ))}
-      </DataContainer>
+        </DataContainer>
+      )}
       <Arrow placement={dataPlacement} />
     </Container>
   );
