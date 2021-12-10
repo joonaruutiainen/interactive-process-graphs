@@ -36,6 +36,7 @@ const CloseButton = styled.div`
 const TitleText = styled.h3`
   padding: 0;
   margin: 0 0 10px 0;
+  font-family: ${props => props.theme.fontFamily};
   color: ${props => props.theme.palette.primary.text};
 `;
 

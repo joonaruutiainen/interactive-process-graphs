@@ -46,7 +46,7 @@ const Controls = styled.div`
 
 const ButtonGroup = styled.div`
   background-color: ${props => props.theme.palette.background.main};
-  border-top-right-radius: ${props => props.theme.borderRadius}px;
+  border-radius: ${props => props.theme.borderRadius}px;
   padding-right: 13px;
   display: flex;
   flex-direction: row;
@@ -57,7 +57,7 @@ const ButtonGroup = styled.div`
 
 const ControlGroup = styled.div`
   background-color: ${props => props.theme.palette.background.main};
-  border-top-left-radius: ${props => props.theme.borderRadius}px;
+  border-radius: ${props => props.theme.borderRadius}px;
   padding-left: 13px;
   display: flex;
   flex-direction: row;
