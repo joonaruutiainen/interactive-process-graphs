@@ -6,7 +6,7 @@ const exampleProcesses = [
     nodes: [
       {
         id: 1,
-        type: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+        type: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
         nextNodes: [4],
         previousNodes: [],
         description: 'Ingredient A tank',
@@ -32,7 +32,7 @@ const exampleProcesses = [
           mass_flow: '1.5kg/s',
           pressure: '0.3',
           liiba:
-            '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."',
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
         },
       },
       {
@@ -43,13 +43,6 @@ const exampleProcesses = [
         description: 'Water tank',
         data: {
           mass_flow: '1.5kg/s',
-          pressure: '0.3',
-          liiba: 'laaba',
-          liirum: 'laarum',
-          mass_flow2: '1.5kg/s',
-          pressure2: '0.3',
-          liiba2: 'laaba',
-          liirum2: 'laarum',
         },
       },
       {
@@ -81,7 +74,18 @@ const exampleProcesses = [
         type: 'pipe',
         nextNodes: [7],
         previousNodes: [3],
-        description: 'Pipe from water tank to mixing tank',
+        description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        data: {
+          mass_flow: '1.5kg/s',
+          pressure: '0.3',
+          liiba: 'laaba',
+          liirum: 'laarum',
+          mass_flow2: '1.5kg/s',
+          pressure2: '0.3',
+          liiba2: 'laaba',
+          liirum2: 'laarum',
+        },
       },
       {
         id: 7,

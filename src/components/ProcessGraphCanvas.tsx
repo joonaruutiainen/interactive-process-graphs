@@ -18,7 +18,7 @@ import Tippy, { useSingleton } from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 
 import { Edge } from '../types/Edge';
-import { Node } from '../types/Node';
+import { Node, NodeDataFormat } from '../types/Node';
 import useGraphTools, { GraphTool } from '../hooks/graphTools/useGraphTools';
 import usePopupInfoTool from '../hooks/graphTools/usePopupInfoTool';
 import InfoBox from './InfoBox';
@@ -131,10 +131,11 @@ export interface ProcessGraphCanvasProps {
   edges: Edge[];
   hideZoomButtons?: boolean;
   hideInfoButton?: boolean;
-  icons?: IconMap;
   customGraphTools?: GraphTool[];
+  nodeDataFormat?: NodeDataFormat;
   width: number;
   height: number;
+  icons?: IconMap;
 }
 
 const ProcessGraphCanvas: React.FC<ProcessGraphCanvasProps> = ({
@@ -143,6 +144,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphCanvasProps> = ({
   hideZoomButtons = false,
   hideInfoButton = false,
   customGraphTools = [],
+  nodeDataFormat = 'json',
   width,
   height,
   icons,
@@ -159,7 +161,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphCanvasProps> = ({
   );
   const reaflowEdges: EdgeData[] = useMemo(() => edges.map(edgeToEdgeData), [edges]);
 
-  const popupInfoTool = usePopupInfoTool(icons);
+  const popupInfoTool = usePopupInfoTool(icons, nodeDataFormat);
   const [activeTool, setActiveTool, allTools] = useGraphTools([popupInfoTool, ...customGraphTools]);
   const activeToolTippyProps = useMemo(() => activeTool.getTippyProps?.(), [activeTool]);
 
