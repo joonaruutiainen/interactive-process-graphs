@@ -19,4 +19,17 @@ declare module 'styled-components' {
       background: IPalette;
     };
   }
+  export interface ElomaticTheme {
+    borderRadius: number; // border radius in pixels
+    fontFamily: string;
+    palette: {
+      common: {
+        black: string;
+        white: string;
+      };
+      primary: IPalette;
+      secondary: IPalette;
+      background: IPalette;
+    };
+  }
 }
