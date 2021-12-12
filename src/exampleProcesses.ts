@@ -6,7 +6,7 @@ const exampleProcesses = [
     nodes: [
       {
         id: 1,
-        type: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+        type: 'tank',
         nextNodes: [4],
         previousNodes: [],
         description: 'Ingredient A tank',
@@ -129,7 +129,7 @@ const exampleProcesses = [
       },
       {
         id: 5,
-        type: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+        type: 'pipe',
         nextNodes: [6],
         previousNodes: [9],
         description: 'Feedback pipe',
@@ -246,7 +246,7 @@ const exampleProcesses = [
       },
       {
         id: 6,
-        type: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        type: 'pipe',
         nextNodes: [20],
         previousNodes: [5],
         description: 'Pipe from ingredient B tank to reactor',
