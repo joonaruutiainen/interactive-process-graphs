@@ -94,12 +94,15 @@ const EMPTY_ICON = {
 };
 
 const nodeToNodeData = (node: Node, iconUrl?: string): NodeData => {
-  let nodeWidth = node.type.length * 10;
-  let maxWidth = 320;
+  const text = node.type.length > 20 ? `${node.type.substr(0, 19)}...` : node.type;
+  const textWidth = text.length * 10;
+
+  let nodeWidth = textWidth + 40;
+  let maxWidth = 250;
   let icon;
 
   if (iconUrl) {
-    nodeWidth += ICON_SIZE * 2.1;
+    nodeWidth += ICON_SIZE;
     maxWidth += ICON_SIZE;
     icon = {
       url: iconUrl,
@@ -107,13 +110,12 @@ const nodeToNodeData = (node: Node, iconUrl?: string): NodeData => {
       width: ICON_SIZE,
     };
   } else {
-    nodeWidth += 42;
     icon = EMPTY_ICON;
   }
 
   return {
     id: node.id.toString(),
-    text: node.type,
+    text,
     width: Math.min(nodeWidth, maxWidth),
     height: Math.max(ICON_SIZE + 20, 50),
     icon,

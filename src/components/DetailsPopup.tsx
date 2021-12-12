@@ -16,7 +16,8 @@ const Container = styled.div`
   border-radius: ${props => props.theme.borderRadius}px;
   padding: 10px;
   margin: 10px;
-  width: 250px;
+  min-width: 200px;
+  max-width: 300px;
   flex-wrap: wrap;
   background-color: ${props => props.theme.palette.primary.main};
 `;
@@ -62,6 +63,7 @@ const Desc = styled.span`
 const ButtonContainer = styled.div`
   display: flex;
   align-items: start;
+  margin-left: 10px;
 `;
 
 const Button = styled.div`
@@ -148,7 +150,7 @@ export const NodeDetailsPopup: React.FC<NodeDetailsPopupProps> = ({
         )}
         <Text>
           <Title>
-            {type.length > 20 ? `${type.substr(0, 20)}...` : type} {id}
+            {type.length > 20 ? `${type.substr(0, 19)}...` : type} {id}
           </Title>
           {description && <Desc>{description.length > 60 ? `${description.substr(0, 60)}...` : description}</Desc>}
         </Text>
