@@ -18,7 +18,7 @@ import Tippy, { useSingleton } from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 
 import { Edge } from '../types/Edge';
-import { Node } from '../types/Node';
+import { Node, NodeDataFormat } from '../types/Node';
 import useGraphTools, { GraphTool } from '../hooks/graphTools/useGraphTools';
 import usePopupInfoTool from '../hooks/graphTools/usePopupInfoTool';
 import InfoBox from './InfoBox';
@@ -47,12 +47,8 @@ const Controls = styled.div`
 const ButtonGroup = styled.div`
   background-color: ${props => props.theme.palette.background.main};
   border-radius: ${props => props.theme.borderRadius}px;
-  padding-right: 13px;
   display: flex;
   flex-direction: row;
-  position: absolute;
-  left: 0;
-  bottom: 0;
 `;
 
 const ControlGroup = styled.div`
@@ -98,12 +94,15 @@ const EMPTY_ICON = {
 };
 
 const nodeToNodeData = (node: Node, iconUrl?: string): NodeData => {
-  let nodeWidth = node.type.length * 10;
-  let maxWidth = 320;
+  const text = node.type.length > 20 ? `${node.type.substr(0, 19)}...` : node.type;
+  const textWidth = text.length * 10;
+
+  let nodeWidth = textWidth + 40;
+  let maxWidth = 250;
   let icon;
 
   if (iconUrl) {
-    nodeWidth += ICON_SIZE * 2.1;
+    nodeWidth += ICON_SIZE;
     maxWidth += ICON_SIZE;
     icon = {
       url: iconUrl,
@@ -111,13 +110,12 @@ const nodeToNodeData = (node: Node, iconUrl?: string): NodeData => {
       width: ICON_SIZE,
     };
   } else {
-    nodeWidth += 42;
     icon = EMPTY_ICON;
   }
 
   return {
     id: node.id.toString(),
-    text: node.type,
+    text,
     width: Math.min(nodeWidth, maxWidth),
     height: Math.max(ICON_SIZE + 20, 50),
     icon,
@@ -134,18 +132,21 @@ export interface ProcessGraphCanvasProps {
   nodes: Node[];
   edges: Edge[];
   hideZoomButtons?: boolean;
-
-  icons?: IconMap;
+  hideInfoButton?: boolean;
   customGraphTools?: GraphTool[];
+  nodeDataFormat?: NodeDataFormat;
   width: number;
   height: number;
+  icons?: IconMap;
 }
 
 const ProcessGraphCanvas: React.FC<ProcessGraphCanvasProps> = ({
   nodes,
   edges,
   hideZoomButtons = false,
+  hideInfoButton = false,
   customGraphTools = [],
+  nodeDataFormat = 'json',
   width,
   height,
   icons,
@@ -162,7 +163,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphCanvasProps> = ({
   );
   const reaflowEdges: EdgeData[] = useMemo(() => edges.map(edgeToEdgeData), [edges]);
 
-  const popupInfoTool = usePopupInfoTool(icons);
+  const popupInfoTool = usePopupInfoTool(icons, nodeDataFormat);
   const [activeTool, setActiveTool, allTools] = useGraphTools([popupInfoTool, ...customGraphTools]);
   const activeToolTippyProps = useMemo(() => activeTool.getTippyProps?.(), [activeTool]);
 
@@ -329,28 +330,32 @@ const ProcessGraphCanvas: React.FC<ProcessGraphCanvasProps> = ({
                       </Button>
                     </ButtonDiv>
                   </Tippy>
-                  {allTools.map(tool => (
-                    <Tippy key={tool.name} content={tool.name} singleton={tooltipTarget}>
-                      <ButtonDiv>
-                        <ToolButton onClick={() => setActiveTool(tool)} disabled={activeTool.name === tool.name}>
-                          {tool.icon}
-                        </ToolButton>
-                      </ButtonDiv>
-                    </Tippy>
-                  ))}
                 </ButtonGroup>
               )}
+              <ButtonGroup>
+                {allTools.map(tool => (
+                  <Tippy key={tool.name} content={tool.name} singleton={tooltipTarget}>
+                    <ButtonDiv>
+                      <ToolButton onClick={() => setActiveTool(tool)} disabled={activeTool.name === tool.name}>
+                        {tool.icon}
+                      </ToolButton>
+                    </ButtonDiv>
+                  </Tippy>
+                ))}
+              </ButtonGroup>
             </Controls>
-            <Controls>
-              <ControlGroup>
-                <Tippy content='Instructions' singleton={tooltipTarget}>
-                  <InfoButton onClick={() => setInfoVisible(!infoVisible)}>
-                    <Icon name='info' size={24} />
-                  </InfoButton>
-                </Tippy>
-                {infoVisible && <InfoBox handleClose={() => setInfoVisible(false)} />}
-              </ControlGroup>
-            </Controls>
+            {!hideInfoButton && (
+              <Controls>
+                <ControlGroup>
+                  <Tippy content='Instructions' singleton={tooltipTarget}>
+                    <InfoButton onClick={() => setInfoVisible(!infoVisible)}>
+                      <Icon name='info' size={24} />
+                    </InfoButton>
+                  </Tippy>
+                  {infoVisible && <InfoBox handleClose={() => setInfoVisible(false)} />}
+                </ControlGroup>
+              </Controls>
+            )}
           </>
         )}
       </TransformWrapper>

@@ -4,3 +4,5 @@ export interface Node {
   description?: string;
   data?: Record<string, unknown>;
 }
+
+export type NodeDataFormat = 'json' | 'yaml';

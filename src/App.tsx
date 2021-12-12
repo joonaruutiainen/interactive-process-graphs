@@ -15,7 +15,7 @@ import { GraphTool } from './hooks/graphTools/useGraphTools';
 import useMultiselectTool from './hooks/graphTools/useMultiselectTool';
 import useWindowDimensions from './hooks/useWindowDimensions';
 import importIcons from './utils/iconImporter';
-import { lightTheme } from './styles/themes';
+import { darkTheme } from './styles/themes';
 import { IconMap } from './types/IconMap';
 
 const AppContainer = styled.div`
@@ -24,7 +24,7 @@ const AppContainer = styled.div`
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background-color: white;
+  background-color: silver;
 `;
 
 const RowContainer = styled.div`
@@ -228,10 +228,11 @@ const App: React.FC = () => {
         nodes={graph.nodes}
         edges={graph.edges}
         customGraphTools={[multiselectTool, customClickTool]}
+        nodeDataFormat='yaml'
         width={width * 0.9}
         height={height * 0.7}
         icons={icons}
-        theme={lightTheme}
+        theme={darkTheme}
       />
     </AppContainer>
   );

@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'ts-react-feather-icons';
 import { Placement } from 'tippy.js';
+import yaml from 'js-yaml';
 
 import Arrow from './Arrow';
 import { Edge } from '../types/Edge';
-import { Node } from '../types/Node';
+import { Node, NodeDataFormat } from '../types/Node';
 
 const CLOSE_BUTTON_SIZE = 20;
 
@@ -15,7 +16,8 @@ const Container = styled.div`
   border-radius: ${props => props.theme.borderRadius}px;
   padding: 10px;
   margin: 10px;
-  width: 250px;
+  min-width: 200px;
+  max-width: 300px;
   flex-wrap: wrap;
   background-color: ${props => props.theme.palette.primary.main};
 `;
@@ -30,10 +32,14 @@ const Spacer = styled.span`
   flex: 1 1 auto;
 `;
 
-const DataContainer = styled.div`
-  overflow-y: auto;
-  max-height: 150px;
-  padding-top: 10px;
+const DataTextarea = styled.textarea`
+  width: 100%;
+  margin-top: 10px;
+  background-color: ${props => props.theme.palette.primary.main};
+  color: ${props => props.theme.palette.primary.text};
+  font-family: ${props => props.theme.fontFamily};
+  border: 0;
+  resize: none;
 `;
 
 const Title = styled.h3`
@@ -57,6 +63,7 @@ const Desc = styled.span`
 const ButtonContainer = styled.div`
   display: flex;
   align-items: start;
+  margin-left: 10px;
 `;
 
 const Button = styled.div`
@@ -102,6 +109,7 @@ interface NodeDetailsPopupProps extends DetailsPopupProps {
   node: Node;
   icon?: string;
   iconSize?: number;
+  textFormat?: NodeDataFormat;
 }
 
 export const NodeDetailsPopup: React.FC<NodeDetailsPopupProps> = ({
@@ -109,9 +117,26 @@ export const NodeDetailsPopup: React.FC<NodeDetailsPopupProps> = ({
   dataPlacement,
   iconSize = 70,
   icon,
+  textFormat = 'json',
   onClose = undefined,
 }) => {
   const { id, type, description, data } = node;
+
+  const dataString: string = useMemo(() => {
+    let str;
+
+    if (textFormat === 'json') {
+      str = JSON.stringify(data, undefined, 4);
+      return str;
+    }
+
+    str = yaml.dump(data, { indent: 4 });
+    // remove newline at the end of yaml formatted text
+    str = str.substr(0, str.length - 1);
+    return str;
+  }, [data]);
+
+  const rowCount = (str: string): number => str.split(/\r?\n/).length;
 
   return (
     <Container>
@@ -125,9 +150,9 @@ export const NodeDetailsPopup: React.FC<NodeDetailsPopupProps> = ({
         )}
         <Text>
           <Title>
-            {type} {id}
+            {type.length > 20 ? `${type.substr(0, 19)}...` : type} {id}
           </Title>
-          <Desc>{description}</Desc>
+          {description && <Desc>{description.length > 60 ? `${description.substr(0, 60)}...` : description}</Desc>}
         </Text>
         <Spacer />
         <ButtonContainer>
@@ -136,15 +161,7 @@ export const NodeDetailsPopup: React.FC<NodeDetailsPopupProps> = ({
           </Button>
         </ButtonContainer>
       </FirstRow>
-      {data && (
-        <DataContainer>
-          {Object.entries(data).map(([key, value]) => (
-            <Text key={key}>
-              {key}: {JSON.stringify(value)}
-            </Text>
-          ))}
-        </DataContainer>
-      )}
+      {data && <DataTextarea value={dataString} readOnly rows={Math.min(rowCount(dataString), 8)} />}
       <Arrow placement={dataPlacement} />
     </Container>
   );
