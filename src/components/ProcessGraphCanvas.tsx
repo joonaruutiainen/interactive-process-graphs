@@ -47,12 +47,8 @@ const Controls = styled.div`
 const ButtonGroup = styled.div`
   background-color: ${props => props.theme.palette.background.main};
   border-radius: ${props => props.theme.borderRadius}px;
-  padding-right: 13px;
   display: flex;
   flex-direction: row;
-  position: absolute;
-  left: 0;
-  bottom: 0;
 `;
 
 const ControlGroup = styled.div`
@@ -134,7 +130,7 @@ export interface ProcessGraphCanvasProps {
   nodes: Node[];
   edges: Edge[];
   hideZoomButtons?: boolean;
-
+  hideInfoButton?: boolean;
   icons?: IconMap;
   customGraphTools?: GraphTool[];
   width: number;
@@ -145,6 +141,7 @@ const ProcessGraphCanvas: React.FC<ProcessGraphCanvasProps> = ({
   nodes,
   edges,
   hideZoomButtons = false,
+  hideInfoButton = false,
   customGraphTools = [],
   width,
   height,
@@ -329,28 +326,32 @@ const ProcessGraphCanvas: React.FC<ProcessGraphCanvasProps> = ({
                       </Button>
                     </ButtonDiv>
                   </Tippy>
-                  {allTools.map(tool => (
-                    <Tippy key={tool.name} content={tool.name} singleton={tooltipTarget}>
-                      <ButtonDiv>
-                        <ToolButton onClick={() => setActiveTool(tool)} disabled={activeTool.name === tool.name}>
-                          {tool.icon}
-                        </ToolButton>
-                      </ButtonDiv>
-                    </Tippy>
-                  ))}
                 </ButtonGroup>
               )}
+              <ButtonGroup>
+                {allTools.map(tool => (
+                  <Tippy key={tool.name} content={tool.name} singleton={tooltipTarget}>
+                    <ButtonDiv>
+                      <ToolButton onClick={() => setActiveTool(tool)} disabled={activeTool.name === tool.name}>
+                        {tool.icon}
+                      </ToolButton>
+                    </ButtonDiv>
+                  </Tippy>
+                ))}
+              </ButtonGroup>
             </Controls>
-            <Controls>
-              <ControlGroup>
-                <Tippy content='Instructions' singleton={tooltipTarget}>
-                  <InfoButton onClick={() => setInfoVisible(!infoVisible)}>
-                    <Icon name='info' size={24} />
-                  </InfoButton>
-                </Tippy>
-                {infoVisible && <InfoBox handleClose={() => setInfoVisible(false)} />}
-              </ControlGroup>
-            </Controls>
+            {!hideInfoButton && (
+              <Controls>
+                <ControlGroup>
+                  <Tippy content='Instructions' singleton={tooltipTarget}>
+                    <InfoButton onClick={() => setInfoVisible(!infoVisible)}>
+                      <Icon name='info' size={24} />
+                    </InfoButton>
+                  </Tippy>
+                  {infoVisible && <InfoBox handleClose={() => setInfoVisible(false)} />}
+                </ControlGroup>
+              </Controls>
+            )}
           </>
         )}
       </TransformWrapper>
