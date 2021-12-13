@@ -1,9 +1,6 @@
+import { IParser } from './types/IParser';
 import { Node } from './types/Node';
 import { Edge } from './types/Edge';
-
-export interface IParser<T> {
-  (data: T): { nodes: Node[]; edges: Edge[] };
-}
 
 type DefaultNode = {
   id: number;
