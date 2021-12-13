@@ -14,7 +14,6 @@ import { GraphTool } from './hooks/graphTools/useGraphTools';
 import useMultiselectTool from './hooks/graphTools/useMultiselectTool';
 import useWindowDimensions from './hooks/useWindowDimensions';
 import importIcons from './utils/iconImporter';
-import { darkTheme } from './styles/themes';
 import { IconMap } from './types/IconMap';
 
 import defaultParser from './defaultParser';
