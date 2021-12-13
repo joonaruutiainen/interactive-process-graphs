@@ -45,26 +45,3 @@ export const darkTheme: DefaultTheme = {
     },
   },
 };
-
-export const ElomaticTheme: DefaultTheme = {
-  borderRadius: 7,
-  fontFamily: 'Helvetica',
-  palette: {
-    common: {
-      black: '#000000',
-      white: '#ffffff',
-    },
-    primary: {
-      main: '#003b72',
-      text: '#ffffff',
-    },
-    secondary: {
-      main: '#002e41',
-      text: '#ffffff',
-    },
-    background: {
-      main: '#e6f3f8',
-      text: '#000000',
-    },
-  },
-};
