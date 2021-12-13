@@ -3,7 +3,7 @@ import { Placement } from 'tippy.js';
 import { Icon } from 'ts-react-feather-icons';
 
 import { EdgeClickCallback, GraphTool, NodeClickCallback } from './useGraphTools';
-import { Node } from '../../types/Node';
+import { Node, NodeDataFormat } from '../../types/Node';
 import { Edge } from '../../types/Edge';
 import { EdgeDetailsPopup, NodeDetailsPopup } from '../../components/DetailsPopup';
 import { IconMap } from '../../types/IconMap';
@@ -14,7 +14,7 @@ type TippyAttrs = {
   'data-escaped'?: string;
 };
 
-const usePopupInfoTool = (icons?: IconMap): GraphTool => {
+const usePopupInfoTool = (icons?: IconMap, nodeDataFormat?: NodeDataFormat): GraphTool => {
   const [selectedEdge, setSelectedEdge] = useState<Edge | undefined>();
   const [selectedNode, setSelectedNode] = useState<Node | undefined>();
   const [tippyTargetElement, setTippyTargetElement] = useState<Element | undefined>();
@@ -71,6 +71,7 @@ const usePopupInfoTool = (icons?: IconMap): GraphTool => {
             node: selectedNode,
             icon: icons?.[selectedNode.type],
             dataPlacement: attrs['data-placement'],
+            textFormat: nodeDataFormat,
             onClose: () => setSelectedNode(undefined),
           }),
         reference: tippyTargetElement,
