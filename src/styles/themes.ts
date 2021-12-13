@@ -1,4 +1,4 @@
-import { DefaultTheme, ElomaticTheme } from 'styled-components';
+import { DefaultTheme } from 'styled-components';
 
 export const lightTheme: DefaultTheme = {
   borderRadius: 7,
@@ -46,7 +46,7 @@ export const darkTheme: DefaultTheme = {
   },
 };
 
-export const customTheme: ElomaticTheme = {
+export const ElomaticTheme: DefaultTheme = {
   borderRadius: 7,
   fontFamily: 'Helvetica',
   palette: {
