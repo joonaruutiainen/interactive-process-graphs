@@ -9,14 +9,15 @@ import { Edge } from './types/Edge';
 import { Graph } from './types/Graph';
 import ProcessGraph from './components/ProcessGraph';
 import exampleProcesses from './exampleProcesses';
-import defaultParser from './parser';
-import { RandomGraphGenerator } from './random';
+import { RandomGraphGenerator } from './utils/random';
 import { GraphTool } from './hooks/graphTools/useGraphTools';
 import useMultiselectTool from './hooks/graphTools/useMultiselectTool';
 import useWindowDimensions from './hooks/useWindowDimensions';
 import importIcons from './utils/iconImporter';
 import { darkTheme } from './styles/themes';
 import { IconMap } from './types/IconMap';
+
+import defaultParser from './defaultParser';
 
 const AppContainer = styled.div`
   display: flex;
