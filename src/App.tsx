@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { DefaultTheme } from 'styled-components';
 import { Icon } from 'ts-react-feather-icons';
 
 import requireContext from 'require-context.macro';
@@ -101,6 +101,29 @@ const StyledSelect = styled.select`
   border-radius: 5px;
   font-family: Helvetica;
 `;
+
+const ElomaticTheme: DefaultTheme = {
+  borderRadius: 7,
+  fontFamily: 'Helvetica',
+  palette: {
+    common: {
+      black: '#000000',
+      white: '#ffffff',
+    },
+    primary: {
+      main: '#003b72',
+      text: '#ffffff',
+    },
+    secondary: {
+      main: '#002e41',
+      text: '#ffffff',
+    },
+    background: {
+      main: '#e6f3f8',
+      text: '#000000',
+    },
+  },
+};
 
 type ProcessMode = 'examples' | 'random';
 
@@ -233,7 +256,7 @@ const App: React.FC = () => {
         width={width * 0.9}
         height={height * 0.7}
         icons={icons}
-        theme={darkTheme}
+        theme={ElomaticTheme}
       />
     </AppContainer>
   );
