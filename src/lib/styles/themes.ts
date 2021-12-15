@@ -1,4 +1,4 @@
-import { DefaultTheme } from 'styled-components';
+import { DefaultTheme } from '../types/DefaultTheme';
 
 export const lightTheme: DefaultTheme = {
   borderRadius: 7,

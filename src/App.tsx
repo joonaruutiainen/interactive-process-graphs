@@ -1,22 +1,20 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import styled, { DefaultTheme } from 'styled-components';
+import styled from 'styled-components';
 import { Icon } from 'ts-react-feather-icons';
 
-import requireContext from 'require-context.macro';
+import ProcessGraph from './lib/components/ProcessGraph';
+import { Node } from './lib/types/Node';
+import { Edge } from './lib/types/Edge';
+import { Graph } from './lib/types/Graph';
+import { RandomGraphGenerator } from './lib/utils/random';
+import { GraphTool } from './lib/hooks/graphTools/useGraphTools';
+import useMultiselectTool from './lib/hooks/graphTools/useMultiselectTool';
+import useWindowDimensions from './lib/hooks/useWindowDimensions';
+import { IconMap } from './lib/types/IconMap';
+import defaultIcons from './lib/defaultIcons';
+import { DefaultTheme } from './lib/types/DefaultTheme';
 
-import { Node } from './types/Node';
-import { Edge } from './types/Edge';
-import { Graph } from './types/Graph';
-import ProcessGraph from './components/ProcessGraph';
 import exampleProcesses from './exampleProcesses';
-import { RandomGraphGenerator } from './utils/random';
-import { GraphTool } from './hooks/graphTools/useGraphTools';
-import useMultiselectTool from './hooks/graphTools/useMultiselectTool';
-import useWindowDimensions from './hooks/useWindowDimensions';
-import importIcons from './utils/iconImporter';
-import { darkTheme } from './styles/themes';
-import { IconMap } from './types/IconMap';
-
 import defaultParser from './defaultParser';
 
 const AppContainer = styled.div`
@@ -127,10 +125,11 @@ const ElomaticTheme: DefaultTheme = {
 
 type ProcessMode = 'examples' | 'random';
 
-const ICONS = importIcons(requireContext('./defaultIcons', false, /\.(svg)$/));
+// Example: How to load own icons in a Webpack environment
+// const ICONS = importIcons(require.context('path/to/icons-folder/here/', false, /\.(svg)$/));
 
 const App: React.FC = () => {
-  const [icons, setIcons] = useState<IconMap | undefined>(ICONS);
+  const [icons, setIcons] = useState<IconMap | undefined>(defaultIcons);
   const [graph, setGraph] = useState<Graph>({ nodes: [], edges: [] });
 
   const [processMode, setProcessMode] = useState<ProcessMode>('examples');
@@ -178,7 +177,7 @@ const App: React.FC = () => {
 
   const changeIcons = (value: string) => {
     if (value === 'yes') {
-      setIcons(ICONS);
+      setIcons(defaultIcons);
     }
     if (value === 'no') {
       setIcons(undefined);

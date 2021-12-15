@@ -42,6 +42,7 @@
                 "tsx": "never"
             }
         ],
+        "import/no-extraneous-dependencies": "off",
         "prettier/prettier": ["warn"]
     },
     "settings": {

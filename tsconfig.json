@@ -1,11 +1,15 @@
 {
   "compilerOptions": {
     "target": "es6",
+    "outDir": "lib",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
+    "declaration": true,
+    "declarationDir": "./lib",
+    "typeRoots": ["src/types/", "./node_modules/@types"],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -21,5 +25,7 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src" ]
+    "src/lib", "src/types" 
+  ],
+  "exclude": ["node_modules", "lib"]
 }
