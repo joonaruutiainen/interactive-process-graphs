@@ -124,15 +124,25 @@ export const NodeDetailsPopup: React.FC<NodeDetailsPopupProps> = ({
 
   const dataString: string = useMemo(() => {
     let str;
+    const indentation = 4;
 
     if (textFormat === 'json') {
-      str = JSON.stringify(data, undefined, 4);
+      str = JSON.stringify(data, undefined, indentation);
+      if (str) {
+        str = str
+          // remove newlines from start and end
+          .substring(2, str.length - 2)
+          // also remove spaces from the start of every row
+          .split(/\n/)
+          .map(row => row.substring(indentation, row.length))
+          .join('\n');
+      }
       return str;
     }
 
-    str = yaml.dump(data, { indent: 4 });
+    str = yaml.dump(data, { indent: indentation });
     // remove newline at the end of yaml formatted text
-    str = str.substr(0, str.length - 1);
+    str = str.substring(0, str.length - 1);
     return str;
   }, [data]);
 
@@ -150,9 +160,9 @@ export const NodeDetailsPopup: React.FC<NodeDetailsPopupProps> = ({
         )}
         <Text>
           <Title>
-            {type.length > 20 ? `${type.substr(0, 19)}...` : type} {id}
+            {type.length > 20 ? `${type.substring(0, 19)}...` : type} {id}
           </Title>
-          {description && <Desc>{description.length > 60 ? `${description.substr(0, 60)}...` : description}</Desc>}
+          {description && <Desc>{description.length > 60 ? `${description.substring(0, 59)}...` : description}</Desc>}
         </Text>
         <Spacer />
         <ButtonContainer>
