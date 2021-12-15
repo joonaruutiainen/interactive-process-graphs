@@ -71,6 +71,6 @@ Icons for node types can be provided as a prop to `ProcessGraph`. ProcessGraph e
 
 Default icons provided with the package:
 
-> `axe, cut, drill, filter, hammer, input, measurement, mortar, paint, pipe, pliers, pump, reactor, saw, screw feeder, screw, tank, transport, wrench`
+> axe, cut, drill, filter, hammer, input, measurement, mortar, paint, pipe, pliers, pump, reactor, saw, screw feeder, screw, tank, transport, wrench
 
 Helper function `iconImporter` is provided for easily importing all the icons inside a given folder, using Webpack's [require.context](https://webpack.js.org/guides/dependency-management/#requirecontext).
