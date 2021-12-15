@@ -3,7 +3,7 @@ interface IPalette {
   text: string;
 }
 
-interface DefaultTheme {
+export interface DefaultTheme {
   borderRadius: number; // border radius in pixels
   fontFamily: string;
   palette: {
@@ -16,5 +16,3 @@ interface DefaultTheme {
     background: IPalette;
   };
 }
-
-export default DefaultTheme;
