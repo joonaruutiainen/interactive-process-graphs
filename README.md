@@ -1,8 +1,9 @@
-[![CI/CD](https://github.com/joonaruutiainen/interactive-process-graphs/actions/workflows/cicd.yml/badge.svg?branch=main)](https://github.com/joonaruutiainen/interactive-process-graphs/actions/workflows/cicd.yml) ![License](https://img.shields.io/github/license/joonaruutiainen/interactive-process-graphs) ![npm](https://img.shields.io/npm/v/interactive-process-graphs)
 
-[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=joonaruutiainen_interactive-process-graphs)](https://sonarcloud.io/dashboard?id=joonaruutiainen_interactive-process-graphs)
+
+
 
 # Interactive process graphs with React
+[![CI/CD](https://github.com/joonaruutiainen/interactive-process-graphs/actions/workflows/cicd.yml/badge.svg?branch=main)](https://github.com/joonaruutiainen/interactive-process-graphs/actions/workflows/cicd.yml) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=joonaruutiainen_interactive-process-graphs&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=joonaruutiainen_interactive-process-graphs) [![License](https://img.shields.io/github/license/joonaruutiainen/interactive-process-graphs)](https://github.com/joonaruutiainen/interactive-process-graphs/blob/main/LICENSE) [![npm](https://img.shields.io/npm/v/interactive-process-graphs)](https://www.npmjs.com/package/interactive-process-graphs) [![Repository](https://img.shields.io/badge/GitHub-Repository-lightgrey?style=flat&logo=github)](https://github.com/joonaruutiainen/interactive-process-graphs) 
 
 This project is part of the "Software Engineering Project" -course at Tampere University. The goal of the project is to produce a React component package for drawing interactive process graphs for visualizing data structures that represent industrial production processes. The project topic was given by Elomatic Oy as part of development of a process traceability program for industrial uses.
 
