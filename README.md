@@ -1,4 +1,4 @@
-[![CI/CD](https://github.com/joonaruutiainen/interactive-process-graphs/actions/workflows/cicd.yml/badge.svg?branch=main)](https://github.com/joonaruutiainen/interactive-process-graphs/actions/workflows/cicd.yml) ![License](https://img.shields.io/github/license/joonaruutiainen/interactive-process-graphs) ![npm](https://img.shields.io/npm/v/interactive-process-graphs-2)
+[![CI/CD](https://github.com/joonaruutiainen/interactive-process-graphs/actions/workflows/cicd.yml/badge.svg?branch=main)](https://github.com/joonaruutiainen/interactive-process-graphs/actions/workflows/cicd.yml) ![License](https://img.shields.io/github/license/joonaruutiainen/interactive-process-graphs) ![npm](https://img.shields.io/npm/v/interactive-process-graphs)
 
 [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=joonaruutiainen_interactive-process-graphs)](https://sonarcloud.io/dashboard?id=joonaruutiainen_interactive-process-graphs)
 
