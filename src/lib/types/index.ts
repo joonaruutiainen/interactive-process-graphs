@@ -1,4 +1,5 @@
 import DefaultTheme from './DefaultTheme';
+
 export * from './Edge';
 export * from './Graph';
 export * from './IParser';
