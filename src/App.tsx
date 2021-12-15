@@ -3,16 +3,12 @@ import styled from 'styled-components';
 import { Icon } from 'ts-react-feather-icons';
 
 import ProcessGraph from './lib/components/ProcessGraph';
-import { Node } from './lib/types/Node';
-import { Edge } from './lib/types/Edge';
-import { Graph } from './lib/types/Graph';
+import { Node, Edge, Graph, DefaultTheme, IconMap } from './lib/types';
 import { RandomGraphGenerator } from './lib/utils/random';
 import { GraphTool } from './lib/hooks/graphTools/useGraphTools';
 import useMultiselectTool from './lib/hooks/graphTools/useMultiselectTool';
 import useWindowDimensions from './lib/hooks/useWindowDimensions';
-import { IconMap } from './lib/types/IconMap';
 import defaultIcons from './lib/defaultIcons';
-import { DefaultTheme } from './lib/types/DefaultTheme';
 
 import exampleProcesses from './exampleProcesses';
 import defaultParser from './defaultParser';
