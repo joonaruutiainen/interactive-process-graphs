@@ -129,14 +129,52 @@ const edgeToEdgeData = (edge: Edge): EdgeData => ({
 });
 
 export interface ProcessGraphCanvasProps {
+  /**
+   * Nodes to render in the process graph.
+   */
   nodes: Node[];
+
+  /**
+   * Edges to render in the process graph.
+   */
   edges: Edge[];
+
+  /**
+   * Whether to hide the zoom buttons.
+   * @default false
+   */
   hideZoomButtons?: boolean;
+
+  /**
+   * Whether to hide the info button.
+   * @default false
+   */
   hideInfoButton?: boolean;
+
+  /**
+   * List of custom graph tools to display in the toolbar.
+   */
   customGraphTools?: GraphTool[];
+
+  /**
+   * Whether to display the node data as JSON or YAML.
+   * @default 'json'
+   */
   nodeDataFormat?: NodeDataFormat;
+
+  /**
+   * Width of the process graph canvas.
+   */
   width: number;
+
+  /**
+   * Height of the process graph canvas.
+   */
   height: number;
+
+  /**
+   * Node types mapped to their corresponding icon URLs.
+   */
   icons?: IconMap;
 }
 

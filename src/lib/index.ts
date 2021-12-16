@@ -1,4 +1,4 @@
-import ProcessGraph from './components/ProcessGraph';
+import ProcessGraph, { ProcessGraphProps } from './components/ProcessGraph';
 import defaultIcons from './defaultIcons';
 
 export * from './hooks';
@@ -7,3 +7,4 @@ export * from './utils';
 export * from './types';
 
 export { ProcessGraph, defaultIcons };
+export type { ProcessGraphProps };

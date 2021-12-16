@@ -2,26 +2,42 @@ import { Graph } from '../types/Graph';
 import { Node } from '../types/Node';
 import { Edge } from '../types/Edge';
 
+/**
+ * A horizontal row of nodes used by the random generation algorithm.
+ */
 type NodeRow = Node[];
+
+/**
+ * Get the last node in a node row.
+ * @param row Node row to operate on.
+ * @returns The last node in the row.
+ */
 const lastNode = (row: NodeRow): Node => row[row.length - 1];
 
-export type ProcessNode = {
-  id: number;
-  type: string;
-  nextNodes: number[];
-  previousNodes: number[];
-  description?: string;
-};
-
-export class RandomGraphGenerator {
+class RandomGraphGenerator {
+  /**
+   * Maximum depth for the random graph.
+   */
   maxDepth: number;
 
+  /**
+   * Number of input nodes for the graph.
+   */
   nInputNodes: number;
 
+  /**
+   * Chance to skip rendering a node for a particular node row.
+   */
   chanceToSkip: number;
 
+  /**
+   * Chance of merging two node rows together.
+   */
   chanceToMerge: number;
 
+  /**
+   * Chance of splitting a node row into two.
+   */
   chanceToSplit: number;
 
   constructor(maxDepth: number, nInputNodes: number, chanceToSkip = 0.2, chanceToMerge = 0.3, chanceToSplit = 0.1) {
@@ -32,6 +48,10 @@ export class RandomGraphGenerator {
     this.chanceToSplit = chanceToSplit;
   }
 
+  /**
+   * Generate a new random graph.
+   * @returns A new random graph.
+   */
   generate(): Graph {
     const nodes: Node[] = [];
     const edges: Edge[] = [];
@@ -87,3 +107,5 @@ export class RandomGraphGenerator {
     return { nodes, edges };
   }
 }
+
+export default RandomGraphGenerator;

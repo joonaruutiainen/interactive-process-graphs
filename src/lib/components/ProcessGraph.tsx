@@ -2,7 +2,10 @@ import React from 'react';
 import { ThemeProvider, DefaultTheme } from 'styled-components';
 import ProcessGraphCanvas, { ProcessGraphCanvasProps } from './ProcessGraphCanvas';
 
-interface ProcessGraphProps extends ProcessGraphCanvasProps {
+export interface ProcessGraphProps extends ProcessGraphCanvasProps {
+  /**
+   * Theme used to style the process graph with.
+   */
   theme: DefaultTheme;
 }
 

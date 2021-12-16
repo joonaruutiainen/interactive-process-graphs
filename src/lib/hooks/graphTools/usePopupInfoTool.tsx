@@ -14,6 +14,12 @@ type TippyAttrs = {
   'data-escaped'?: string;
 };
 
+/**
+ * Hook for using a default popup info tool.
+ * @param icons Node types mapped to their corresponding icons.
+ * @param nodeDataFormat Format to display the node data in. 'json' or 'yaml'.
+ * @returns The popup info tool.
+ */
 const usePopupInfoTool = (icons?: IconMap, nodeDataFormat?: NodeDataFormat): GraphTool => {
   const [selectedEdge, setSelectedEdge] = useState<Edge | undefined>();
   const [selectedNode, setSelectedNode] = useState<Node | undefined>();
