@@ -129,7 +129,6 @@ const edgeToEdgeData = (edge: Edge): EdgeData => ({
 });
 
 export interface ProcessGraphCanvasProps {
-
   /**
    * Nodes to render in the process graph.
    */

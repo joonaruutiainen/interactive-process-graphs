@@ -14,7 +14,7 @@ type NodeRow = Node[];
  */
 const lastNode = (row: NodeRow): Node => row[row.length - 1];
 
-export class RandomGraphGenerator {
+class RandomGraphGenerator {
   /**
    * Maximum depth for the random graph.
    */
@@ -107,3 +107,5 @@ export class RandomGraphGenerator {
     return { nodes, edges };
   }
 }
+
+export default RandomGraphGenerator;

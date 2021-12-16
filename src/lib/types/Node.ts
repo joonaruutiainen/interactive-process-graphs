@@ -1,5 +1,4 @@
 export interface Node {
-
   /**
    * Unique ID for the node.
    */

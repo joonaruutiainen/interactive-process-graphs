@@ -25,12 +25,10 @@ interface DefaultTheme {
    * Palettes for the theme.
    */
   palette: {
-
     /**
      * Common colors used throughout the process graph.
      */
     common: {
-      
       /**
        * Black color.
        */

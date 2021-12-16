@@ -41,7 +41,7 @@ export interface GraphTool {
    * Handler for an edge being clicked.
    */
   onEdgeClick?: EdgeClickCallback;
-  
+
   /**
    * Handler for a node being clicked.
    */
