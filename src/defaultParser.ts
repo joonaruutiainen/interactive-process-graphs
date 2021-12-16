@@ -1,6 +1,6 @@
-import { IParser } from './types/IParser';
-import { Node } from './types/Node';
-import { Edge } from './types/Edge';
+import { IParser } from './lib/types/IParser';
+import { Node } from './lib/types/Node';
+import { Edge } from './lib/types/Edge';
 
 type DefaultNode = {
   id: number;
