@@ -8,6 +8,10 @@ function getWindowDimensions() {
   };
 }
 
+/**
+ * Hook for getting the window dimensions.
+ * @returns windowDimensions
+ */
 export const useWindowDimensions = (): { width: number; height: number } => {
   const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
 

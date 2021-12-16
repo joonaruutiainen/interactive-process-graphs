@@ -4,6 +4,11 @@ import { Icon } from 'ts-react-feather-icons';
 import { GraphTool, NodeClickCallback } from './useGraphTools';
 import { Node } from '../../types/Node';
 
+/**
+ * Tool that allows you to click and select multiple nodes at once.
+ * @param onUpdate Callback for when the selection has changed.
+ * @returns GraphTool
+ */
 const useMultiselectTool = (onUpdate?: (nodes: Node[]) => void): GraphTool => {
   const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
 
