@@ -27,5 +27,7 @@
   "include": [
     "src/lib", "src/types" 
   ],
-  "exclude": ["node_modules", "lib"]
+  "exclude": [
+    "node_modules", "lib", "src/**/*.test.*" 
+  ]
 }
