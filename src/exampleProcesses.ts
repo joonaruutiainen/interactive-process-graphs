@@ -89,7 +89,7 @@ const exampleProcesses = [
       },
       {
         id: 7,
-        type: 'tank',
+        type: 'mix_tank',
         nextNodes: [],
         previousNodes: [4, 5, 6],
         description: 'Mixing tank',
@@ -101,7 +101,7 @@ const exampleProcesses = [
     nodes: [
       {
         id: 1,
-        type: 'screw feeder',
+        type: 'screw_feeder',
         nextNodes: [2],
         previousNodes: [],
         description: 'Powder screw feeder',
@@ -136,7 +136,7 @@ const exampleProcesses = [
       },
       {
         id: 6,
-        type: 'tank',
+        type: 'mix_tank',
         nextNodes: [7],
         previousNodes: [2, 4, 5],
         description: 'Mixing tank 1',
@@ -178,7 +178,7 @@ const exampleProcesses = [
       },
       {
         id: 12,
-        type: 'tank',
+        type: 'mix_tank',
         nextNodes: [13],
         previousNodes: [10, 11],
         description: 'Mixing tank 2',
@@ -379,7 +379,7 @@ const exampleProcesses = [
       },
       {
         id: 25,
-        type: 'tank',
+        type: 'cooling_tank',
         nextNodes: [26],
         previousNodes: [23, 24],
         description: 'Cooling tank',
