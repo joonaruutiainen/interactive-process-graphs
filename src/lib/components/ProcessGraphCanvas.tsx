@@ -152,7 +152,7 @@ export interface ProcessGraphCanvasProps {
   hideInfoButton?: boolean;
 
   /**
-   * List of xustom graph tools to display in the toolbar.
+   * List of custom graph tools to display in the toolbar.
    */
   customGraphTools?: GraphTool[];
 
