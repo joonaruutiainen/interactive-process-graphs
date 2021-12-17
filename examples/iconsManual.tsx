@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProcessGraph, IconMap, Edge, Node, defaultIcons } from 'interactive-process-graph';
+import { ProcessGraph, IconMap, Edge, Node, defaultIcons } from 'interactive-process-graphs';
 
 // Import custom icons manually
 import { MyCustomIcon, AnotherIcon } from 'my-custom-icons';
@@ -18,7 +18,7 @@ const nodes: Node[] = [
   // Node types should match the icon keys
   { id: 0, type: 'myNodeType' },
   { id: 1, type: 'anotherNodeType' },
-  { id: 2, type: 'pipe' },  // 'pipe' is from the defaultIcons
+  { id: 2, type: 'pipe' }, // 'pipe' is from the defaultIcons
 ];
 
 const edges: Edge[] = [
@@ -26,7 +26,7 @@ const edges: Edge[] = [
   { from: 1, to: 2 },
 ];
 
-const App: React.FC = () => {
+const MyComponent: React.FC = () => {
   return <ProcessGraph
     nodes={nodes}
     edges={edges}
@@ -36,4 +36,4 @@ const App: React.FC = () => {
   />;
 };
 
-export default App;
+export default MyComponent;

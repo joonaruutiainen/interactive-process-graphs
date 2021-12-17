@@ -10,7 +10,7 @@ const edges: Edge[] = [
   { from: 0, to: 1 },
 ];
 
-const App: React.FC = () => {
+const MyComponent: React.FC = () => {
   // Get dynamically updating window dimensions
   const { width, height } = useWindowDimensions();
 
@@ -28,4 +28,4 @@ const App: React.FC = () => {
   )
 };
 
-export default App;
+export default MyComponent;

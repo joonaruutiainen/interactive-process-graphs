@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { ProcessGraph, GraphTool, Edge, Node } from 'interactive-process-graph';
+import { ProcessGraph, GraphTool, Edge, Node } from 'interactive-process-graphs';
+import myImage from './myImage.png';
 
-const App: React.FC = () => {
+const MyComponent: React.FC = () => {
   // Nodes and edges defined in state so they can be changed at runtime
   const [nodes, setNodes] = useState<Node[]>([
     { id: 0, type: 'pipe' },
@@ -20,16 +21,17 @@ const App: React.FC = () => {
     name: 'Remove Tool',
 
     // You may provide a custom icon
-    icon: <img src="myimage.png" width="32px" height="32px" />,
+    icon: <img src={myImage} width="32px" height="32px" />,
 
     // Add a callback for a node being clicked
     onNodeClick: (clickedNode: Node) => {
-      setNodes(nodes.filter(node => node.id != clickedNode.id));
+      setNodes(nodes.filter(node => node.id !== clickedNode.id));
+      setEdges(edges.filter(edge => (edge.from !== clickedNode.id && edge.to !== clickedNode.id)));
     },
 
     // Add a callback for an edge being clicked
     onEdgeClick: (clickedEdge: Edge) => {
-      setEdges(edges.filter(edge => (edge.from != clickedEdge.from || edge.to != clickedEdge.to)));
+      setEdges(edges.filter(edge => (edge.from !== clickedEdge.from && edge.to !== clickedEdge.to)));
     },
   });
 
@@ -39,8 +41,10 @@ const App: React.FC = () => {
   return <ProcessGraph
     nodes={nodes}
     edges={edges}
+    width={640}
+    height={480}
     customGraphTools={[removeTool]}
   />;
 };
 
-export default App;
+export default MyComponent;
