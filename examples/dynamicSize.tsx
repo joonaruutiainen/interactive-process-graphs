@@ -15,6 +15,7 @@ const App: React.FC = () => {
   const { width, height } = useWindowDimensions();
 
   return (
+    // ProcessGraph should be wrapped in a flex box for it to correctly size itself
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: '100vh' }}>
       <ProcessGraph
         nodes={nodes}

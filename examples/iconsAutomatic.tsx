@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProcessGraph, importIcons, IconMap, Edge, Node } from 'interactive-process-graph';
+import { ProcessGraph, importIcons, IconMap, Edge, Node } from 'interactive-process-graphs';
 
 // Automatically import all .svg icons from C:/Custom/Icons directory
 const icons: IconMap = importIcons(require.context('C:/Custom/Icons', false, /\.(svg)$/));
@@ -14,7 +14,7 @@ const edges: Edge[] = [
   { from: 0, to: 1 },
 ];
 
-const App: React.FC = () => {
+const MyComponent: React.FC = () => {
   return <ProcessGraph
     nodes={nodes}
     edges={edges}
@@ -24,4 +24,4 @@ const App: React.FC = () => {
   />;
 };
 
-export default App;
+export default MyComponent;
