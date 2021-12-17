@@ -1,7 +1,3 @@
-
-
-
-
 # Interactive process graphs with React
 [![CI/CD](https://github.com/joonaruutiainen/interactive-process-graphs/actions/workflows/cicd.yml/badge.svg?branch=main)](https://github.com/joonaruutiainen/interactive-process-graphs/actions/workflows/cicd.yml) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=joonaruutiainen_interactive-process-graphs&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=joonaruutiainen_interactive-process-graphs) [![License](https://img.shields.io/github/license/joonaruutiainen/interactive-process-graphs)](https://github.com/joonaruutiainen/interactive-process-graphs/blob/main/LICENSE) [![npm](https://img.shields.io/npm/v/interactive-process-graphs)](https://www.npmjs.com/package/interactive-process-graphs) [![Repository](https://img.shields.io/badge/GitHub-Repository-lightgrey?style=flat&logo=github)](https://github.com/joonaruutiainen/interactive-process-graphs) 
 
@@ -9,7 +5,22 @@ This project is part of the "Software Engineering Project" -course at Tampere Un
 
 ## Getting started
 
-Run `npm install interactive-process-graphs` to install the package via NPM
+Run `npm install interactive-process-graphs` to install the package via NPM.
+
+Then provide your nodes and edges for the `ProcessGraph` component:
+
+```ts
+import { ProcessGraph } from 'interactive-process-graph';
+
+const MyApp = () => {
+  return <ProcessGraph
+    nodes={[{ id: 0, type: 'pipe' }, { id: 1, type: 'tank' }]}
+    edges={[{ from: 0, to: 1 }]}
+  >;
+};
+```
+
+See the `examples` directory for examples of theming, custom icons, custom tools for the toolbar, and more.
 
 ## Development
 
@@ -35,10 +46,8 @@ How to create a new release:
 
 A custom theme can be provided for the `ProcessGraph` component via the `theme` prop.
 Light theme is used as default but this package includes a dark theme as well.
-Changing theme at runtime is currently not supported.
-The primary color is for the background of the buttons and nodes,
-the secondary color is for the edges,
-and the background color is for the background of the canvas.
+Changing theme at runtime is currently **not** supported.
+The `theme` prop should be of the following format:
 
 ```json
 {
@@ -64,6 +73,12 @@ and the background color is for the background of the canvas.
   }
 }
 ```
+
+Where:
+
+- The primary color is for the background of the buttons and nodes,
+- the secondary color is for the edges,
+- and the background color is for the background of the canvas.
 
 ## Icons
 
