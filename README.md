@@ -10,7 +10,7 @@ Run `npm install interactive-process-graphs` to install the package via NPM.
 Then provide your nodes and edges for the `ProcessGraph` component:
 
 ```ts
-import { ProcessGraph } from 'interactive-process-graph';
+import { ProcessGraph } from 'interactive-process-graphs';
 
 const MyApp = () => {
   return <ProcessGraph
