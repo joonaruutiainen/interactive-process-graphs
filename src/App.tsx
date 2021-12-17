@@ -4,7 +4,7 @@ import { Icon } from 'ts-react-feather-icons';
 
 import ProcessGraph from './lib/components/ProcessGraph';
 import { Node, Edge, Graph, DefaultTheme, IconMap } from './lib/types';
-import { RandomGraphGenerator } from './lib/utils/random';
+import RandomGraphGenerator from './lib/utils/random';
 import { GraphTool } from './lib/hooks/graphTools/useGraphTools';
 import useMultiselectTool from './lib/hooks/graphTools/useMultiselectTool';
 import useWindowDimensions from './lib/hooks/useWindowDimensions';
