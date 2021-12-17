@@ -16,6 +16,8 @@ const MyApp = () => {
   return <ProcessGraph
     nodes={[{ id: 0, type: 'pipe' }, { id: 1, type: 'tank' }]}
     edges={[{ from: 0, to: 1 }]}
+    width={666}
+    height={420}
   >;
 };
 ```
