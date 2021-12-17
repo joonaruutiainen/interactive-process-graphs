@@ -18,6 +18,8 @@ const App: React.FC = () => {
   return <ProcessGraph
     nodes={nodes}
     edges={edges}
+    width={640}
+    height={480}
     icons={icons}
   />;
 };
