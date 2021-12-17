@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProcessGraph, useWindowDimensions, Edge, Node } from 'interactive-process-graph';
+import { ProcessGraph, useWindowDimensions, Edge, Node, lightTheme } from 'interactive-process-graphs';
 
 const nodes: Node[] = [
   { id: 0, type: 'pipe' },
@@ -12,14 +12,19 @@ const edges: Edge[] = [
 
 const App: React.FC = () => {
   // Get dynamically updating window dimensions
-  const [winWidth, winHeight] = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
 
-  return <ProcessGraph
-    nodes={nodes}
-    edges={edges}
-    width={winWidth * 0.8}
-    height={winHeight * 0.8}
-  />;
+  return (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: '100vh' }}>
+      <ProcessGraph
+        nodes={nodes}
+        edges={edges}
+        width={width * 0.8}
+        height={height * 0.8}
+        theme={lightTheme}
+      />
+    </div>
+  )
 };
 
 export default App;
